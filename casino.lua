@@ -310,7 +310,7 @@ msgdone.OnClientEvent:Connect(function(msgdata)
 		else
 			chat('💸 Your balance stays the same 💸')
 		end
-		plrChatted:Setattribute('Donated', newBalance)		
+		plrChatted:SetAttribute('Donated', newBalance)		
 	end
     if message == '.help' then
         chat('.help | .withdraw | .play amount | .balance || Amount of bux you donate will be sent to your balance.')
