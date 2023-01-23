@@ -263,7 +263,7 @@ msgdone.OnClientEvent:Connect(function(msgdata)
 	local speaker = tostring(msgdata.FromSpeaker)
 	local message = string.lower(msgdata.Message)
 	local plrChatted = game:GetService('Players')[speaker] or nil
-	if (plrChatted and plrChatted == game:GetService('Players').LocalPlayer) or not plrChatted or debounceThing:FindFirstChild(plrChatted.Name) or string.find(message,'💸') then
+	if (plrChatted and plrChatted == game:GetService('Players').LocalPlayer) or not plrChatted or debounceThing:FindFirstChild(plrChatted.Name) or string.find(message,'💸') or string.find(message,'💎') then
 		return
 	end
 	local bal = plrChatted:GetAttribute('Donated')
