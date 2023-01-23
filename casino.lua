@@ -401,6 +401,19 @@ end)
 
 if setfpscap then setfpscap(30) end
 
+if hookmetamethod then
+  local old
+  old = hookmetamethod(game,"__namecall",function(self,...)
+	local args = {...}
+	local method = getnamecallmethod()
+	if tostring(self) == "SayMessageRequest" and method == "FireServer" then
+		args[1] = args[1]:gsub('💎','💸')
+		return old(self,unpack(args))
+	end
+	return old(self,...)
+  end)
+end
+
 while task.wait(getgenv().settin.ServerHopDelay * 60) do
 	if not hopTimer then
 		hopSet()
