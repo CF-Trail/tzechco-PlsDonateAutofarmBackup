@@ -1,3 +1,9 @@
+--[[
+	This property is protected.
+	You are not allowed to claim this as your own.
+	Removal of initial credits to the authors is prohibited.
+]]
+
 repeat
 	task.wait()
 until game:IsLoaded()
@@ -245,14 +251,45 @@ raised:GetPropertyChangedSignal('Value'):Connect(function()
 	if string.find(logs[#logs].message, Players.LocalPlayer.DisplayName) then
 		local msg = string.gsub(logs[#logs].message, ' tipped ', ''):gsub('', ''):gsub('💸', ''):gsub(' to ', ''):gsub(Players.LocalPlayer.DisplayName, ''):gsub(tostring(raisedN), ''):gsub(' ', '')
 		for i, v in next, Players:GetPlayers() do
-			if string.lower(v.DisplayName) == string.lower(msg) and v ~= Players.LocalPlayer then
+			if v.DisplayName == msg then
 				playerWhoDonated = v
 				chat('💸 ' .. raisedN .. ' has been added to your balance! 💸')
 				playerWhoDonated:SetAttribute('Donated', playerWhoDonated:GetAttribute('Donated') + raisedN)
 			end
 		end
+		if not playerWhoDonated then
+		   chat('💸 Could not fetch who donated me! Please stay close to me! 💸')
+		   task.wait(6)
+		   local players = Players:GetPlayers()
+                   local closestPlayer = nil
+                   local closestDistance = math.huge
+
+                   for i, player in ipairs(players) do
+                     local distance = (player.Character.Head.Position - Players.LocalPlayer.Character.Head.Position).Magnitude
+                     if distance < closestDistance and player ~= Players.LocalPlayer then
+                       playerWhoDonated = player
+                       closestDistance = distance
+                     end
+                   end
+		playerWhoDonated:SetAttribute('Donated',raisedN)
+		chat('💸 Added ' .. raisedN .. ' to ' .. playerWhoDonated.Name .. ' 💸')
+		end
         else
-		chat('Couldnt fetch server message. Blame pls donate, this is not our issue.')
+		   chat('💸 Could not fetch who donated me! Please stay close to me! 💸')
+		   task.wait(6)
+		   local players = Players:GetPlayers()
+                   local closestPlayer = nil
+                   local closestDistance = math.huge
+
+                   for i, player in ipairs(players) do
+                     local distance = (player.Character.Head.Position - Players.LocalPlayer.Character.Head.Position).Magnitude
+                     if distance < closestDistance and player ~= Players.LocalPlayer then
+                       playerWhoDonated = player
+                       closestDistance = distance
+                     end
+                   end
+		playerWhoDonated:SetAttribute('Donated',raisedN)
+		chat('💸 Added ' .. raisedN .. ' to ' .. playerWhoDonated.Name .. ' 💸')
 	end
 	oldVal = raised.Value
         hopSet()
