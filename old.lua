@@ -1082,11 +1082,17 @@ local randommsgs = {
 	'alr',
 	'yeah'
 }
+local randombotmsgs = {
+	'no im not a bot',
+	'why yall think im a bot :(',
+	'bro im not a bot',
+	'bruh shut up im a real human'
+}
 local messageRequest = game:GetService('ReplicatedStorage').DefaultChatSystemChatEvents.SayMessageRequest
 msgdone.OnClientEvent:Connect(function(msgdata)
 	local speaker = tostring(msgdata.FromSpeaker)
 	local message = string.lower(msgdata.Message)
-	task.wait(1.2)
+	task.wait(2 + math.random(0.4,1))
 	local plrChatted = game:GetService('Players')[speaker] or nil
 	if (plrChatted and plrChatted == game:GetService('Players').LocalPlayer) or getgenv().settings.autoNearReply == false or not plrChatted then
 		return
