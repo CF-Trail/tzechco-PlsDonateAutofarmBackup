@@ -1053,7 +1053,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 		local LogService = Game:GetService("LogService")
 		local logs = LogService:GetLogHistory()
 		if string.find(logs[#logs].message, Players.LocalPlayer.DisplayName) then
-			local msg = string.gsub(logs[#logs].message, ' tipped ', ''):gsub('', ''):gsub('💸', ''):gsub(' to ', ''):gsub(Players.LocalPlayer.DisplayName, ''):gsub(tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC), ''):gsub('',''):gsub(' ', '')
+			local msg = string.gsub(logs[#logs].message, ' tipped ', ''):gsub('', ''):gsub('💸', ''):gsub(' to ', ''):gsub(Players.LocalPlayer.DisplayName, ''):gsub(tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC), ''):gsub('',''):gsub("💰",''):gsub(' ', '')
 			for i, v in next, Players:GetPlayers() do
 				if v.DisplayName == msg then
 					playerWhoDonated = v
@@ -1065,7 +1065,6 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 		else
 			webhook(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
 		end
-		--webhook("💰 Tip | Amount: " .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. 'R$ (after tax: ' .. tostring(math.floor((Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * 0.6)) .. 'R$) | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value) .. 'R$ | Account: ' .. Players.LocalPlayer.DisplayName .. ' (' .. Players.LocalPlayer.Name .. ')')
 	end
 	if getgenv().settings.serverHopAfterDonation then
 		task.spawn(function()
