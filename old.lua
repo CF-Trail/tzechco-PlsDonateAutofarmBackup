@@ -393,22 +393,84 @@ local function begging()
 	end
 end
 
-local function webhook(msg)
+local function webhook(raised,donor)
 	if getgenv().settings.webhookBox:gsub(' ', '') == '' then
 		return
 	end
-	pcall(function()
-		httprequest({
-			Url = getgenv().settings.webhookBox,
-			Body = httpservice:JSONEncode({
-				["content"] = msg
-			}),
-			Method = "POST",
-			Headers = {
-				["content-type"] = "application/json"
+	local isLucky
+	local math1 = math.random(1,1000)
+	local math2 = math.random(1,1000)
+	if math1 == math2 then
+		isLucky = 'Lucky'
+	else
+		isLucky = 'Unlucky'
+	end
+	local a = os.time()
+	local a = os.date("!*t", a)
+	local c = game:GetService("MarketplaceService")
+	local c = c:GetProductInfo(game.PlaceId, Enum.InfoType.Asset)
+	local a = {
+		["title"] = '**' .. game:GetService('Players').LocalPlayer.Name .. '**',
+		["description"] = "",
+		["type"] = "rich",
+		["color"] = tonumber(getgenv().embedcolor),
+		["thumbnail"] = {
+			["url"] = "https://www.roblox.com/headshot-thumbnail/image?userId=" ..
+               Players.LocalPlayer.UserId .. "&width=420&height=420&format=png"
+		},
+		["image"] = {
+			["url"] = "http://www.roblox.com/Thumbs/Asset.ashx?Width=768&Height=432&AssetID=" .. game.PlaceId
+		},
+		["fields"] = {
+			{
+				["name"] = "Donation Amount",
+				["value"] = "`" .. tostring(raised) .. '`',
+				["inline"] = true
+			},
+			{
+				["name"] = "Total",
+				["value"] = '`' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value) .. '`',
+				["inline"] = true
+			},
+			{
+				["name"] = "After Tax [DONATION]",
+				["value"] = '`' .. '' .. math.floor(tostring(raised * 0.6)) ..'`',
+				["inline"] = true
+			},
+			{
+				["name"] = "After Tax [TOTAL]",
+				["value"] = '`' .. math.floor(tostring(Players.LocalPlayer.leaderstats.Raised.Value * 0.6)) ..'`',
+				["inline"] = true
+			},
+			{
+				["name"] = "Donor",
+				["value"] = '`' .. tostring(donor) .. '`',
+				["inline"] = true
+			},
+			{
+				["name"] = "RNG lucky game:",
+				["value"] = '`' .. tostring(isLucky) .. '`',
+				["inline"] = true
+			},
+		},
+		["footer"] = {
+			["text"] = "made by szze#6220 | https://discord.gg/8jxEbMAEQD",
+		},
+		["timestamp"] = string.format("%d-%d-%dT%02d:%02d:%02dZ", a.year, a.month, a.day, a.hour, a.min, a.sec)
+	}
+	httprequest{
+		Url = getgenv().settings.webhookBox,
+		Method = "POST",
+		Headers = {
+			["Content-Type"] = "application/json"
+		},
+		Body = game:GetService "HttpService":JSONEncode({
+			content = Content,
+			embeds = {
+				a
 			}
 		})
-	end)
+	}   
 end
 
   --GUI
@@ -984,15 +1046,24 @@ if getgenv().settings.autoBeg then
 end
 local RaisedC = Players.LocalPlayer.leaderstats.Raised.value
 Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
+	local playerWhoDonated
 	hopSet()
 	xspin = ((xspin + Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) / 3) * getgenv().settings.spinSpeedMultiplier
 	if getgenv().settings.webhookToggle and getgenv().settings.webhookBox then
 		local LogService = Game:GetService("LogService")
 		local logs = LogService:GetLogHistory()
 		if string.find(logs[#logs].message, Players.LocalPlayer.DisplayName) then
-			webhook("💰 Tip | Amount: " .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. 'R$ (after tax: ' .. tostring(math.floor((Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * 0.6)) .. 'R$) | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value) .. 'R$ | Account: ' .. Players.LocalPlayer.DisplayName .. ' (' .. Players.LocalPlayer.Name .. ') | Server Message: ' .. logs[#logs].message:gsub('', ''):gsub('',''))
+			local msg = string.gsub(logs[#logs].message, ' tipped ', ''):gsub('', ''):gsub('💸', ''):gsub(' to ', ''):gsub(Players.LocalPlayer.DisplayName, ''):gsub(tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC), ''):gsub('',''):gsub(' ', '')
+			for i, v in next, Players:GetPlayers() do
+				if v.DisplayName == msg then
+					playerWhoDonated = v
+				end
+			end
+		end
+		if playerWhoDonated then
+			webhook(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC,playerWhoDonated)
 		else
-			webhook("💰 Tip | Amount: " .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. 'R$ (after tax: ' .. tostring(math.floor((Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * 0.6)) .. 'R$) | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value) .. 'R$ | Account: ' .. Players.LocalPlayer.DisplayName .. ' (' .. Players.LocalPlayer.Name .. ') | Couldnt fetch server message')
+			webhook(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
 		end
 		--webhook("💰 Tip | Amount: " .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. 'R$ (after tax: ' .. tostring(math.floor((Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * 0.6)) .. 'R$) | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value) .. 'R$ | Account: ' .. Players.LocalPlayer.DisplayName .. ' (' .. Players.LocalPlayer.Name .. ')')
 	end
@@ -1037,7 +1108,7 @@ end)
 update()
 
 task.spawn(function()
-	raisedV = nil
+	raisedV = 0
 	task.wait(5)
 	Players.LocalPlayer.CharacterRemoving:Connect(function()
 		if getgenv().settings.spinSet then
