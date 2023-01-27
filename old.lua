@@ -964,6 +964,7 @@ local fpsBoosts = otherTab:AddSwitch('CPU Saver',function(bool)
 	task.wait(9)
 	if getgenv().settings.fpsBoost then
 		for i, v in next, workspace:GetDescendants() do
+			task.wait()
 			if v:IsA('BasePart') then
 				v.Material = Enum.Material.Plastic
 				v.CastShadow = false
