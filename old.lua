@@ -7,8 +7,8 @@
 if hookmetamethod and typeof(hookmetamethod) == 'function' then
 	local oldHook
 	oldHook = hookmetamethod(game, "__namecall", function(self, ...)
-		if getnamecallmethod() == "IsVoiceEnabledForUserIdAsync" then
-			return true
+		if getnamecallmethod() == "Kick" then
+			return warn('haha bypassed')
 		end
 		return oldHook(self, ...)
 	end)
@@ -18,8 +18,8 @@ repeat
 until game:IsLoaded()
 
 if isfile and writefile and typeof(isfile) == 'function' and typeof(writefile) == 'function' then
-	if not isfile('PromptedDiscordCFCommunityRR.txt') then
-		writefile('PromptedDiscordCFCommunityRR.txt', game:GetService('HttpService'):JSONEncode('hi'))
+	if not isfile('PromptedDiscordCFCommunityPD.txt') then
+		writefile('PromptedDiscordCFCommunityPD.txt', game:GetService('HttpService'):JSONEncode('hi'))
 		local Module = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Discord%20Inviter/Source.lua"))()
 		Module.Prompt({
 			invite = "https://discord.gg/fNeggqVMZs",
@@ -185,7 +185,9 @@ local sNames = {
 	'boothTop',
 	'spinSpeedMultiplier',
 	'webhookAfterSH',
-	'minimumDonated'
+	'minimumDonated',
+	'webhookType',
+	'fpsBoost'
 }
 
 local positionX = workspace:WaitForChild('Boomboxes'):WaitForChild('Spawn')
@@ -236,7 +238,9 @@ local sValues = {
 	false,
 	1,
 	false,
-	0
+	0,
+	'New',
+	false
 }
 if #getgenv().settings ~= sNames then
 	for i, v in ipairs(sNames) do
@@ -314,7 +318,26 @@ local function playerChecker(player)
 		end
 	end)
 end
-  
+
+local function oldWebhook(msg)
+	if getgenv().settings.webhookBox:gsub(' ', '') == '' then
+		return
+	end
+	pcall(function()
+		httprequest({
+			Url = getgenv().settings.webhookBox,
+			Body = httpservice:JSONEncode({
+				["content"] = msg
+			}),
+			Method = "POST",
+			Headers = {
+				["content-type"] = "application/json"
+			}
+		})
+	end)
+end
+
+
   --Function to fix slider
 local sliderInProgress = false;
 local function slider(value, whichSlider)
@@ -477,7 +500,7 @@ end
 local Window = library:AddWindow("welcome dtt haters | szze#6220",
   {
 	main_color = Color3.fromRGB(80, 80, 80),
-	min_size = Vector2.new(373, 433),
+	min_size = Vector2.new(450, 483),
 	toggle_key = Enum.KeyCode.RightShift,
 })
 local boothTab = Window:AddTab("Booth")
@@ -560,7 +583,6 @@ local standingPos = boothTab:AddDropdown("[ " .. getgenv().settings.standingPosi
 	else
 		getgenv().settings.boothPosition = -5.5
 	end
-	saveSettings()
 end)
 standingPos:Add('Front')
 standingPos:Add('Left')
@@ -595,7 +617,7 @@ if signPass then
 		if bool then
 			Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):EquipTool(Players.LocalPlayer.Backpack:FindFirstChild("DonateSign"))
 		else
-			Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):UnequipTools(Players.LocalPlayer.Backpack:FindFirstChild("DonateSign"))
+			Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):UnequipTools(Players.LocalPlayer.Character:FindFirstChild("DonateSign"))
 		end
 	end)
 	signToggle:Set(getgenv().settings.signToggle)
@@ -764,10 +786,23 @@ webhookBox.Text = getgenv().settings.webhookBox
 webhookTab:AddLabel('Press Enter to Save')
 webhookTab:AddButton("Test", function()
 	if getgenv().settings.webhookBox then
-		webhook("webhook works | dotgg")
+		oldWebhook("webhook works | dotgg")
 	end
 end)
+
+webhookTab:AddLabel('Webhook Type: ')
+
+local webhookType = webhookTab:AddDropdown("[ " .. getgenv().settings.webhookType .. " ]", function(t)
+	if t == 'New [BUGGY]' then
+		getgenv().settings.webhookType = 'New'
+	else
+		getgenv().settings.webhookType = 'Old'
+	end
+	saveSettings()
+end)
   
+webhookType:Add('New [BUGGY]')
+webhookType:Add('Old [RECOMMENDED!]')
   
   --Server Hop Settings
 pcall(function()
@@ -911,6 +946,7 @@ local spinToggle = otherTab:AddSwitch('Spin [1R$ = +1 speed]', function(bool)
 	if getgenv().settings.spinSet then
 		local root = Players.LocalPlayer.Character.Humanoid.RootPart
 		local Spin = Instance.new("BodyAngularVelocity")
+		if syn then syn.protect_gui(Spin) end
 		Spin.Name = "Spin"
 		Spin.Parent = root
 		Spin.MaxTorque = Vector3.new(0, math.huge, 0)
@@ -921,6 +957,46 @@ local spinToggle = otherTab:AddSwitch('Spin [1R$ = +1 speed]', function(bool)
 	saveSettings()
 end)
 
+
+local fpsBoosts = otherTab:AddSwitch('CPU Saver',function(bool)
+	getgenv().settings.fpsBoost = bool
+	saveSettings()
+	if getgenv().settings.fpsBoost then
+		for i, v in next, workspace:GetDescendants() do
+			if v:IsA('BasePart') then
+				v.Material = Enum.Material.Plastic
+				v.CastShadow = false
+			end
+			if v:IsA('Decal') or (string.match(v.ClassName, 'Mesh') and not v:IsDescendantOf(game:GetService('Players').LocalPlayer.Character)) then
+				v:Destroy()
+			end
+			if string.match(v.Name, 'Blimp') and not game:GetService('Players'):FindFirstChild(v.Name) then
+				v:Destroy()
+			end
+		end
+		workspace.DescendantAdded:Connect(function(v)
+		task.wait()
+		if v:IsA('BasePart') then
+			v.Material = Enum.Material.Plastic
+			v.CastShadow = false
+		end
+		if v:IsA('Decal') or (string.match(v.ClassName, 'Mesh') and not v:IsDescendantOf(game:GetService('Players').LocalPlayer.Character)) then
+			v:Destroy()
+		end
+		if string.match(v.Name, 'Blimp') and not game:GetService('Players'):FindFirstChild(v.Name) then
+			v:Destroy()
+		end
+		end)
+		
+		game:GetService('Lighting').GlobalShadows = false
+		for i,v in next, game:GetService("Lighting"):GetChildren() do
+			v:Destroy()
+		end
+		if settings then settings().Rendering.QualityLevel = 1 end
+	end
+end)
+
+fpsBoosts:Set(getgenv().settings.fpsBoost)
 
 local jumpsPerRB = otherTab:AddSlider("Jumps per robux", function(x)
 	if settingsLock then
@@ -1048,8 +1124,10 @@ local RaisedC = Players.LocalPlayer.leaderstats.Raised.value
 Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 	local playerWhoDonated
 	hopSet()
-	xspin = ((xspin + Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) / 3) * getgenv().settings.spinSpeedMultiplier
-	if getgenv().settings.webhookToggle and getgenv().settings.webhookBox then
+	if Players.LocalPlayer.Character:FindFirstChildWhichIsA('Humanoid').RootPart:FindFirstChild('Spin') then
+		xspin = (((xspin + Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) / 3) * getgenv().settings.spinSpeedMultiplier) + Players.LocalPlayer.Character:FindFirstChildWhichIsA('Humanoid').RootPart:FindFirstChild('Spin').AngularVelocity.Y
+	end
+	if getgenv().settings.webhookToggle == true and getgenv().settings.webhookBox then
 		local LogService = Game:GetService("LogService")
 		local logs = LogService:GetLogHistory()
 		if string.find(logs[#logs].message, Players.LocalPlayer.DisplayName) then
@@ -1061,32 +1139,40 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 			end
 		end
 		if playerWhoDonated then
-			webhook(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC,playerWhoDonated)
+			if getgenv().settings.webhookType == 'New' then
+			    webhook(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC,playerWhoDonated)
+			else
+			    oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. ' | [A/T]: ' .. tostring(math.floor(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value))
+			end
 		else
-			webhook(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
+			if getgenv().settings.webhookType == 'New' then
+				webhook(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)				
+			else
+			    oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. ' | [A/T]: ' .. tostring(math.floor(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value))
+			end
 		end
 	end
-	if getgenv().settings.serverHopAfterDonation then
+	if getgenv().settings.serverHopAfterDonation == true then
 		task.spawn(function()
 			serverHop()
 		end)
 	end
-	if Players.LocalPlayer.Character.Humanoid.RootPart:FindFirstChild('Spin') and getgenv().settings.spinSet then
+	if Players.LocalPlayer.Character.Humanoid.RootPart:FindFirstChild('Spin') and getgenv().settings.spinSet == true then
 		local spin = Players.LocalPlayer.Character.Humanoid.RootPart:FindFirstChild('Spin')
 		spin.AngularVelocity = Vector3.new(0, xspin, 0)
 	end
-	if getgenv().settings.donationJump and not getgenv().settings.spinSet then
+	if getgenv().settings.donationJump == true and not getgenv().settings.spinSet == true then
 		task.spawn(function()
 			if getgenv().settings.jumpsPerRobux == 1 then
-				for i = 1, game:GetService('Players').LocalPlayer.leaderstats.Raised.value - RaisedC do
-					game:GetService('Players').LocalPlayer.Character.Humanoid:ChangeState("Jumping")
+				for i = 1, game:GetService('Players').LocalPlayer.leaderstats.Raised.Value - RaisedC do
+					game:GetService('Players').LocalPlayer.Character.Humanoid:ChangeState('Jumping')
 					repeat
 						task.wait()
 					until game:GetService('Players').LocalPlayer.Character.Humanoid:GetState() == Enum.HumanoidStateType.Running
 				end
 			else
-				for i = 1, (game:GetService('Players').LocalPlayer.leaderstats.Raised.value - RaisedC) * getgenv().settings.jumpsPerRobux do
-					game:GetService('Players').LocalPlayer.Character.Humanoid:ChangeState("Jumping")
+				for i = 1, (game:GetService('Players').LocalPlayer.leaderstats.Raised.Value - RaisedC) * getgenv().settings.jumpsPerRobux do
+					game:GetService('Players').LocalPlayer.Character.Humanoid:ChangeState('Jumping')
 					repeat
 						task.wait()
 					until game:GetService('Players').LocalPlayer.Character.Humanoid:GetState() == Enum.HumanoidStateType.Running
@@ -1095,7 +1181,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 		end)
 	end
 	RaisedC = Players.LocalPlayer.leaderstats.Raised.value
-	if getgenv().settings.autoThanks then
+	if getgenv().settings.autoThanks == true then
 		task.spawn(function()
 			task.wait(getgenv().settings.thanksDelay)
 			game:GetService('ReplicatedStorage').DefaultChatSystemChatEvents.SayMessageRequest:FireServer(getgenv().settings.thanksMessage[math.random(#getgenv().settings.thanksMessage)], "All")
@@ -1132,6 +1218,7 @@ end)
 
 task.spawn(function()
 	while task.wait(5) do
+		saveSettings()
 		if (Players.LocalPlayer.Character and Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid').RootPart) then
 			local root = Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid').RootPart
 			if (root.Position - positionX.Position).Magnitude > 1500 or (root.Position - positionX.Position).Magnitude < -1500 then
@@ -1154,7 +1241,7 @@ local randommsgs = {
 }
 local randombotmsgs = {
 	'no im not a bot',
-	'why yall think im a bot :(',
+	'why do yall think im a bot :(',
 	'bro im not a bot',
 	'bruh shut up im a real human'
 }
@@ -1162,7 +1249,7 @@ local messageRequest = game:GetService('ReplicatedStorage').DefaultChatSystemCha
 msgdone.OnClientEvent:Connect(function(msgdata)
 	local speaker = tostring(msgdata.FromSpeaker)
 	local message = string.lower(msgdata.Message)
-	task.wait(2 + math.random(0.4,1))
+	task.wait(2.1 + math.random(0.4,1))
 	local plrChatted = game:GetService('Players')[speaker] or nil
 	if (plrChatted and plrChatted == game:GetService('Players').LocalPlayer) or getgenv().settings.autoNearReply == false or not plrChatted then
 		return
@@ -1171,15 +1258,19 @@ msgdone.OnClientEvent:Connect(function(msgdata)
 		local chatChar = plrChatted.Character
 		if (plrChatted.Character and plrChatted.Character.Humanoid.RootPart) then
 			local root = chatChar.Humanoid.RootPart
-			if (root.Position - game:GetService('Players').LocalPlayer.Character.Humanoid.RootPart.Position).Magnitude < 10 then
-				if message == 'hello' or message == 'hi' or message == 'sup' then
+			if (root.Position - game:GetService('Players').LocalPlayer.Character.Humanoid.RootPart.Position).Magnitude < 11 then
+				if message == 'hello' or message == 'hi' or message == 'sup' or message == 'hey' then
 					messageRequest:FireServer("hello", 'All')
 				elseif string.find(message, 'jump') then
 					messageRequest:FireServer('ok', 'All')
 				elseif string.find(message, '?') and not string.find(message,'bot') then
 					messageRequest:FireServer('yes', 'All')
 				elseif string.find(message,'bot') then
-					messageRequest:FireServer('no im not', 'All')
+					messageRequest:FireServer(randombotmsgs[math.random(1,#randombotmsgs)], 'All')
+				elseif string.find(message,'donate') then
+					messageRequest:FireServer('no','All')
+				elseif string.find(message,'scam') then
+					messageRequest:FireServer('no i dont scam','All')
 				else
 					messageRequest:FireServer(randommsgs[math.random(1, #randommsgs)], 'All')
 				end
