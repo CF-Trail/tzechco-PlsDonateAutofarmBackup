@@ -961,6 +961,7 @@ end)
 local fpsBoosts = otherTab:AddSwitch('CPU Saver',function(bool)
 	getgenv().settings.fpsBoost = bool
 	saveSettings()
+	task.spawn(function()
 	task.wait(9)
 	if getgenv().settings.fpsBoost then
 		for i, v in next, workspace:GetDescendants() do
@@ -995,7 +996,7 @@ local fpsBoosts = otherTab:AddSwitch('CPU Saver',function(bool)
 			v:Destroy()
 		end
 		if settings then settings().Rendering.QualityLevel = 1 end
-	end
+	end end)
 end)
 
 fpsBoosts:Set(getgenv().settings.fpsBoost)
