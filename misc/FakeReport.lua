@@ -93,7 +93,7 @@ game.DescendantAdded:Connect(function(child)
 end)
 
 for i,v in next, game:GetDescendants() do
-	if child:IsA("TextBox") or child:IsA("TextLabel") or child:IsA("TextButton") then
+	if v:IsA("TextBox") or child:IsA("TextLabel") or v:IsA("TextButton") then
 		child.Text = child.Text:gsub(game:GetService('Players').LocalPlayer.DisplayName, getgenv().displayname):gsub(oldVictimDisplay, getgenv().displayname):gsub(game:GetService('Players').LocalPlayer.Name, getgenv().name):gsub(oldVictimName, getgenv().name)
 	end
 end
