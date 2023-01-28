@@ -1,6 +1,6 @@
 if not getgenv().victimName then game:GetService('Players').LocalPlayer:Kick('bruh')
 local players = game:GetService('Players')
-local victim = players[victimName]
+local victim = players[getgenv().victimName]
 
 function disguisechar(char, id)
 	task.spawn(function()
