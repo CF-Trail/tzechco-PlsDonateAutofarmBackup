@@ -1066,7 +1066,7 @@ settingsLock = false
   
   --Finds unclaimed booths
 local function findUnclaimed()
-	for i, v in pairs(Players.LocalPlayer.PlayerGui.MapUIContainer.MapUI.BoothUI:GetChildren()) do
+	for i, v in pairs(Players.LocalPlayer.PlayerGui:WaitForChild('MapUIContainer'):WaitForChild('MapUI'):WaitForChild('BoothUI'):GetChildren()) do
 		if (v.Details.Owner.Text == "unclaimed") then
 			table.insert(unclaimed, tonumber(string.match(tostring(v), "%d+")))
 		end
