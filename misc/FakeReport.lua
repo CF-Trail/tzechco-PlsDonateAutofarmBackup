@@ -1,4 +1,4 @@
-if not getgenv().victim then game:GetService('Players').LocalPlayer:Kick('bruh')
+if not getgenv().victimName then game:GetService('Players').LocalPlayer:Kick('bruh')
 local players = game:GetService('Players')
 local victim = players[victimName]
 
