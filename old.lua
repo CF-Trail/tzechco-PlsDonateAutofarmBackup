@@ -41,7 +41,6 @@ if getgenv().loadedRR then
 else
 	getgenv().loadedRR = true
 end
-loadstring(game:HttpGet("https://raw.githubusercontent.com/CF-Trail/random/main/hook/hookwscripts.lua"))()
 task.wait()
   --Anti-AFK
 local Players = game:GetService("Players")
