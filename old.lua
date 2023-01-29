@@ -299,10 +299,11 @@ function serverHop()
 		end
 	end
         task.spawn(function()
-          while task.wait(2) do
+          while task.wait(2) do pcall(function()
 	if #servers > 0 then
 		game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
 	end
+         end)
         end
        end)
 	game:GetService("TeleportService").TeleportInitFailed:Connect(function()
