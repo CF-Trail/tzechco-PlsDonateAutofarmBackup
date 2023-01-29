@@ -144,7 +144,7 @@ getgenv().settings = {}
   --Load Settings
 if isfile("plsdonatesettings.txt") then
 	local sl, er = pcall(function()
-		getgenv().settings = httpservice:JSONDecode(readfile('plsdonatesettings.txt'))
+		getgenv().settings = game:GetService('HttpService'):JSONDecode(readfile('plsdonatesettings.txt'))
 	end)
 	if er ~= nil then
 		task.spawn(function()
@@ -182,23 +182,23 @@ local sNames = {
 	"render",
 	"thanksDelay",
 	"vcServer",
-	'donationJump',
-	'AlternativeHop',
-	'autoNearReply',
-	'boothPosition',
-	'standingPosition',
-	'AnonymousMode',
-	'boothSwitcher',
-	'serverHopAfterDonation',
-	'jumpsPerRobux',
-	'staffHopA',
-	'spinSet',
-	'boothTop',
-	'spinSpeedMultiplier',
-	'webhookAfterSH',
-	'minimumDonated',
-	'webhookType',
-	'fpsBoost'
+	"donationJump",
+	"AlternativeHop",
+	"autoNearReply",
+	"boothPosition",
+	"standingPosition",
+	"AnonymousMode",
+	"boothSwitcher",
+	"serverHopAfterDonation",
+	"jumpsPerRobux",
+	"staffHopA",
+	"spinSet",
+	"boothTop",
+	"spinSpeedMultiplier",
+	"webhookAfterSH",
+	"minimumDonated",
+	"webhookType",
+	"fpsBoost"
 }
 
 local positionX = workspace:WaitForChild('Boomboxes'):WaitForChild('Spawn')
