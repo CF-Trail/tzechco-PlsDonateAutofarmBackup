@@ -345,28 +345,32 @@ function serverHop()
 			gameId = '8737602449'
 		end
 	end
-	local servers = {}
-	local req = httprequest({
-		Url = "https://games.roblox.com/v1/games/" .. gameId .. "/servers/Public?sortOrder=Desc&limit=100"
-	})
-	local body = httpservice:JSONDecode(req.Body)
-	if body and body.data then
-		for i, v in next, body.data do
-			if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing < v.maxPlayers and v.playing > 19 then
-				table.insert(servers, 1, v.id)
+	task.spawn(function()
+		for i = 0, 5 do
+		local servers = {}
+		local req = httprequest({
+			Url = "https://games.roblox.com/v1/games/" .. gameId .. "/servers/Public?sortOrder=Desc&limit=100"
+		})
+		local body = httpservice:JSONDecode(req.Body)
+		if body and body.data then
+			for i, v in next, body.data do
+				if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing < v.maxPlayers and v.playing > 19 then
+					table.insert(servers, 1, v.id)
+				end
 			end
 		end
+			task.spawn(function()
+			  while task.wait(0.5) do pcall(function()
+				 if #servers > 0 then
+					game:GetService("TeleportService"):Teleport(gameId)
+				 end
+			 end)
+			end
+		   end)
+		game:GetService("TeleportService").TeleportInitFailed:Connect(function()
+			game:GetService("TeleportService"):Teleport(gameId)
+		end)
 	end
-        task.spawn(function()
-          while task.wait(0.5) do pcall(function()
-	         if #servers > 0 then
-	        	game:GetService("TeleportService"):Teleport(gameId)
-	         end
-         end)
-        end
-       end)
-	game:GetService("TeleportService").TeleportInitFailed:Connect(function()
-		game:GetService("TeleportService"):Teleport(gameId)
 	end)
 end
 
@@ -402,7 +406,7 @@ end
 
 local function waitServerHop()
 	task.wait(getgenv().settings.serverHopDelay * 60)
-	serverHop()
+    serverHop()
 end
 local function hopSet()
 	if hopTimer then
