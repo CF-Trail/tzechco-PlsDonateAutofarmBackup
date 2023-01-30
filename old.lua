@@ -155,7 +155,7 @@ if isfile("plsdonatesettings.txt") then
 			errMsg:Destroy()
 		end)
                 task.wait(2)
-		serverHop()
+		forceServerHop()
 	end
 end
 local sNames = {
@@ -311,6 +311,37 @@ function serverHop()
 		game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
 	end)
 end
+
+function forceServerHop()
+	--local isVip = game:GetService('RobloxReplicatedStorage').GetServerType:InvokeServer()
+	--if isVip == "VIPServer" then return end
+	local gameId
+	gameId = "8737602449"
+	local servers = {}
+	local req = httprequest({
+		Url = "https://games.roblox.com/v1/games/" .. gameId .. "/servers/Public?sortOrder=Desc&limit=100"
+	})
+	local body = httpservice:JSONDecode(req.Body)
+	if body and body.data then
+		for i, v in next, body.data do
+			if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing < v.maxPlayers and v.playing > 19 then
+				table.insert(servers, 1, v.id)
+			end
+		end
+	end
+        task.spawn(function()
+          while task.wait(2) do pcall(function()
+	if #servers > 0 then
+		game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
+	end
+         end)
+        end
+       end)
+	game:GetService("TeleportService").TeleportInitFailed:Connect(function()
+		game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
+	end)
+end
+
 local function waitServerHop()
 	task.wait(getgenv().settings.serverHopDelay * 60)
 	serverHop()
