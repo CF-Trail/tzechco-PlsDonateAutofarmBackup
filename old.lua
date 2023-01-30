@@ -46,6 +46,55 @@ end
 
 local xspin = 0
 
+local fonts = {
+    "AmaticSC",
+    "Antique",
+    "Arcade",
+    "Arial",
+    "ArialBold",
+    "Bangers",
+    "Bodoni",
+    "Cartoon",
+    "Code",
+    "Creepster",
+    "DenkOne",
+    "Fantasy",
+    "Fondamento",
+    "FredokaOne",
+    "Garamond",
+    "Gotham",
+    "GothamBlack",
+    "GothamBold",
+    "GothamMedium",
+    "GrenzeGotisch",
+    "Highway",
+    "IndieFlower",
+    "JosefinSans",
+    "Jura",
+    "Kalam",
+    "Legacy",
+    "LuckiestGuy",
+    "Merriweather",
+    "Michroma",
+    "Nunito",
+    "Oswald",
+    "PatrickHand",
+    "PermanentMarker",
+    "Roboto",
+    "RobotoCondensed",
+    "RobotoMono",
+    "Sarpanch",
+    "SciFi",
+    "SourceSans",
+    "SourceSansBold",
+    "SourceSansItalic",
+    "SourceSansLight",
+    "SourceSansSemibold",
+    "SpecialElite",
+    "TitilliumWeb",
+    "Ubuntu"
+}
+
 print('TurningGlobe ily thanks for showcasing / szze#6220')
 if getgenv().loadedRR then
 	return
@@ -198,7 +247,11 @@ local sNames = {
 	"webhookAfterSH",
 	"minimumDonated",
 	"webhookType",
-	"fpsBoost"
+	"fpsBoost",
+	"fontFace",
+	"fontSize",
+	'noFont',
+	'taggedBoothHop'
 }
 
 local positionX = workspace:WaitForChild('Boomboxes'):WaitForChild('Spawn')
@@ -251,8 +304,13 @@ local sValues = {
 	false,
 	0,
 	'New',
+	false,
+	'SciFi',
+	5,
+	false,
 	false
 }
+
 if #getgenv().settings ~= sNames then
 	for i, v in ipairs(sNames) do
 		if getgenv().settings[v] == nil then
@@ -300,15 +358,15 @@ function serverHop()
 		end
 	end
         task.spawn(function()
-          while task.wait(2) do pcall(function()
-	if #servers > 0 then
-		game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
-	end
+          while task.wait(0.5) do pcall(function()
+	         if #servers > 0 then
+	        	game:GetService("TeleportService"):Teleport(gameId)
+	         end
          end)
         end
        end)
 	game:GetService("TeleportService").TeleportInitFailed:Connect(function()
-		game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
+		game:GetService("TeleportService"):Teleport(gameId)
 	end)
 end
 
@@ -331,9 +389,9 @@ function forceServerHop()
 	end
         task.spawn(function()
           while task.wait(2) do pcall(function()
-	if #servers > 0 then
-		game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
-	end
+	       if #servers > 0 then
+		     game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
+	       end
          end)
         end
        end)
@@ -406,7 +464,7 @@ local function slider(value, whichSlider)
 end
   
   --Booth update function
-local function update()
+function update()
 	local text
 	local current = Players.LocalPlayer.leaderstats.Raised.Value
 	local goal = current + tonumber(getgenv().settings.goalBox)
@@ -416,25 +474,44 @@ local function update()
 	if current == 420 or current == 425 then
 		current = current + 10
 	end
-	if goal > 999 then
-		if tonumber(getgenv().settings.goalBox) < 10 then
-			goal = string.format("%.2fk", (current + 10) / 10 ^ 3)
-		else
-			goal = string.format("%.2fk", (goal) / 10 ^ 3)
-		end
-	end
-	if current > 999 then
-		current = string.format("%.2fk", current / 10 ^ 3)
-	end
+    if goal > 999 and goal < 10000 then
+        if tonumber(getgenv().settings.goalBox) < 10 then
+            goal = string.format("%.2fk", (current + 10) / 10 ^ 3)
+        else
+            goal = string.format("%.2fk", (goal) / 10 ^ 3)
+        end
+    elseif goal > 9999 then
+        if tonumber(getgenv().settings.goalBox) < 10 then
+            goal = string.format("%.1fk", (current + 10) / 10 ^ 3)
+        else
+            goal = string.format("%.1fk", (goal) / 10 ^ 3)
+        end
+    end
+    if current > 999 and current < 10000 then
+        current = string.format("%.2fk", current / 10 ^ 3)
+    elseif current > 9999 then
+        current = string.format("%.1fk", current / 10 ^ 3)
+    end
 	if getgenv().settings.textUpdateToggle and getgenv().settings.customBoothText then
 		text = string.gsub(getgenv().settings.customBoothText, "$C", current)
 		text = string.gsub (text, "$G", goal)
 		text = string.gsub(text, '$D', tostring(getgenv().settings.jumpsPerRobux))
-		boothText = tostring('<font color="' .. getgenv().settings.hexBox .. '">' .. text .. '</font>')
-		  --Updates the booth text
+		if not getgenv().settings.noFont then
+		    boothText = tostring('<font face="'.. getgenv().settings.fontFace.. '" size="'.. getgenv().settings.fontSize ..'" color="#'.. getgenv().settings.hexBox ..'">'.. text.. '</font>')
+		else
+            boothText = text
+		end
+		--Updates the booth text
 		local myBooth = Players.LocalPlayer.PlayerGui.MapUIContainer.MapUI.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[1]))
 		if myBooth.Sign.TextLabel.Text ~= boothText then
 			if string.find(myBooth.Sign.TextLabel.Text, "# #") or string.find(myBooth.Sign.TextLabel.Text, "##") then
+				if getgenv().settings.taggedBoothHop then
+					if nx >= 1 then
+						serverHop()
+					else
+						nx = 8
+					end
+				end
 				require(game:GetService("ReplicatedStorage").Remotes).Event("SetBoothText"):FireServer("your text here", "booth")
 				task.wait(3)
 			end
@@ -556,6 +633,7 @@ local chatTab = Window:AddTab("Chat")
 local webhookTab = Window:AddTab("Webhook")
 local serverHopTab = Window:AddTab("Server")
 local otherTab = Window:AddTab("Other")
+local otherTab2 = Window:AddTab("Other 2")
 local bThemes = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("ScreenGui"):WaitForChild("BoothSettings"):WaitForChild("ScrollingFrame"):WaitForChild("ChangeTheme"):WaitForChild("Themes")
   
   --Booth Settings
@@ -569,6 +647,18 @@ local textUpdateToggle = boothTab:AddSwitch("Text Update", function(bool)
 		update()
 	end
 end)
+
+local noFontSwitch = boothTab:AddSwitch("No Font", function(bool)
+	if settingsLock then
+		return
+	end
+	getgenv().settings.noFont = bool
+	saveSettings()
+	if bool then
+		update()
+	end
+end)
+noFontSwitch:Set(getgenv().settings.noFont)
 textUpdateToggle:Set(getgenv().settings.textUpdateToggle)
 local textUpdateDelay = boothTab:AddSlider("Text Update Delay (S)", function(x)
 	if settingsLock then
@@ -593,7 +683,6 @@ local hexBox = boothTab:AddTextBox("Hex Codes Only", function(text)
 	if success and string.find(text, "#") then
 		getgenv().settings.hexBox = text
 		saveSettings()
-		update()
 	end
 end,
   {
@@ -605,7 +694,6 @@ local goalBox = boothTab:AddTextBox("Numbers Only", function(text)
 	if tonumber(text) then
 		getgenv().settings.goalBox = tonumber(text)
 		saveSettings()
-		update()
 	end
 end,
   {
@@ -617,28 +705,23 @@ local customBoothText = boothTab:AddConsole({
 	["y"] = 50,
 	["source"] = "",
 })
-boothTab:AddLabel("Standing Position:")
-local standingPos = boothTab:AddDropdown("[ " .. getgenv().settings.standingPosition .. " ]", function(t)
-	getgenv().settings.standingPosition = t
+
+boothTab:AddLabel("Font:")
+local fontDropdown = boothTab:AddDropdown("[ " .. getgenv().settings.fontFace .. " ]", function(t)
+	getgenv().settings.fontFace = t
 	saveSettings()
-	if t == "Front" then
-		getgenv().settings.boothPosition = 3
-	elseif t == "Left" then
-		getgenv().settings.boothPosition = -6
-	elseif t == "Right" then
-		getgenv().settings.boothPosition = 6
-	else
-		getgenv().settings.boothPosition = -5.5
-	end
 end)
-standingPos:Add('Front')
-standingPos:Add('Left')
-standingPos:Add('Right')
-standingPos:Add('Behind')
+
+for i,v in next, fonts do
+	fontDropdown:Add(v)
+end
+
 customBoothText:Set(getgenv().settings.customBoothText)
-boothTab:AddButton("Save", function()
+
+boothTab:AddButton("Update", function()
 	if #customBoothText:Get() > 221 then
-		return customBoothText:Set("221 Character Limit")
+		customBoothText:Set("Character limit reached")
+		return warn('CHARACTER LIMIT REACHED')
 	end
 	if settingsLock then
 		return
@@ -649,8 +732,6 @@ boothTab:AddButton("Save", function()
 		update()
 	end
 end)
-local helpLabel = boothTab:AddLabel("$C = Current, $G = Goal, $D = Robux per jump, 221 Character Limit")
-helpLabel.TextSize = 9
   --Sign Settings
 pcall(function()
 	if game:GetService("MarketplaceService"):UserOwnsGamePassAsync(Players.LocalPlayer.UserId, 28460459) then
@@ -857,6 +938,7 @@ pcall(function()
 		vcEnabled = true
 	end
 end)
+
 local serverHopToggle = serverHopTab:AddSwitch("Auto Server Hop", function(bool)
 	if settingsLock then
 		return
@@ -878,6 +960,7 @@ if vcEnabled then
 	end)
 	vcToggle:Set(getgenv().settings.vcServer)
 end
+
 local alhop = serverHopTab:AddSwitch("Random Hop", function(bool)
 	getgenv().settings.AlternativeHop = bool
 	saveSettings()
@@ -897,7 +980,13 @@ end)
 
 staffHopSwitch:Set(getgenv().settings.staffHopA)
 
+local taggedBoothHopSwitch = serverHopTab:AddSwitch('ServerHop if tagged booth', function(bool)
+	getgenv().settings.taggedBoothHop = bool
+	saveSettings()
+end)
+
 alhop:Set(getgenv().settings.AlternativeHop)
+taggedBoothHopSwitch:Set(getgenv().settings.taggedBoothHop)
 serverHopTab:AddButton("Server Hop", function()
 	serverHop()
 end)
@@ -908,6 +997,7 @@ end,
   {
 	["clear"] = false
 })
+serverHopMinAmount.Text = getgenv().settings.minimumDonated
 
 local serverHopDelay = serverHopTab:AddSlider("Server Hop Delay (M)", function(x)
 	if settingsLock then
@@ -1048,6 +1138,8 @@ end)
 
 fpsBoosts:Set(getgenv().settings.fpsBoost)
 
+otherTab:AddLabel("-----------------------")
+
 local jumpsPerRB = otherTab:AddSlider("Jumps per robux", function(x)
 	if settingsLock then
 		return
@@ -1095,8 +1187,30 @@ if setfpscap and type(setfpscap) == "function" then
 	setfpscap(getgenv().settings.fpsLimit)
 end
 
-render:Set(getgenv().settings.render)
+--otherTab2
 
+otherTab2:AddLabel("Standing Position:")
+local standingPos = otherTab2:AddDropdown("[ " .. getgenv().settings.standingPosition .. " ]", function(t)
+	getgenv().settings.standingPosition = t
+	saveSettings()
+	if t == "Front" then
+		getgenv().settings.boothPosition = 3
+	elseif t == "Left" then
+		getgenv().settings.boothPosition = -6
+	elseif t == "Right" then
+		getgenv().settings.boothPosition = 6
+	else
+		getgenv().settings.boothPosition = -5.5
+	end
+end)
+
+standingPos:Add('Front')
+standingPos:Add('Left')
+standingPos:Add('Right')
+standingPos:Add('Behind')
+
+
+render:Set(getgenv().settings.render)
 boothTab:Show()
 library:FormatWindows()
 settingsLock = false
