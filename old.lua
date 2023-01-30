@@ -346,7 +346,6 @@ function serverHop()
 		end
 	end
 	task.spawn(function()
-		for i = 0, 5 do
 		local servers = {}
 		local req = httprequest({
 			Url = "https://games.roblox.com/v1/games/" .. gameId .. "/servers/Public?sortOrder=Desc&limit=100"
@@ -370,7 +369,6 @@ function serverHop()
 		game:GetService("TeleportService").TeleportInitFailed:Connect(function()
 			game:GetService("TeleportService"):Teleport(gameId)
 		end)
-	end
 	end)
 end
 
@@ -406,7 +404,7 @@ end
 
 local function waitServerHop()
 	task.wait(getgenv().settings.serverHopDelay * 60)
-    serverHop()
+        serverHop()
 end
 local function hopSet()
 	if hopTimer then
