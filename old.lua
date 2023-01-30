@@ -710,6 +710,7 @@ boothTab:AddLabel("Font:")
 local fontDropdown = boothTab:AddDropdown("[ " .. getgenv().settings.fontFace .. " ]", function(t)
 	getgenv().settings.fontFace = t
 	saveSettings()
+	update()
 end)
 
 for i,v in next, fonts do
