@@ -45,6 +45,7 @@ if game.PlaceId ~= 8737602449 and game.PlaceId ~= 8943844393 then
 end
 
 local xspin = 0
+local nx = 0
 
 local fonts = {
     "AmaticSC",
@@ -491,7 +492,7 @@ function update()
     end
     if current > 999 and current < 10000 then
         current = string.format("%.2fk", current / 10 ^ 3)
-    elseif current > 9999 then
+    elseif current >= 9999 then
         current = string.format("%.1fk", current / 10 ^ 3)
     end
 	if getgenv().settings.textUpdateToggle and getgenv().settings.customBoothText then
