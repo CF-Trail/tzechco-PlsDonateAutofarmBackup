@@ -1581,7 +1581,7 @@ function library:AddWindow(title, options)
 									Held = true
 
 									task.spawn(function() -- Loop check
-										while Held and Entered1 and (not dropdown_open) do -- Palette
+										while Held and Entered1 and (not dropdown_open) and task.wait() do -- Palette
 											local mouse_location = gMouse()
 
 											local x = ((palette.AbsoluteSize.X - (mouse_location.X - palette.AbsolutePosition.X)) + 1)
@@ -1597,7 +1597,7 @@ function library:AddWindow(title, options)
 											RS.Heartbeat:Wait()
 										end
 
-										while Held and Entered2 and (not dropdown_open) do -- Saturation
+										while Held and Entered2 and (not dropdown_open) and task.wait() do -- Saturation
 											local mouse_location = gMouse()
 											local y = ((palette.AbsoluteSize.Y - (mouse_location.Y - palette.AbsolutePosition.Y)) + 1.5)
 											v = y / 100
