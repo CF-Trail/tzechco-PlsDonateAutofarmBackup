@@ -726,9 +726,6 @@ boothTab:AddButton("Update", function()
 		customBoothText:Set("Character limit reached")
 		return warn('CHARACTER LIMIT REACHED')
 	end
-	if settingsLock then
-		return
-	end
 	if customBoothText:Get() then
 		getgenv().settings.customBoothText = customBoothText:Get()
 		saveSettings()
