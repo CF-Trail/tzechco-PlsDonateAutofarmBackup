@@ -240,6 +240,7 @@ if isfile("plsdonatesettings.txt") then
 		end)
                 task.wait(2)
 		forceServerHop()
+		return
 	end
 end
 local sNames = {
