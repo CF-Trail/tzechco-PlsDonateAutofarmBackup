@@ -316,23 +316,7 @@ end
 task.spawn(claimGifts)
 getgenv().settings = {}
   --Load Settings
-if isfile("plsdonatesettings.txt") then
-	local sl, er = pcall(function()
-		getgenv().settings = game:GetService('HttpService'):JSONDecode(readfile('plsdonatesettings.txt'))
-	end)
-	if er ~= nil then
-		task.spawn(function()
-			errMsg = Instance.new("Hint")
-			errMsg.Parent = game:GetService('CoreGui')
-			errMsg.Text = tostring("COULDNT LOAD SETTINGS BECAUSE OF DUMBASS JSON ERROR, SERVERHOPPING")
-			task.wait(15)
-			errMsg:Destroy()
-		end)
-		task.wait(2)
-		forceServerHop()
-		return
-	end
-end
+
 local sNames = {
 	"textUpdateToggle",
 	"textUpdateDelay",
@@ -438,6 +422,25 @@ local sValues = {
 	false,
 	false
 }
+getgenv().settings = {}
+if isfile("plsdonatesettings.txt") then
+	local sl, er = pcall(function()
+		getgenv().settings = httpservice:JSONDecode(readfile("plsdonatesettings.txt"))
+	end)
+	if er ~= nil then
+		task.spawn(function()
+			errMsg = Instance.new("Hint")
+			errMsg.Parent = game:GetService('CoreGui')
+			errMsg.Text = tostring("COULDNT LOAD SETTINGS BECAUSE OF DUMBASS JSON ERROR, SERVERHOPPING")
+			task.wait(15)
+			errMsg:Destroy()
+		end)
+                delfile("plsdonatesettings.txt")
+		task.wait(2)
+		forceServerHop()
+		return
+	end
+end
 
 if #getgenv().settings ~= sNames then
 	for i, v in ipairs(sNames) do
