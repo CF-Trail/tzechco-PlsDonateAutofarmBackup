@@ -46,56 +46,151 @@ end
 
 local xspin = 0
 local nx = 0
+local RainbowTextActivated = false
 
 local fonts = {
-    "AmaticSC",
-    "Antique",
-    "Arcade",
-    "Arial",
-    "ArialBold",
-    "Bangers",
-    "Bodoni",
-    "Cartoon",
-    "Code",
-    "Creepster",
-    "DenkOne",
-    "Fantasy",
-    "Fondamento",
-    "FredokaOne",
-    "Garamond",
-    "Gotham",
-    "GothamBlack",
-    "GothamBold",
-    "GothamMedium",
-    "GrenzeGotisch",
-    "Highway",
-    "IndieFlower",
-    "JosefinSans",
-    "Jura",
-    "Kalam",
-    "Legacy",
-    "LuckiestGuy",
-    "Merriweather",
-    "Michroma",
-    "Nunito",
-    "Oswald",
-    "PatrickHand",
-    "PermanentMarker",
-    "Roboto",
-    "RobotoCondensed",
-    "RobotoMono",
-    "Sarpanch",
-    "SciFi",
-    "SourceSans",
-    "SourceSansBold",
-    "SourceSansItalic",
-    "SourceSansLight",
-    "SourceSansSemibold",
-    "SpecialElite",
-    "TitilliumWeb",
-    "Ubuntu"
+	"AmaticSC",
+	"Antique",
+	"Arcade",
+	"Arial",
+	"ArialBold",
+	"Bangers",
+	"Bodoni",
+	"Cartoon",
+	"Code",
+	"Creepster",
+	"DenkOne",
+	"Fantasy",
+	"Fondamento",
+	"FredokaOne",
+	"Garamond",
+	"Gotham",
+	"GothamBlack",
+	"GothamBold",
+	"GothamMedium",
+	"GrenzeGotisch",
+	"Highway",
+	"IndieFlower",
+	"JosefinSans",
+	"Jura",
+	"Kalam",
+	"Legacy",
+	"LuckiestGuy",
+	"Merriweather",
+	"Michroma",
+	"Nunito",
+	"Oswald",
+	"PatrickHand",
+	"PermanentMarker",
+	"Roboto",
+	"RobotoCondensed",
+	"RobotoMono",
+	"Sarpanch",
+	"SciFi",
+	"SourceSans",
+	"SourceSansBold",
+	"SourceSansItalic",
+	"SourceSansLight",
+	"SourceSansSemibold",
+	"SpecialElite",
+	"TitilliumWeb",
+	"Ubuntu"
 }
 
+local RainbowHexColors = {
+	"#FF0000",
+	"#FF7F00",
+	"#FFFF00",
+	"#00FF00",
+	"#0000FF",
+	"#4B0082",
+	"#9400D3"
+}
+local BetterRainbowColorHex = {
+	"#FF0000",
+	"#FF1100",
+	"#FF2300",
+	"#FF3400",
+	"#FF4600",
+	"#FF5700",
+	"#FF6900",
+	"#FF7B00",
+	"#FF8C00",
+	"#FF9E00",
+	"#FFAF00",
+	"#FFC100",
+	"#FFD200",
+	"#FFE400",
+	"#FFF500",
+	"#F5FF00",
+	"#E3FF00",
+	"#D1FF00",
+	"#BFFF00",
+	"#ADFF00",
+	"#9CFF00",
+	"#8AFF00",
+	"#78FF00",
+	"#66FF00",
+	"#54FF00",
+	"#42FF00",
+	"#31FF00",
+	"#1FFF00",
+	"#00FF0F",
+	"#00FF21",
+	"#00FF32",
+	"#00FF44",
+	"#00FF55",
+	"#00FF67",
+	"#00FF78",
+	"#00FF8A",
+	"#00FF9B",
+	"#00FFAD",
+	"#00FFBE",
+	"#00FFD0",
+	"#00FFE1",
+	"#00FFF3",
+	"#00F5FF",
+	"#00E3FF",
+	"#00D1FF",
+	"#00BFFF",
+	"#00ADFF",
+	"#009CFF",
+	"#008AFF",
+	"#0078FF",
+	"#0066FF",
+	"#0054FF",
+	"#0042FF",
+	"#0031FF",
+	"#001FFF",
+	"#0000FF",
+	"#0F00FF",
+	"#2100FF",
+	"#3200FF",
+	"#4400FF",
+	"#5500FF",
+	"#6700FF",
+	"#7800FF",
+	"#8A00FF",
+	"#9B00FF",
+	"#AD00FF",
+	"#BE00FF",
+	"#D000FF",
+	"#E100FF",
+	"#F300FF",
+	"#FF00F5",
+	"#FF00E3",
+	"#FF00D1",
+	"#FF00BF",
+	"#FF00AD",
+	"#FF009C",
+	"#FF008A",
+	"#FF0078",
+	"#FF0066",
+	"#FF0054",
+	"#FF0042",
+	"#FF0031",
+	"#FF001F"
+}
 print('TurningGlobe ily thanks for showcasing / szze#6220')
 if getgenv().loadedRR then
 	return
@@ -121,8 +216,7 @@ task.spawn(function()
 		end)
 	end
 end)
-  
-  --Variables
+
 local unclaimed = {}
 local counter = 0
 local donation, boothText, spamming, hopTimer, vcEnabled
@@ -163,19 +257,16 @@ local httprequest = (syn and syn.request) or http and http.request or http_reque
 local httpservice = game:GetService('HttpService')
 queueonteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/CF-Trail/tzechco-PlsDonateAutofarmBackup/main/old.lua'))()")
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/CF-Trail/tzechco-PlsDonateAutofarmBackup/main/UI"))()
-
 function forceServerHop()
 	--local isVip = game:GetService('RobloxReplicatedStorage').GetServerType:InvokeServer()
 	--if isVip == "VIPServer" then return end
-	local gameId,req,body
+	local gameId
 	gameId = "8737602449"
 	local servers = {}
-	repeat task.wait(1)
 	local req = httprequest({
 		Url = "https://games.roblox.com/v1/games/" .. gameId .. "/servers/Public?sortOrder=Desc&limit=100"
 	})
 	local body = httpservice:JSONDecode(req.Body)
-	until body
 	if body and body.data then
 		for i, v in next, body.data do
 			if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing < v.maxPlayers and v.playing > 19 then
@@ -183,20 +274,19 @@ function forceServerHop()
 			end
 		end
 	end
-        task.spawn(function()
-          while task.wait(2) do pcall(function()
-	       if #servers > 0 then
-		     game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
-	       end
-         end)
-        end
-       end)
+	task.spawn(function()
+		while task.wait(2) do
+			pcall(function()
+				if #servers > 0 then
+					game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
+				end
+			end)
+		end
+	end)
 	game:GetService("TeleportService").TeleportInitFailed:Connect(function()
 		game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
 	end)
 end
-
-
 local function claimGifts()
 	pcall(function()
 		Players.LocalPlayer:WaitForChild("PlayerGui")
@@ -234,11 +324,11 @@ if isfile("plsdonatesettings.txt") then
 		task.spawn(function()
 			errMsg = Instance.new("Hint")
 			errMsg.Parent = game:GetService('CoreGui')
-			errMsg.Text = tostring("COULDNT LOAD CONFIG BECAUSE OF THIS STUPID ASS JSON ERROR, SERVERHOPPING")
+			errMsg.Text = tostring("COULDNT LOAD SETTINGS BECAUSE OF DUMBASS JSON ERROR, SERVERHOPPING")
 			task.wait(15)
 			errMsg:Destroy()
 		end)
-                task.wait(2)
+		task.wait(2)
 		forceServerHop()
 		return
 	end
@@ -287,7 +377,8 @@ local sNames = {
 	"fontFace",
 	"fontSize",
 	'noFont',
-	'taggedBoothHop'
+	'taggedBoothHop',
+	'rainbowText'
 }
 
 local positionX = workspace:WaitForChild('Boomboxes'):WaitForChild('Spawn')
@@ -344,6 +435,7 @@ local sValues = {
 	'SciFi',
 	5,
 	false,
+	false,
 	false
 }
 
@@ -356,7 +448,6 @@ if #getgenv().settings ~= sNames then
 	writefile('plsdonatesettings.txt', httpservice:JSONEncode(getgenv().settings))
 end
 
-  --Save Settings
 local settingsLock = true
 local function saveSettings()
 	if settingsLock == false then
@@ -382,35 +473,39 @@ function serverHop()
 		end
 	end
 	task.spawn(function()
-		local servers = {}
-		local req = httprequest({
-			Url = "https://games.roblox.com/v1/games/" .. gameId .. "/servers/Public?sortOrder=Desc&limit=100"
-		})
-		local body = httpservice:JSONDecode(req.Body)
-		if body and body.data then
-			for i, v in next, body.data do
-				if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing < v.maxPlayers and v.playing > 19 then
-					table.insert(servers, 1, v.id)
+		for i = 0, 5 do
+			local servers = {}
+			local req = httprequest({
+				Url = "https://games.roblox.com/v1/games/" .. gameId .. "/servers/Public?sortOrder=Desc&limit=100"
+			})
+			local body = httpservice:JSONDecode(req.Body)
+			if body and body.data then
+				for i, v in next, body.data do
+					if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing < v.maxPlayers and v.playing > 22 then
+						table.insert(servers, 1, v.id)
+					end
 				end
 			end
-		end
 			task.spawn(function()
-			  while task.wait(0.5) do pcall(function()
-				 if #servers > 0 then
-		                     game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
-				 end
-			 end)
-			end
-		   end)
-		game:GetService("TeleportService").TeleportInitFailed:Connect(function()
-		     game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
-		end)
+				while task.wait(0.5) do
+					pcall(function()
+						if #servers > 0 then
+							game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
+						end
+					end)
+				end
+			end)
+			game:GetService("TeleportService").TeleportInitFailed:Connect(function()
+				game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
+			end)
+		end
 	end)
 end
 
+
 local function waitServerHop()
 	task.wait(getgenv().settings.serverHopDelay * 60)
-        serverHop()
+	serverHop()
 end
 local function hopSet()
 	if hopTimer then
@@ -450,8 +545,6 @@ local function oldWebhook(msg)
 	end)
 end
 
-
-  --Function to fix slider
 local sliderInProgress = false;
 local function slider(value, whichSlider)
 	if sliderInProgress then
@@ -470,9 +563,8 @@ local function slider(value, whichSlider)
 		return slider(getgenv().settings[whichSlider], whichSlider)
 	end
 end
-  
-  --Booth update function
-function update()
+
+function updateBoothText()
 	local text
 	local current = Players.LocalPlayer.leaderstats.Raised.Value
 	local goal = current + tonumber(getgenv().settings.goalBox)
@@ -482,32 +574,32 @@ function update()
 	if current == 420 or current == 425 then
 		current = current + 10
 	end
-    if goal > 999 and goal < 10000 then
-        if tonumber(getgenv().settings.goalBox) < 10 then
-            goal = string.format("%.2fk", (current + 10) / 10 ^ 3)
-        else
-            goal = string.format("%.2fk", (goal) / 10 ^ 3)
-        end
-    elseif goal > 9999 then
-        if tonumber(getgenv().settings.goalBox) < 10 then
-            goal = string.format("%.1fk", (current + 10) / 10 ^ 3)
-        else
-            goal = string.format("%.1fk", (goal) / 10 ^ 3)
-        end
-    end
-    if current > 999 and current < 10000 then
-        current = string.format("%.2fk", current / 10 ^ 3)
-    elseif current >= 9999 then
-        current = string.format("%.1fk", current / 10 ^ 3)
-    end
+	if goal > 999 and goal < 10000 then
+		if tonumber(getgenv().settings.goalBox) < 10 then
+			goal = string.format("%.2fk", (current + 10) / 10 ^ 3)
+		else
+			goal = string.format("%.2fk", (goal) / 10 ^ 3)
+		end
+	elseif goal > 9999 then
+		if tonumber(getgenv().settings.goalBox) < 10 then
+			goal = string.format("%.1fk", (current + 10) / 10 ^ 3)
+		else
+			goal = string.format("%.1fk", (goal) / 10 ^ 3)
+		end
+	end
+	if current > 999 and current < 10000 then
+		current = string.format("%.2fk", current / 10 ^ 3)
+	elseif current > 9999 then
+		current = string.format("%.1fk", current / 10 ^ 3)
+	end
 	if getgenv().settings.textUpdateToggle and getgenv().settings.customBoothText then
 		text = string.gsub(getgenv().settings.customBoothText, "$C", current)
 		text = string.gsub (text, "$G", goal)
 		text = string.gsub(text, '$D', tostring(getgenv().settings.jumpsPerRobux))
 		if not getgenv().settings.noFont then
-		    boothText = tostring('<font face="'.. getgenv().settings.fontFace.. '" size="'.. getgenv().settings.fontSize ..'" color="#'.. getgenv().settings.hexBox ..'">'.. text.. '</font>')
+			boothText = tostring('<font face="' .. getgenv().settings.fontFace .. '" size="' .. getgenv().settings.fontSize .. '" color="#' .. getgenv().settings.hexBox .. '">' .. text .. '</font>')
 		else
-            boothText = text
+			boothText = tostring('<font color="#' .. getgenv().settings.hexBox .. '">' .. text .. '</font>')
 		end
 		--Updates the booth text
 		local myBooth = Players.LocalPlayer.PlayerGui.MapUIContainer.MapUI.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[1]))
@@ -525,7 +617,23 @@ function update()
 			end
 			require(game:GetService('ReplicatedStorage').Remotes).Event("SetBoothText"):FireServer(boothText, "booth")
 			task.wait(3)
+		else
 		end
+	end
+	if getgenv().settings.textUpdateToggle and getgenv().settings.customBoothText and getgenv().settings.rainbowText then
+	  while task.wait() and getgenv().settings.rainbowText do
+		task.wait(3)
+		for i,v in next, RainbowHexColors do
+			if not getgenv().settings.rainbowText then break end
+			if not getgenv().settings.noFont then
+				boothText = tostring('<font face="' .. getgenv().settings.fontFace .. '" size="' .. getgenv().settings.fontSize .. '" color="#' .. v .. '">' .. text .. '</font>')
+			else
+				boothText = tostring('<font color="' .. v .. '">' .. text .. '</font>')
+			end
+			require(game:GetService('ReplicatedStorage').Remotes).Event("SetBoothText"):FireServer(boothText, "booth")
+			task.wait(3)
+		end
+	  end
 	end
 	if getgenv().settings.signToggle and getgenv().settings.signUpdateToggle and getgenv().settings.signText and signPass then
 		local currentSign = game:GetService('Players').LocalPlayer.Character.DonateSign.TextSign.SurfaceGui.TextLabel.Text
@@ -548,13 +656,13 @@ local function begging()
 	end
 end
 
-local function webhook(raised,donor)
+local function webhook(raised, donor)
 	if getgenv().settings.webhookBox:gsub(' ', '') == '' then
 		return
 	end
 	local isLucky
-	local math1 = math.random(1,1000)
-	local math2 = math.random(1,1000)
+	local math1 = math.random(1, 1000)
+	local math2 = math.random(1, 1000)
 	if math1 == math2 then
 		isLucky = 'Lucky'
 	else
@@ -589,12 +697,12 @@ local function webhook(raised,donor)
 			},
 			{
 				["name"] = "After Tax [DONATION]",
-				["value"] = '`' .. '' .. math.floor(tostring(raised * 0.6)) ..'`',
+				["value"] = '`' .. '' .. math.floor(tostring(raised * 0.6)) .. '`',
 				["inline"] = true
 			},
 			{
 				["name"] = "After Tax [TOTAL]",
-				["value"] = '`' .. math.floor(tostring(Players.LocalPlayer.leaderstats.Raised.Value * 0.6)) ..'`',
+				["value"] = '`' .. math.floor(tostring(Players.LocalPlayer.leaderstats.Raised.Value * 0.6)) .. '`',
 				["inline"] = true
 			},
 			{
@@ -628,12 +736,23 @@ local function webhook(raised,donor)
 	}   
 end
 
-  --GUI
+local function hex(c3)
+	local r, g, b = math.floor(c3.R * 255), math.floor(c3.G * 255), math.floor(c3.B * 255)
+	return string.format("#%02X%02X%02X", r, g, b)
+end
+
+local function rgb(hex)
+	hex = hex:gsub("#", "")
+	local r, g, b = tonumber("0x" .. hex:sub(1, 2)), tonumber("0x" .. hex:sub(3, 4)), tonumber("0x" .. hex:sub(5, 6))
+	return Color3.new(r, g, b)
+end
+
 local Window = library:AddWindow("welcome dtt haters | szze#6220",
   {
 	main_color = Color3.fromRGB(80, 80, 80),
-	min_size = Vector2.new(450, 483),
+	min_size = Vector2.new(500, 563),
 	toggle_key = Enum.KeyCode.RightShift,
+	can_resize = true,
 })
 local boothTab = Window:AddTab("Booth")
 local signTab = Window:AddTab("Sign")
@@ -642,6 +761,7 @@ local webhookTab = Window:AddTab("Webhook")
 local serverHopTab = Window:AddTab("Server")
 local otherTab = Window:AddTab("Other")
 local otherTab2 = Window:AddTab("Other 2")
+
 local bThemes = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("ScreenGui"):WaitForChild("BoothSettings"):WaitForChild("ScrollingFrame"):WaitForChild("ChangeTheme"):WaitForChild("Themes")
   
   --Booth Settings
@@ -652,7 +772,7 @@ local textUpdateToggle = boothTab:AddSwitch("Text Update", function(bool)
 	getgenv().settings.textUpdateToggle = bool
 	saveSettings()
 	if bool then
-		update()
+		updateBoothText()
 	end
 end)
 
@@ -663,10 +783,20 @@ local noFontSwitch = boothTab:AddSwitch("No Font", function(bool)
 	getgenv().settings.noFont = bool
 	saveSettings()
 	if bool then
-		update()
+		updateBoothText()
 	end
 end)
 noFontSwitch:Set(getgenv().settings.noFont)
+
+local rainbowSwitch = boothTab:AddSwitch("Rainbow Text", function(bool)
+	getgenv().settings.rainbowText = bool
+	saveSettings()
+	if bool then
+		updateBoothText()
+	end
+end)
+rainbowSwitch:Set(getgenv().settings.rainbowText)
+
 textUpdateToggle:Set(getgenv().settings.textUpdateToggle)
 local textUpdateDelay = boothTab:AddSlider("Text Update Delay (S)", function(x)
 	if settingsLock then
@@ -680,23 +810,29 @@ end,
 	["max"] = 120
 })
 textUpdateDelay:Set((getgenv().settings.textUpdateDelay / 120) * 100)
-boothTab:AddLabel("Text Color:")
-local hexBox = boothTab:AddTextBox("Hex Codes Only", function(text)
+boothTab:AddLabel("Booth Text Color: ")
+local colorPicker = boothTab:AddColorPicker(function(text)
+	print(hex(text))
 	if settingsLock then
 		return
 	end
-	local success = pcall(function()
-		return Color3.fromHex(text)
+	local success, err = pcall(function()
+		return Color3.fromHex(hex(text))
 	end)
-	if success and string.find(text, "#") then
-		getgenv().settings.hexBox = text
+	if success and string.find(hex(text), "#") then
+		getgenv().settings.hexBox = hex(text)
+		displayColor.Text = getgenv().settings.hexBox
 		saveSettings()
+	elseif success and not (string.find(hex(text), "#")) then
+		warn("?how?")
+	elseif err then
+		warn("Error: " .. tostring(err))
+	else
+		warn("Something happened...")
 	end
-end,
-  {
-	["clear"] = false
-})
-hexBox.Text = getgenv().settings.hexBox
+end)
+colorPicker:Set(rgb(getgenv().settings.hexBox))
+
 boothTab:AddLabel("Goal Increase:")
 local goalBox = boothTab:AddTextBox("Numbers Only", function(text)
 	if tonumber(text) then
@@ -714,14 +850,16 @@ local customBoothText = boothTab:AddConsole({
 	["source"] = "",
 })
 
+boothTab:AddLabel('$C = current | $G = goal | $D = jumps per robux')
+
 boothTab:AddLabel("Font:")
 local fontDropdown = boothTab:AddDropdown("[ " .. getgenv().settings.fontFace .. " ]", function(t)
 	getgenv().settings.fontFace = t
 	saveSettings()
-	update()
+	updateBoothText()
 end)
 
-for i,v in next, fonts do
+for i, v in next, fonts do
 	fontDropdown:Add(v)
 end
 
@@ -732,10 +870,13 @@ boothTab:AddButton("Update", function()
 		customBoothText:Set("Character limit reached")
 		return warn('CHARACTER LIMIT REACHED')
 	end
+	if settingsLock then
+		return
+	end
 	if customBoothText:Get() then
 		getgenv().settings.customBoothText = customBoothText:Get()
 		saveSettings()
-		update()
+		updateBoothText()
 	end
 end)
   --Sign Settings
@@ -762,30 +903,31 @@ if signPass then
 		getgenv().settings.signUpdateToggle = bool
 		saveSettings()
 		if bool then
-			update()
+			updateBoothText()
 		end
 	end)
 	signUpdateToggle:Set(getgenv().settings.signUpdateToggle)
-	signTab:AddLabel("Text Color:")
-	local signHexBox = signTab:AddTextBox("Hex Codes Only", function(text)
+	signTab:AddLabel("Sign Text Color: " .. getgenv().settings.hexBox or '???')
+	local colorPicker = signTab:AddColorPicker(function(text)
 		if settingsLock then
 			return
 		end
-		local success = pcall(function()
-			return Color3.fromHex(text)
+		local success, err = pcall(function()
+			return Color3.fromHex(hex(text))
 		end)
-		if success and string.find(text, "#") then
-			getgenv().settings.signHexBox = text
+		if success and string.find(hex(text), "#") then
+			getgenv().settings.signHexBox = hex(text)
+			displayColor.Text = getgenv().settings.signHexBox
 			saveSettings()
-			if getgenv().settings.signUpdateToggle and getgenv().settings.signText then
-				update()
-			end
+		elseif success and not (string.find(hex(text), "#")) then
+			warn("?how?")
+		elseif err then
+			warn("Error: " .. tostring(err))
+		else
+			warn("Something happend...")
 		end
-	end,
-	  {
-		["clear"] = false
-	})
-	signHexBox.Text = getgenv().settings.signHexBox
+	end)
+
 	signTab:AddLabel("Sign Text:")
 	local signText = signTab:AddConsole({
 		["y"] = 50,
@@ -802,7 +944,7 @@ if signPass then
 		if signText:Get() then
 			getgenv().settings.signText = signText:Get()
 			saveSettings()
-			update()
+			updateBoothText()
 		end
 	end)
 	local signHelpLabel = signTab:AddLabel("$C = Current, $G = Goal, 221 Character Limit")
@@ -1089,7 +1231,9 @@ local spinToggle = otherTab:AddSwitch('Spin [1R$ = +1 speed]', function(bool)
 	if getgenv().settings.spinSet then
 		local root = Players.LocalPlayer.Character.Humanoid.RootPart
 		local Spin = Instance.new("BodyAngularVelocity")
-		if syn then syn.protect_gui(Spin) end
+		if syn then
+			syn.protect_gui(Spin)
+		end
 		Spin.Name = "Spin"
 		Spin.Parent = root
 		Spin.MaxTorque = Vector3.new(0, math.huge, 0)
@@ -1101,45 +1245,47 @@ local spinToggle = otherTab:AddSwitch('Spin [1R$ = +1 speed]', function(bool)
 end)
 
 
-local fpsBoosts = otherTab:AddSwitch('CPU Saver',function(bool)
+local fpsBoosts = otherTab:AddSwitch('CPU Saver', function(bool)
 	getgenv().settings.fpsBoost = bool
 	saveSettings()
 	task.spawn(function()
-	task.wait(9)
-	if getgenv().settings.fpsBoost then
-		for i, v in next, workspace:GetDescendants() do
-			task.wait()
-			if v:IsA('BasePart') then
-				v.Material = Enum.Material.Plastic
-				v.CastShadow = false
+		task.wait(9)
+		if getgenv().settings.fpsBoost then
+			for i, v in next, workspace:GetDescendants() do
+				task.wait()
+				if v:IsA('BasePart') then
+					v.Material = Enum.Material.Plastic
+					v.CastShadow = false
+				end
+				if v:IsA('Decal') or (string.match(v.ClassName, 'Mesh') and not v:IsDescendantOf(game:GetService('Players').LocalPlayer.Character)) then
+					v:Destroy()
+				end
+				if string.match(v.Name, 'Blimp') and not game:GetService('Players'):FindFirstChild(v.Name) then
+					v:Destroy()
+				end
 			end
-			if v:IsA('Decal') or (string.match(v.ClassName, 'Mesh') and not v:IsDescendantOf(game:GetService('Players').LocalPlayer.Character)) then
+			workspace.DescendantAdded:Connect(function(v)
+				task.wait()
+				if v:IsA('BasePart') then
+					v.Material = Enum.Material.Plastic
+					v.CastShadow = false
+				end
+				if v:IsA('Decal') or (string.match(v.ClassName, 'Mesh') and not v:IsDescendantOf(game:GetService('Players').LocalPlayer.Character)) then
+					v:Destroy()
+				end
+				if string.match(v.Name, 'Blimp') and not game:GetService('Players'):FindFirstChild(v.Name) then
+					v:Destroy()
+				end
+			end)
+			game:GetService('Lighting').GlobalShadows = false
+			for i, v in next, game:GetService("Lighting"):GetChildren() do
 				v:Destroy()
 			end
-			if string.match(v.Name, 'Blimp') and not game:GetService('Players'):FindFirstChild(v.Name) then
-				v:Destroy()
+			if settings then
+				settings().Rendering.QualityLevel = 1
 			end
 		end
-		workspace.DescendantAdded:Connect(function(v)
-		task.wait()
-		if v:IsA('BasePart') then
-			v.Material = Enum.Material.Plastic
-			v.CastShadow = false
-		end
-		if v:IsA('Decal') or (string.match(v.ClassName, 'Mesh') and not v:IsDescendantOf(game:GetService('Players').LocalPlayer.Character)) then
-			v:Destroy()
-		end
-		if string.match(v.Name, 'Blimp') and not game:GetService('Players'):FindFirstChild(v.Name) then
-			v:Destroy()
-		end
-		end)
-		
-		game:GetService('Lighting').GlobalShadows = false
-		for i,v in next, game:GetService("Lighting"):GetChildren() do
-			v:Destroy()
-		end
-		if settings then settings().Rendering.QualityLevel = 1 end
-	end end)
+	end)
 end)
 
 fpsBoosts:Set(getgenv().settings.fpsBoost)
@@ -1301,7 +1447,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 		local LogService = Game:GetService("LogService")
 		local logs = LogService:GetLogHistory()
 		if string.find(logs[#logs].message, Players.LocalPlayer.DisplayName) then
-			local msg = string.gsub(logs[#logs].message, ' tipped ', ''):gsub('', ''):gsub('💸', ''):gsub(' to ', ''):gsub(Players.LocalPlayer.DisplayName, ''):gsub(tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC), ''):gsub('',''):gsub("💰",''):gsub(' ', '')
+			local msg = string.gsub(logs[#logs].message, ' tipped ', ''):gsub('', ''):gsub('💸', ''):gsub(' to ', ''):gsub(Players.LocalPlayer.DisplayName, ''):gsub(tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC), ''):gsub('', ''):gsub("💰", ''):gsub(' ', '')
 			for i, v in next, Players:GetPlayers() do
 				if v.DisplayName == msg then
 					playerWhoDonated = v
@@ -1310,15 +1456,15 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 		end
 		if playerWhoDonated then
 			if getgenv().settings.webhookType == 'New' then
-			    webhook(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC,playerWhoDonated)
+				webhook(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC, playerWhoDonated)
 			else
-			    oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. ' | [A/T]: ' .. tostring(math.floor((Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value))
+				oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. ' | [A/T]: ' .. tostring(math.floor((Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value))
 			end
 		else
 			if getgenv().settings.webhookType == 'New' then
 				webhook(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)				
 			else
-			    oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. ' | [A/T]: ' .. tostring(math.floor((Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value))
+				oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. ' | [A/T]: ' .. tostring(math.floor((Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value))
 			end
 		end
 	end
@@ -1358,9 +1504,9 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 		end)
 	end
 	task.wait(getgenv().settings.textUpdateDelay)
-	update()
+	updateBoothText()
 end)
-update()
+updateBoothText()
 
 task.spawn(function()
 	raisedV = 0
@@ -1370,7 +1516,7 @@ task.spawn(function()
 			serverHop()
 		end
 	end)
-	for i,v in next, Players:GetPlayers() do
+	for i, v in next, Players:GetPlayers() do
 		if v:FindFirstChild('leaderstats') and v ~= Players.LocalPlayer then
 			if raisedV ~= nil then
 				if v.leaderstats.Raised.Value > raisedV then
@@ -1419,7 +1565,7 @@ local messageRequest = game:GetService('ReplicatedStorage').DefaultChatSystemCha
 msgdone.OnClientEvent:Connect(function(msgdata)
 	local speaker = tostring(msgdata.FromSpeaker)
 	local message = string.lower(msgdata.Message)
-	task.wait(2.1 + math.random(0.4,1))
+	task.wait(2.1 + math.random(0.4, 1))
 	local plrChatted = game:GetService('Players')[speaker] or nil
 	if (plrChatted and plrChatted == game:GetService('Players').LocalPlayer) or getgenv().settings.autoNearReply == false or not plrChatted then
 		return
@@ -1433,14 +1579,14 @@ msgdone.OnClientEvent:Connect(function(msgdata)
 					messageRequest:FireServer("hello", 'All')
 				elseif string.find(message, 'jump') then
 					messageRequest:FireServer('ok', 'All')
-				elseif string.find(message, '?') and not string.find(message,'bot') then
+				elseif string.find(message, '?') and not string.find(message, 'bot') then
 					messageRequest:FireServer('yes', 'All')
-				elseif string.find(message,'bot') then
-					messageRequest:FireServer(randombotmsgs[math.random(1,#randombotmsgs)], 'All')
-				elseif string.find(message,'donate') then
-					messageRequest:FireServer('no','All')
-				elseif string.find(message,'scam') then
-					messageRequest:FireServer('no i dont scam','All')
+				elseif string.find(message, 'bot') then
+					messageRequest:FireServer(randombotmsgs[math.random(1, #randombotmsgs)], 'All')
+				elseif string.find(message, 'donate') then
+					messageRequest:FireServer('no', 'All')
+				elseif string.find(message, 'scam') then
+					messageRequest:FireServer('no i dont scam', 'All')
 				else
 					messageRequest:FireServer(randommsgs[math.random(1, #randommsgs)], 'All')
 				end
