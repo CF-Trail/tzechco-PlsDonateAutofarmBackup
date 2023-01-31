@@ -200,7 +200,7 @@ if isfile("plsdonatesettings.txt") then
 		task.spawn(function()
 			errMsg = Instance.new("Hint")
 			errMsg.Parent = game:GetService('CoreGui')
-			errMsg.Text = tostring("Settings reset due to error: " .. er)
+			errMsg.Text = tostring("COULDNT LOAD CONFIG BECAUSE OF THIS STUPID ASS JSON ERROR, SERVERHOPPING")
 			task.wait(15)
 			errMsg:Destroy()
 		end)
