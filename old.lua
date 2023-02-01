@@ -813,28 +813,6 @@ end,
 	["max"] = 120
 })
 textUpdateDelay:Set((getgenv().settings.textUpdateDelay / 120) * 100)
-boothTab:AddLabel("Booth Text Color: ")
-local colorPicker = boothTab:AddColorPicker(function(text)
-	print(hex(text))
-	if settingsLock then
-		return
-	end
-	local success, err = pcall(function()
-		return Color3.fromHex(hex(text))
-	end)
-	if success and string.find(hex(text), "#") then
-		getgenv().settings.hexBox = hex(text)
-		displayColor.Text = getgenv().settings.hexBox
-		saveSettings()
-	elseif success and not (string.find(hex(text), "#")) then
-		warn("?how?")
-	elseif err then
-		warn("Error: " .. tostring(err))
-	else
-		warn("Something happened...")
-	end
-end)
-colorPicker:Set(rgb(getgenv().settings.hexBox))
 
 boothTab:AddLabel("Goal Increase:")
 local goalBox = boothTab:AddTextBox("Numbers Only", function(text)
@@ -911,25 +889,6 @@ if signPass then
 	end)
 	signUpdateToggle:Set(getgenv().settings.signUpdateToggle)
 	signTab:AddLabel("Sign Text Color: " .. getgenv().settings.hexBox or '???')
-	local colorPicker = signTab:AddColorPicker(function(text)
-		if settingsLock then
-			return
-		end
-		local success, err = pcall(function()
-			return Color3.fromHex(hex(text))
-		end)
-		if success and string.find(hex(text), "#") then
-			getgenv().settings.signHexBox = hex(text)
-			displayColor.Text = getgenv().settings.signHexBox
-			saveSettings()
-		elseif success and not (string.find(hex(text), "#")) then
-			warn("?how?")
-		elseif err then
-			warn("Error: " .. tostring(err))
-		else
-			warn("Something happend...")
-		end
-	end)
 
 	signTab:AddLabel("Sign Text:")
 	local signText = signTab:AddConsole({
