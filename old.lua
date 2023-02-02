@@ -1528,6 +1528,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 		xspin = (((xspin + Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) / 3) * getgenv().settings.spinSpeedMultiplier) + Players.LocalPlayer.Character:FindFirstChildWhichIsA('Humanoid').RootPart:FindFirstChild('Spin').AngularVelocity.Y
 	end
 	if getgenv().settings.webhookToggle == true and getgenv().settings.webhookBox then
+                task.wait(0.3)
 		local LogService = Game:GetService("LogService")
 		local logs = LogService:GetLogHistory()
 		if string.find(logs[#logs].message, Players.LocalPlayer.DisplayName) then
