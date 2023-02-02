@@ -47,6 +47,39 @@ end
 local xspin = 0
 local nx = 0
 local RainbowTextActivated = false
+local _TELEPORTING = false
+local _CLIENT = game:GetService("Players").LocalPlayer
+local _TPSERVICE = game:GetService("TeleportService")
+local httprequest = (syn and syn.request) or http and http.request or http_request or (fluxus and fluxus.request) or request
+local httpservice = game:GetService('HttpService')
+
+
+_CLIENT.OnTeleport:Connect(function(_TPSTATE, _GAMEID, _SPAWNNAME)
+	if _TPSTATE == Enum.TeleportState.Failed then
+		if _TELEPORTING then
+			_TELEPORTING = false
+			local gameId
+			local servers = {}
+			gameId = "8737602449"
+			task.spawn(function()
+					local servers = {}
+					local req = httprequest({
+						Url = "https://games.roblox.com/v1/games/" .. gameId .. "/servers/Public?sortOrder=Desc&limit=100"
+					})
+					local body = httpservice:JSONDecode(req.Body)
+					if body and body.data then
+						for i, v in next, body.data do
+							if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing < v.maxPlayers and v.playing > 22 then
+								table.insert(servers, 1, v.id)
+							end
+						end
+					end
+				end)
+			_TELEPORTING = true
+			_TPSERVICE:TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], _CLIENT)
+		end
+	end
+end)
 
 local fonts = {
 	"AmaticSC",
@@ -253,8 +286,6 @@ local booths = {
 	["28"] = "-8, 3, 151"
 }
 local queueonteleport = (syn and syn.queue_on_teleport) or queue_on_teleport or (fluxus and fluxus.queue_on_teleport)
-local httprequest = (syn and syn.request) or http and http.request or http_request or (fluxus and fluxus.request) or request
-local httpservice = game:GetService('HttpService')
 queueonteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/CF-Trail/tzechco-PlsDonateAutofarmBackup/main/old.lua'))()")
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/CF-Trail/tzechco-PlsDonateAutofarmBackup/main/UI"))()
 function forceServerHop()
@@ -278,13 +309,11 @@ function forceServerHop()
 		while task.wait(2) do
 			pcall(function()
 				if #servers > 0 then
+					_TELEPORTING = true
 					game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
 				end
 			end)
 		end
-	end)
-	game:GetService("TeleportService").TeleportInitFailed:Connect(function()
-		game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
 	end)
 end
 local function claimGifts()
@@ -316,7 +345,23 @@ end
 task.spawn(claimGifts)
 getgenv().settings = {}
   --Load Settings
-
+if isfile("plsdonatesettings.txt") then
+	local sl, er = pcall(function()
+		getgenv().settings = game:GetService('HttpService'):JSONDecode(readfile('plsdonatesettings.txt'))
+	end)
+	if er ~= nil then
+		task.spawn(function()
+			errMsg = Instance.new("Hint")
+			errMsg.Parent = game:GetService('CoreGui')
+			errMsg.Text = tostring("COULDNT LOAD SETTINGS BECAUSE OF DUMBASS JSON ERROR, SERVERHOPPING")
+			task.wait(15)
+			errMsg:Destroy()
+		end)
+		task.wait(2)
+		forceServerHop()
+		return
+	end
+end
 local sNames = {
 	"textUpdateToggle",
 	"textUpdateDelay",
@@ -362,7 +407,12 @@ local sNames = {
 	"fontSize",
 	'noFont',
 	'taggedBoothHop',
-	'rainbowText'
+	'rainbowText',
+	'helloResponce',
+	'botResponce',
+	"donateResponce",
+	"otherResponce",
+	"scamResponce"
 }
 
 local positionX = workspace:WaitForChild('Boomboxes'):WaitForChild('Spawn')
@@ -420,27 +470,32 @@ local sValues = {
 	5,
 	false,
 	false,
-	false
+	false,
+	{
+		'Hi',
+		'Sup',
+		'Hello'
+	},
+	{
+		'no im not',
+		'im not a bot'
+	},
+	{
+		"sorry im saving",
+		"i am saving for my dream item",
+		"sorry my robux is pending"
+	},
+	{
+		"..?",
+		"what",
+		"?"
+	},
+	{
+		"im no scam",
+		"im not a scammer",
+		"this is not a scam"
+	}
 }
-getgenv().settings = {}
-if isfile("plsdonatesettings.txt") then
-	local sl, er = pcall(function()
-		getgenv().settings = httpservice:JSONDecode(readfile("plsdonatesettings.txt"))
-	end)
-	if er ~= nil then
-		task.spawn(function()
-			errMsg = Instance.new("Hint")
-			errMsg.Parent = game:GetService('CoreGui')
-			errMsg.Text = tostring("COULDNT LOAD SETTINGS BECAUSE OF DUMBASS JSON ERROR, SERVERHOPPING")
-			task.wait(15)
-			errMsg:Destroy()
-		end)
-                delfile("plsdonatesettings.txt")
-		task.wait(2)
-		forceServerHop()
-		return
-	end
-end
 
 if #getgenv().settings ~= sNames then
 	for i, v in ipairs(sNames) do
@@ -454,7 +509,6 @@ end
 local settingsLock = true
 local function saveSettings()
 	if settingsLock == false then
-		print('Settings saved.')
 		writefile('plsdonatesettings.txt', httpservice:JSONEncode(getgenv().settings))
 	end
 end
@@ -492,15 +546,12 @@ function serverHop()
 				while task.wait(0.5) do
 					pcall(function()
 						if #servers > 0 then
+							_TELEPORTING = true
 							game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
 						end
 					end)
 				end
 			end)
-			game:GetService("TeleportService").TeleportInitFailed:Connect(function()
-				game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
-			end)
-		
 	end)
 end
 
@@ -812,7 +863,6 @@ end,
 	["max"] = 120
 })
 textUpdateDelay:Set((getgenv().settings.textUpdateDelay / 120) * 100)
-
 boothTab:AddLabel("Goal Increase:")
 local goalBox = boothTab:AddTextBox("Numbers Only", function(text)
 	if tonumber(text) then
@@ -887,8 +937,6 @@ if signPass then
 		end
 	end)
 	signUpdateToggle:Set(getgenv().settings.signUpdateToggle)
-	signTab:AddLabel("Sign Text Color: " .. getgenv().settings.hexBox or '???')
-
 	signTab:AddLabel("Sign Text:")
 	local signText = signTab:AddConsole({
 		["y"] = 50,
@@ -994,9 +1042,7 @@ bm:AddButton("Save", function()
 	getgenv().settings.begMessage = bsplit
 	saveSettings()
 end)
-  
-  
-  --Webhook Settings
+
 local webhookToggle = webhookTab:AddSwitch("Discord Webhook Notifications", function(bool)
 	getgenv().settings.webhookToggle = bool
 	saveSettings()
@@ -1101,12 +1147,15 @@ serverHopTab:AddButton("Server Hop", function()
 end)
 
 local serverHopMinAmount = serverHopTab:AddTextBox("Minimum donated amount", function(text)
-	getgenv().settings.minimumDonated = tonumber(text) or 0
+	if tonumber(text) then
+		getgenv().settings.minimumDonated = tonumber(text)
+		saveSettings()
+	end
 end,
   {
 	["clear"] = false
 })
-serverHopMinAmount.Text = getgenv().settings.minimumDonated
+serverHopMinAmount.Text = 'Minumum donated amount: ' .. getgenv().settings.minimumDonated
 
 local serverHopDelay = serverHopTab:AddSlider("Server Hop Delay (M)", function(x)
 	if settingsLock then
@@ -1317,6 +1366,86 @@ local standingPos = otherTab2:AddDropdown("[ " .. getgenv().settings.standingPos
 	end
 end)
 
+otherTab2:AddLabel("Auto Near Replies")
+otherTab2:AddLabel("Reponces to something similar to 'Hello'")
+local HelloResponce = otherTab2:AddConsole({
+    ["y"] = 45,
+    ["source"] = "",
+})
+local hfull = ''
+for i, v in ipairs(getgenv().settings.helloResponce) do
+    hfull = hfull .. v .. "\n"
+end
+HelloResponce:Set(hfull)
+otherTab2:AddLabel("Reponces to something similar to 'You are a bot'")
+local BotResponce = otherTab2:AddConsole({
+    ["y"] = 40,
+    ["source"] = "",
+})
+otherTab2:AddLabel("Reponces to something similar to 'pls donate'")
+local hfull = ''
+for i, v in ipairs(getgenv().settings.botResponce) do
+    hfull = hfull .. v .. "\n"
+end
+BotResponce:Set(hfull)
+local DonateResponce = otherTab2:AddConsole({
+    ["y"] = 45,
+    ["source"] = "",
+})
+local hfull = ''
+for i, v in ipairs(getgenv().settings.donateResponce) do
+    hfull = hfull .. v .. "\n"
+end
+DonateResponce:Set(hfull)
+otherTab2:AddLabel("Reponces to something similar to 'you are a scammer'")
+local ScamResponce = otherTab2:AddConsole({
+    ["y"] = 45,
+    ["source"] = "",
+})
+local hfull = ''
+for i, v in ipairs(getgenv().settings.scamResponce) do
+    hfull = hfull .. v .. "\n"
+end
+ScamResponce:Set(hfull)
+otherTab2:AddLabel("Other Responses:")
+local OtherResponce = otherTab2:AddConsole({
+    ["y"] = 45,
+    ["source"] = "",
+})
+local hfull = ''
+for i, v in ipairs(getgenv().settings.otherResponce) do
+    hfull = hfull .. v .. "\n"
+end
+OtherResponce:Set(hfull)
+otherTab2:AddButton("Save Replies", function()
+	local rsplit = {}
+	for newline in string.gmatch(HelloResponce:Get(), "[^\n]+") do
+		table.insert(rsplit, newline)
+	end
+	getgenv().settings.helloResponce = rsplit
+	local rsplit = {}
+	for newline in string.gmatch(BotResponce:Get(), "[^\n]+") do
+		table.insert(rsplit, newline)
+	end
+	getgenv().settings.botResponce = rsplit
+	local rsplit = {}
+	for newline in string.gmatch(DonateResponce:Get(), "[^\n]+") do
+		table.insert(rsplit, newline)
+	end
+	getgenv().settings.donateResponce = rsplit
+	local rsplit = {}
+	for newline in string.gmatch(OtherResponce:Get(), "[^\n]+") do
+		table.insert(rsplit, newline)
+	end
+	getgenv().settings.otherResponce = rsplit
+	local rsplit = {}
+	for newline in string.gmatch(ScamResponce:Get(), "[^\n]+") do
+		table.insert(rsplit, newline)
+	end
+	getgenv().settings.scamResponce = rsplit
+	saveSettings()
+end)
+
 standingPos:Add('Front')
 standingPos:Add('Left')
 standingPos:Add('Right')
@@ -1510,25 +1639,14 @@ if getgenv().settings.webhookAfterSH then
 end
 
 local msgdone = game:GetService('ReplicatedStorage').DefaultChatSystemChatEvents.OnMessageDoneFiltering
-local randommsgs = {
-	'yes',
-	'ok',
-	'alr',
-	'yeah'
-}
-local randombotmsgs = {
-	'no im not a bot',
-	'why do yall think im a bot :(',
-	'bro im not a bot',
-	'bruh shut up im a real human'
-}
+
 local messageRequest = game:GetService('ReplicatedStorage').DefaultChatSystemChatEvents.SayMessageRequest
 msgdone.OnClientEvent:Connect(function(msgdata)
 	local speaker = tostring(msgdata.FromSpeaker)
 	local message = string.lower(msgdata.Message)
 	task.wait(2.1 + math.random(0.4, 1))
 	local plrChatted = game:GetService('Players')[speaker] or nil
-	if (plrChatted and plrChatted == game:GetService('Players').LocalPlayer) or getgenv().settings.autoNearReply == false or not plrChatted then
+	if (plrChatted and plrChatted == game:GetService('Players').LocalPlayer) or getgenv().settings.autoNearReply == false or not plrChatted  or string.find(message,'donates') or string.find(message,"spamming") then
 		return
 	end
 	pcall(function()
@@ -1537,19 +1655,15 @@ msgdone.OnClientEvent:Connect(function(msgdata)
 			local root = chatChar.Humanoid.RootPart
 			if (root.Position - game:GetService('Players').LocalPlayer.Character.Humanoid.RootPart.Position).Magnitude < 11 then
 				if message == 'hello' or message == 'hi' or message == 'sup' or message == 'hey' then
-					messageRequest:FireServer("hello", 'All')
-				elseif string.find(message, 'jump') then
-					messageRequest:FireServer('ok', 'All')
-				elseif string.find(message, '?') and not string.find(message, 'bot') then
-					messageRequest:FireServer('yes', 'All')
+					messageRequest:FireServer(getgenv().settings.helloResponce[math.random(1,#getgenv().settings.helloResponce)], 'All')
 				elseif string.find(message, 'bot') then
-					messageRequest:FireServer(randombotmsgs[math.random(1, #randombotmsgs)], 'All')
+					messageRequest:FireServer(getgenv().settings.botResponce[math.random(1,#getgenv().settings.botResponce)], 'All')
 				elseif string.find(message, 'donate') then
-					messageRequest:FireServer('no', 'All')
+					messageRequest:FireServer(getgenv().settings.donateResponce[math.random(1,#getgenv().settings.donateResponce)], 'All')
 				elseif string.find(message, 'scam') then
-					messageRequest:FireServer('no i dont scam', 'All')
+					messageRequest:FireServer(getgenv().settings.scamResponce[math.random(1,#getgenv().settings.scamResponce)], 'All')
 				else
-					messageRequest:FireServer(randommsgs[math.random(1, #randommsgs)], 'All')
+					messageRequest:FireServer(getgenv().settings.otherResponce[math.random(1,#getgenv().settings.otherResponce)], 'All')
 				end
 			end
 		end
