@@ -4,6 +4,7 @@
 	Removal of initial credits to the authors is prohibited.
 ]]
 
+
 if hookmetamethod and typeof(hookmetamethod) == 'function' then
 	local oldHook
 	oldHook = hookmetamethod(game, "__namecall", function(self, ...)
@@ -62,19 +63,19 @@ _CLIENT.OnTeleport:Connect(function(_TPSTATE, _GAMEID, _SPAWNNAME)
 			local servers = {}
 			gameId = "8737602449"
 			task.spawn(function()
-					local servers = {}
-					local req = httprequest({
-						Url = "https://games.roblox.com/v1/games/" .. gameId .. "/servers/Public?sortOrder=Desc&limit=100"
-					})
-					local body = httpservice:JSONDecode(req.Body)
-					if body and body.data then
-						for i, v in next, body.data do
-							if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing < v.maxPlayers and v.playing > 22 then
-								table.insert(servers, 1, v.id)
-							end
+				local servers = {}
+				local req = httprequest({
+					Url = "https://games.roblox.com/v1/games/" .. gameId .. "/servers/Public?sortOrder=Desc&limit=100"
+				})
+				local body = httpservice:JSONDecode(req.Body)
+				if body and body.data then
+					for i, v in next, body.data do
+						if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing < v.maxPlayers and v.playing > 22 then
+							table.insert(servers, 1, v.id)
 						end
 					end
-				end)
+				end
+			end)
 			_TELEPORTING = true
 			_TPSERVICE:TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], _CLIENT)
 		end
@@ -513,6 +514,9 @@ local function saveSettings()
 	end
 end
 function serverHop()
+	if getgenv().settings.webhookAfterSH then
+		oldWebhook(Players.LocalPlayer.Name .. ' tried to serverhop.')
+	end
 	--local isVip = game:GetService('RobloxReplicatedStorage').GetServerType:InvokeServer()
 	--if isVip == "VIPServer" then return end
 	local gameId
@@ -529,31 +533,22 @@ function serverHop()
 			gameId = '8737602449'
 		end
 	end
-			local servers = {}
-			local req = httprequest({
-				Url = "https://games.roblox.com/v1/games/" .. gameId .. "/servers/Public?sortOrder=Desc&limit=100"
-			})
-			local body = httpservice:JSONDecode(req.Body)
-			if body and body.data then
-				for i, v in next, body.data do
-					if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing < v.maxPlayers and v.playing > 22 then
-						table.insert(servers, 1, v.id)
-					end
-				end
-			end
-			task.spawn(function()
-				while task.wait(0.5) do
-					pcall(function()
-						if #servers > 0 then
-							_TELEPORTING = true
-							game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
-						end
-					end)
-				end
-			end)
-				game:GetService("TeleportService").TeleportInitFailed:Connect(function()
-		                   game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
-	                        end)
+    local servers = {}
+    local req = httprequest({Url = "https://games.roblox.com/v1/games/".. gameId.."/servers/Public?sortOrder=Desc&limit=100"})
+   	local body = httpservice:JSONDecode(req.Body)
+    if body and body.data then
+        for i, v in next, body.data do
+   	        if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing < v.maxPlayers and v.playing > 19 then
+  		        table.insert(servers, 1, v.id)
+ 	        end 
+        end
+    end
+    if #servers > 0 then
+		game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
+    end
+    game:GetService("TeleportService").TeleportInitFailed:Connect(function()
+        game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
+    end)
 end
 
 
@@ -581,7 +576,7 @@ local function playerChecker(player)
 	end)
 end
 
-local function oldWebhook(msg)
+function oldWebhook(msg)
 	if getgenv().settings.webhookBox:gsub(' ', '') == '' then
 		return
 	end
@@ -675,19 +670,21 @@ function updateBoothText()
 		end
 	end
 	if getgenv().settings.textUpdateToggle and getgenv().settings.customBoothText and getgenv().settings.rainbowText then
-	  while task.wait() and getgenv().settings.rainbowText do
-		task.wait(3)
-		for i,v in next, RainbowHexColors do
-			if not getgenv().settings.rainbowText then break end
-			if not getgenv().settings.noFont then
-				boothText = tostring('<font face="' .. getgenv().settings.fontFace .. '" size="' .. getgenv().settings.fontSize .. '" color="#' .. v .. '">' .. text .. '</font>')
-			else
-				boothText = tostring('<font color="' .. v .. '">' .. text .. '</font>')
-			end
-			require(game:GetService('ReplicatedStorage').Remotes).Event("SetBoothText"):FireServer(boothText, "booth")
+		while task.wait() and getgenv().settings.rainbowText do
 			task.wait(3)
+			for i, v in next, RainbowHexColors do
+				if not getgenv().settings.rainbowText then
+					break
+				end
+				if not getgenv().settings.noFont then
+					boothText = tostring('<font face="' .. getgenv().settings.fontFace .. '" size="' .. getgenv().settings.fontSize .. '" color="#' .. v .. '">' .. text .. '</font>')
+				else
+					boothText = tostring('<font color="' .. v .. '">' .. text .. '</font>')
+				end
+				require(game:GetService('ReplicatedStorage').Remotes).Event("SetBoothText"):FireServer(boothText, "booth")
+				task.wait(3)
+			end
 		end
-	  end
 	end
 	if getgenv().settings.signToggle and getgenv().settings.signUpdateToggle and getgenv().settings.signText and signPass then
 		local currentSign = game:GetService('Players').LocalPlayer.Character.DonateSign.TextSign.SurfaceGui.TextLabel.Text
@@ -1370,52 +1367,52 @@ end)
 otherTab2:AddLabel("Auto Near Replies")
 otherTab2:AddLabel("Reponces to something similar to 'Hello'")
 local HelloResponce = otherTab2:AddConsole({
-    ["y"] = 45,
-    ["source"] = "",
+	["y"] = 45,
+	["source"] = "",
 })
 local hfull = ''
 for i, v in ipairs(getgenv().settings.helloResponce) do
-    hfull = hfull .. v .. "\n"
+	hfull = hfull .. v .. "\n"
 end
 HelloResponce:Set(hfull)
 otherTab2:AddLabel("Reponces to something similar to 'You are a bot'")
 local BotResponce = otherTab2:AddConsole({
-    ["y"] = 40,
-    ["source"] = "",
+	["y"] = 40,
+	["source"] = "",
 })
 otherTab2:AddLabel("Reponces to something similar to 'pls donate'")
 local hfull = ''
 for i, v in ipairs(getgenv().settings.botResponce) do
-    hfull = hfull .. v .. "\n"
+	hfull = hfull .. v .. "\n"
 end
 BotResponce:Set(hfull)
 local DonateResponce = otherTab2:AddConsole({
-    ["y"] = 45,
-    ["source"] = "",
+	["y"] = 45,
+	["source"] = "",
 })
 local hfull = ''
 for i, v in ipairs(getgenv().settings.donateResponce) do
-    hfull = hfull .. v .. "\n"
+	hfull = hfull .. v .. "\n"
 end
 DonateResponce:Set(hfull)
 otherTab2:AddLabel("Reponces to something similar to 'you are a scammer'")
 local ScamResponce = otherTab2:AddConsole({
-    ["y"] = 45,
-    ["source"] = "",
+	["y"] = 45,
+	["source"] = "",
 })
 local hfull = ''
 for i, v in ipairs(getgenv().settings.scamResponce) do
-    hfull = hfull .. v .. "\n"
+	hfull = hfull .. v .. "\n"
 end
 ScamResponce:Set(hfull)
 otherTab2:AddLabel("Other Responses:")
 local OtherResponce = otherTab2:AddConsole({
-    ["y"] = 45,
-    ["source"] = "",
+	["y"] = 45,
+	["source"] = "",
 })
 local hfull = ''
 for i, v in ipairs(getgenv().settings.otherResponce) do
-    hfull = hfull .. v .. "\n"
+	hfull = hfull .. v .. "\n"
 end
 OtherResponce:Set(hfull)
 otherTab2:AddButton("Save Replies", function()
@@ -1636,7 +1633,7 @@ task.spawn(function()
 end)
 
 if getgenv().settings.webhookAfterSH then
-	webhook('hi hello ' .. Players.LocalPlayer.DisplayName .. ' (' .. Players.LocalPlayer.Name .. ') serverhopped')
+	oldWebhook('hi hello ' .. Players.LocalPlayer.DisplayName .. ' (' .. Players.LocalPlayer.Name .. ') serverhopped')
 end
 
 local msgdone = game:GetService('ReplicatedStorage').DefaultChatSystemChatEvents.OnMessageDoneFiltering
@@ -1647,7 +1644,7 @@ msgdone.OnClientEvent:Connect(function(msgdata)
 	local message = string.lower(msgdata.Message)
 	task.wait(2.1 + math.random(0.4, 1))
 	local plrChatted = game:GetService('Players')[speaker] or nil
-	if (plrChatted and plrChatted == game:GetService('Players').LocalPlayer) or getgenv().settings.autoNearReply == false or not plrChatted  or string.find(message,'donates') or string.find(message,"spamming") then
+	if (plrChatted and plrChatted == game:GetService('Players').LocalPlayer) or getgenv().settings.autoNearReply == false or not plrChatted  or string.find(message, 'donates') or string.find(message, "spamming") then
 		return
 	end
 	pcall(function()
@@ -1656,15 +1653,15 @@ msgdone.OnClientEvent:Connect(function(msgdata)
 			local root = chatChar.Humanoid.RootPart
 			if (root.Position - game:GetService('Players').LocalPlayer.Character.Humanoid.RootPart.Position).Magnitude < 11 then
 				if message == 'hello' or message == 'hi' or message == 'sup' or message == 'hey' then
-					messageRequest:FireServer(getgenv().settings.helloResponce[math.random(1,#getgenv().settings.helloResponce)], 'All')
+					messageRequest:FireServer(getgenv().settings.helloResponce[math.random(1, #getgenv().settings.helloResponce)], 'All')
 				elseif string.find(message, 'bot') then
-					messageRequest:FireServer(getgenv().settings.botResponce[math.random(1,#getgenv().settings.botResponce)], 'All')
+					messageRequest:FireServer(getgenv().settings.botResponce[math.random(1, #getgenv().settings.botResponce)], 'All')
 				elseif string.find(message, 'donate') then
-					messageRequest:FireServer(getgenv().settings.donateResponce[math.random(1,#getgenv().settings.donateResponce)], 'All')
+					messageRequest:FireServer(getgenv().settings.donateResponce[math.random(1, #getgenv().settings.donateResponce)], 'All')
 				elseif string.find(message, 'scam') then
-					messageRequest:FireServer(getgenv().settings.scamResponce[math.random(1,#getgenv().settings.scamResponce)], 'All')
+					messageRequest:FireServer(getgenv().settings.scamResponce[math.random(1, #getgenv().settings.scamResponce)], 'All')
 				else
-					messageRequest:FireServer(getgenv().settings.otherResponce[math.random(1,#getgenv().settings.otherResponce)], 'All')
+					messageRequest:FireServer(getgenv().settings.otherResponce[math.random(1, #getgenv().settings.otherResponce)], 'All')
 				end
 			end
 		end
