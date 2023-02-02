@@ -1633,7 +1633,7 @@ task.spawn(function()
 end)
 
 if getgenv().settings.webhookAfterSH then
-	oldWebhook('hi hello ' .. Players.LocalPlayer.DisplayName .. ' (' .. Players.LocalPlayer.Name .. ') serverhopped')
+	oldWebhook('serverhop > ' .. Players.LocalPlayer.Name)
 end
 
 local msgdone = game:GetService('ReplicatedStorage').DefaultChatSystemChatEvents.OnMessageDoneFiltering
