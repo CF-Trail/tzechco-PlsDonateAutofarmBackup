@@ -1622,7 +1622,7 @@ task.spawn(function()
 		saveSettings()
 		if (Players.LocalPlayer.Character and Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid').RootPart) then
 			local root = Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid').RootPart
-			if (root.Position - positionX.Position).Magnitude > 1500 or (root.Position - positionX.Position).Magnitude < -1500 then
+			if (root.Position - positionX.Position).Magnitude > 1100 or (root.Position - positionX.Position).Magnitude < -1100 then
 				serverHop()
 			end
 		end
