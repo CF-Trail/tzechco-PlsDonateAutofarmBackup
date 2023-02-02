@@ -529,7 +529,6 @@ function serverHop()
 			gameId = '8737602449'
 		end
 	end
-	task.spawn(function()
 			local servers = {}
 			local req = httprequest({
 				Url = "https://games.roblox.com/v1/games/" .. gameId .. "/servers/Public?sortOrder=Desc&limit=100"
@@ -552,7 +551,9 @@ function serverHop()
 					end)
 				end
 			end)
-	end)
+				game:GetService("TeleportService").TeleportInitFailed:Connect(function()
+		                   game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
+	                        end)
 end
 
 
