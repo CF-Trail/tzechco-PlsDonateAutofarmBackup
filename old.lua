@@ -1365,7 +1365,7 @@ local standingPos = otherTab2:AddDropdown("[ " .. getgenv().settings.standingPos
 end)
 
 otherTab2:AddLabel("Auto Near Replies")
-otherTab2:AddLabel("Reponces to something similar to 'Hello'")
+otherTab2:AddLabel("Responces to something similar to 'Hello'")
 local HelloResponce = otherTab2:AddConsole({
 	["y"] = 45,
 	["source"] = "",
@@ -1375,12 +1375,12 @@ for i, v in ipairs(getgenv().settings.helloResponce) do
 	hfull = hfull .. v .. "\n"
 end
 HelloResponce:Set(hfull)
-otherTab2:AddLabel("Reponces to something similar to 'You are a bot'")
+otherTab2:AddLabel("Responces to something similar to 'You are a bot'")
 local BotResponce = otherTab2:AddConsole({
 	["y"] = 40,
 	["source"] = "",
 })
-otherTab2:AddLabel("Reponces to something similar to 'pls donate'")
+otherTab2:AddLabel("Responces to something similar to 'pls donate'")
 local hfull = ''
 for i, v in ipairs(getgenv().settings.botResponce) do
 	hfull = hfull .. v .. "\n"
@@ -1395,7 +1395,7 @@ for i, v in ipairs(getgenv().settings.donateResponce) do
 	hfull = hfull .. v .. "\n"
 end
 DonateResponce:Set(hfull)
-otherTab2:AddLabel("Reponces to something similar to 'you are a scammer'")
+otherTab2:AddLabel("Responces to something similar to 'you are a scammer'")
 local ScamResponce = otherTab2:AddConsole({
 	["y"] = 45,
 	["source"] = "",
