@@ -655,11 +655,7 @@ function updateBoothText()
 		if myBooth.Sign.TextLabel.Text ~= boothText then
 			if string.find(myBooth.Sign.TextLabel.Text, "# #") or string.find(myBooth.Sign.TextLabel.Text, "##") then
 				if getgenv().settings.taggedBoothHop then
-					if nx >= 1 then
-						serverHop()
-					else
-						nx = 8
-					end
+				   serverHop()
 				end
 				require(game:GetService("ReplicatedStorage").Remotes).Event("SetBoothText"):FireServer("your text here", "booth")
 				task.wait(3)
