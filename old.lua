@@ -319,6 +319,7 @@ function forceServerHop()
 end
 local function claimGifts()
 	pcall(function()
+		if firesignal then
 		Players.LocalPlayer:WaitForChild("PlayerGui")
 		local guipath = Players.LocalPlayer.PlayerGui:WaitForChild("ScreenGui")
 		firesignal(guipath.GiftAlert.Buttons.Close["Activated"])
@@ -340,6 +341,7 @@ local function claimGifts()
 				task.wait(.5)
 				firesignal(guipath.Gift.Buttons.Close["Activated"])
 			end
+		   end
 		end
 	end)
 end
