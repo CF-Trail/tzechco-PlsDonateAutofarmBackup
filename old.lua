@@ -1179,6 +1179,7 @@ local render = otherTab:AddSwitch("Disable Rendering", function(bool)
 		game:GetService("RunService"):Set3dRenderingEnabled(true)
 	end
 end)
+render:Set(getgenv().settings.render)
 local jumpswitch = otherTab:AddSwitch("Donation Jump", function(bool)
 	getgenv().settings.donationJump = bool
 	saveSettings()
@@ -1348,8 +1349,86 @@ standingPos:Add('Left')
 standingPos:Add('Right')
 standingPos:Add('Behind')
 
+otherTab2:AddLabel("Auto Near Replies")
+otherTab2:AddLabel("Responces to something similar to 'Hello'")
+local HelloResponce = otherTab2:AddConsole({
+	["y"] = 45,
+	["source"] = "",
+})
+local hfull = ''
+for i, v in ipairs(getgenv().settings.helloResponce) do
+	hfull = hfull .. v .. "\n"
+end
+HelloResponce:Set(hfull)
+otherTab2:AddLabel("Responces to something similar to 'You are a bot'")
+local BotResponce = otherTab2:AddConsole({
+	["y"] = 40,
+	["source"] = "",
+})
+otherTab2:AddLabel("Responces to something similar to 'pls donate'")
+local hfull = ''
+for i, v in ipairs(getgenv().settings.botResponce) do
+	hfull = hfull .. v .. "\n"
+end
+BotResponce:Set(hfull)
+local DonateResponce = otherTab2:AddConsole({
+	["y"] = 45,
+	["source"] = "",
+})
+local hfull = ''
+for i, v in ipairs(getgenv().settings.donateResponce) do
+	hfull = hfull .. v .. "\n"
+end
+DonateResponce:Set(hfull)
+otherTab2:AddLabel("Responces to something similar to 'you are a scammer'")
+local ScamResponce = otherTab2:AddConsole({
+	["y"] = 45,
+	["source"] = "",
+})
+local hfull = ''
+for i, v in ipairs(getgenv().settings.scamResponce) do
+	hfull = hfull .. v .. "\n"
+end
+ScamResponce:Set(hfull)
+otherTab2:AddLabel("Other Responses:")
+local OtherResponce = otherTab2:AddConsole({
+	["y"] = 45,
+	["source"] = "",
+})
+local hfull = ''
+for i, v in ipairs(getgenv().settings.otherResponce) do
+	hfull = hfull .. v .. "\n"
+end
+OtherResponce:Set(hfull)
+otherTab2:AddButton("Save Replies", function()
+	local rsplit = {}
+	for newline in string.gmatch(HelloResponce:Get(), "[^\n]+") do
+		table.insert(rsplit, newline)
+	end
+	getgenv().settings.helloResponce = rsplit
+	local rsplit = {}
+	for newline in string.gmatch(BotResponce:Get(), "[^\n]+") do
+		table.insert(rsplit, newline)
+	end
+	getgenv().settings.botResponce = rsplit
+	local rsplit = {}
+	for newline in string.gmatch(DonateResponce:Get(), "[^\n]+") do
+		table.insert(rsplit, newline)
+	end
+	getgenv().settings.donateResponce = rsplit
+	local rsplit = {}
+	for newline in string.gmatch(OtherResponce:Get(), "[^\n]+") do
+		table.insert(rsplit, newline)
+	end
+	getgenv().settings.otherResponce = rsplit
+	local rsplit = {}
+	for newline in string.gmatch(ScamResponce:Get(), "[^\n]+") do
+		table.insert(rsplit, newline)
+	end
+	getgenv().settings.scamResponce = rsplit
+	saveSettings()
+end)
 
-render:Set(getgenv().settings.render)
 boothTab:Show()
 library:FormatWindows()
 settingsLock = false
