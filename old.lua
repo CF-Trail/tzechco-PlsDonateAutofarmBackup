@@ -1520,6 +1520,18 @@ walkToBooth()
 if getgenv().settings.autoBeg then
 	spamming = task.spawn(begging)
 end
+local PlayerGui = game:GetService("Players").LocalPlayer.PlayerGui
+
+if PlayerGui:FindFirstChild("PromptWearLastOutfit") then
+    PlayerGui.PromptWearLastOutfit.PromptResult:FireServer(true)
+end
+
+PlayerGui.ChildAdded:Connect(function(child)
+    task.wait(1)
+    if child.Name == "PromptWearLastOutfit" then
+        PlayerGui.PromptWearLastOutfit:WaitForChild("PromptResult"):FireServer(true)
+    end
+end)
 local RaisedC = Players.LocalPlayer.leaderstats.Raised.value
 Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 	local playerWhoDonated
@@ -1628,6 +1640,8 @@ task.spawn(function()
 		end
 	end
 end)
+
+
 
 if getgenv().settings.webhookAfterSH then
 	oldWebhook('serverhop > ' .. Players.LocalPlayer.Name)
