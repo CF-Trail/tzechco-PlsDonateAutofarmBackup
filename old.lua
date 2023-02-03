@@ -289,34 +289,6 @@ local booths = {
 local queueonteleport = (syn and syn.queue_on_teleport) or queue_on_teleport or (fluxus and fluxus.queue_on_teleport)
 queueonteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/CF-Trail/tzechco-PlsDonateAutofarmBackup/main/old.lua'))()")
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/CF-Trail/tzechco-PlsDonateAutofarmBackup/main/UI"))()
-function forceServerHop()
-	--local isVip = game:GetService('RobloxReplicatedStorage').GetServerType:InvokeServer()
-	--if isVip == "VIPServer" then return end
-	local gameId
-	gameId = "8737602449"
-	local servers = {}
-	local req = httprequest({
-		Url = "https://games.roblox.com/v1/games/" .. gameId .. "/servers/Public?sortOrder=Desc&limit=100"
-	})
-	local body = httpservice:JSONDecode(req.Body)
-	if body and body.data then
-		for i, v in next, body.data do
-			if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing < v.maxPlayers and v.playing > 19 then
-				table.insert(servers, 1, v.id)
-			end
-		end
-	end
-	task.spawn(function()
-		while task.wait(2) do
-			pcall(function()
-				if #servers > 0 then
-					_TELEPORTING = true
-					game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
-				end
-			end)
-		end
-	end)
-end
 local function claimGifts()
 	pcall(function()
 		if firesignal then
@@ -347,6 +319,28 @@ local function claimGifts()
 end
 task.spawn(claimGifts)
 getgenv().settings = {}
+function forceServerHop()
+	--local isVip = game:GetService('RobloxReplicatedStorage').GetServerType:InvokeServer()
+	--if isVip == "VIPServer" then return end
+	local gameId
+	gameId = "8737602449"
+    local servers = {}
+    local req = httprequest({Url = "https://games.roblox.com/v1/games/".. gameId.."/servers/Public?sortOrder=Desc&limit=100"})
+   	local body = httpservice:JSONDecode(req.Body)
+    if body and body.data then
+        for i, v in next, body.data do
+   	        if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing < v.maxPlayers and v.playing > 19 then
+  		        table.insert(servers, 1, v.id)
+ 	        end 
+        end
+    end
+    if #servers > 0 then
+		game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
+    end
+    game:GetService("TeleportService").TeleportInitFailed:Connect(function()
+        game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
+    end)
+end
   --Load Settings
 if isfile("plsdonatesettings.txt") then
 	local sl, er = pcall(function()
@@ -354,6 +348,7 @@ if isfile("plsdonatesettings.txt") then
 	end)
 	if er ~= nil then
 		task.spawn(function()
+			delfile('plsdonatesettings.txt')
 			errMsg = Instance.new("Hint")
 			errMsg.Parent = game:GetService('CoreGui')
 			errMsg.Text = tostring("COULDNT LOAD SETTINGS BECAUSE OF DUMBASS JSON ERROR, SERVERHOPPING")
@@ -1523,18 +1518,18 @@ if getgenv().settings.autoBeg then
 	spamming = task.spawn(begging)
 end
 
---[[local PlayerGui = game:GetService("Players").LocalPlayer.PlayerGui
+local __PlayerGui = game:GetService("Players").LocalPlayer.PlayerGui
 
-if PlayerGui:FindFirstChild("PromptWearLastOutfit") then
-    PlayerGui.PromptWearLastOutfit.PromptResult:FireServer(true)
+if __PlayerGui:FindFirstChild("PromptWearLastOutfit") then
+	__PlayerGui.PromptWearLastOutfit.PromptResult:FireServer(true)
 end
 
-PlayerGui.ChildAdded:Connect(function(child)
-    task.wait(1)
+task.spawn(
+__PlayerGui.ChildAdded:Connect(function(child)
     if child.Name == "PromptWearLastOutfit" then
-        PlayerGui.PromptWearLastOutfit:WaitForChild("PromptResult"):FireServer(true)
+        __PlayerGui.PromptWearLastOutfit:WaitForChild("PromptResult"):FireServer(true)
     end
-end)
+end))
 
 local __ClaimButton = game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Streaks.MainFrame.Claim
 local __ExitButton = game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Streaks.Buttons.Close
@@ -1547,8 +1542,7 @@ if __ClaimButton.Parent.Parent.Visible == true and firesignal then
     for i,Signal in next, __Signals do
         firesignal(__ExitButton[Signal])
     end
-end]]
-
+end
 
 local RaisedC = Players.LocalPlayer.leaderstats.Raised.value
 Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
@@ -1658,8 +1652,6 @@ task.spawn(function()
 		end
 	end
 end)
-
-
 
 if getgenv().settings.webhookAfterSH then
    pcall(function()
