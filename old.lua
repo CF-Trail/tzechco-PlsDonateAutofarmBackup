@@ -324,8 +324,8 @@ function forceServerHop()
 	--if isVip == "VIPServer" then return end
 	local gameId
 	gameId = "8737602449"
-    local servers = {}
-    local req = httprequest({Url = "https://games.roblox.com/v1/games/".. gameId.."/servers/Public?sortOrder=Desc&limit=100"})
+	local servers = {}
+    local req = httprequest({Url = "https://games.roblox.com/v1/games/".. tostring(gameId) .."/servers/Public?sortOrder=Desc&limit=100"})
    	local body = httpservice:JSONDecode(req.Body)
     if body and body.data then
         for i, v in next, body.data do
@@ -530,8 +530,9 @@ function serverHop()
 			gameId = '8737602449'
 		end
 	end
-    local servers = {}
-    local req = httprequest({Url = "https://games.roblox.com/v1/games/".. gameId.."/servers/Public?sortOrder=Desc&limit=100"})
+	local servers = {}
+	-- attempt to call number value vv
+    local req = httprequest({Url = "https://games.roblox.com/v1/games/".. tostring(gameId) .."/servers/Public?sortOrder=Desc&limit=100"})
    	local body = httpservice:JSONDecode(req.Body)
     if body and body.data then
         for i, v in next, body.data do
@@ -1524,25 +1525,28 @@ if __PlayerGui:FindFirstChild("PromptWearLastOutfit") then
 	__PlayerGui.PromptWearLastOutfit.PromptResult:FireServer(true)
 end
 
-task.spawn(
-__PlayerGui.ChildAdded:Connect(function(child)
-    if child.Name == "PromptWearLastOutfit" then
-        __PlayerGui.PromptWearLastOutfit:WaitForChild("PromptResult"):FireServer(true)
-    end
-end))
-
-local __ClaimButton = game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Streaks.MainFrame.Claim
-local __ExitButton = game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Streaks.Buttons.Close
-local __Signals = {"Activated", "MouseButton1Down", "MouseButton2Down", "MouseButton1Click", "MouseButton2Click"}
-
-if __ClaimButton.Parent.Parent.Visible == true and firesignal then
-    for i,Signal in next, __Signals do
-        firesignal(__ClaimButton[Signal])
-    end
-    for i,Signal in next, __Signals do
-        firesignal(__ExitButton[Signal])
-    end
-end
+task.spawn(function()
+	__PlayerGui.ChildAdded:Connect(function(child)
+		if child.Name == "PromptWearLastOutfit" then
+			__PlayerGui.PromptWearLastOutfit:WaitForChild("PromptResult"):FireServer(true)
+		end
+	end)
+	
+	local __ClaimButton = game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Streaks.MainFrame.Claim
+	local __ExitButton = game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Streaks.Buttons.Close
+	local __Signals = {"Activated", "MouseButton1Down", "MouseButton1Click"}
+	
+	if __ClaimButton.Parent.Parent.Visible == true and firesignal then
+		for i,Signal in next, __Signals do
+			task.wait()
+			firesignal(__ClaimButton[Signal])
+		end
+		for i,Signal in next, __Signals do
+			task.wait()
+			firesignal(__ExitButton[Signal])
+		end
+	end
+end)
 
 local RaisedC = Players.LocalPlayer.leaderstats.Raised.value
 Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
