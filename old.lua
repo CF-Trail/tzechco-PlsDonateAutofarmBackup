@@ -1520,6 +1520,7 @@ walkToBooth()
 if getgenv().settings.autoBeg then
 	spamming = task.spawn(begging)
 end
+
 local PlayerGui = game:GetService("Players").LocalPlayer.PlayerGui
 
 if PlayerGui:FindFirstChild("PromptWearLastOutfit") then
@@ -1532,6 +1533,21 @@ PlayerGui.ChildAdded:Connect(function(child)
         PlayerGui.PromptWearLastOutfit:WaitForChild("PromptResult"):FireServer(true)
     end
 end)
+
+local __ClaimButton = game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Streaks.MainFrame.Claim
+local __ExitButton = game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Streaks.Buttons.Close
+local __Signals = {"Activated", "MouseButton1Down", "MouseButton2Down", "MouseButton1Click", "MouseButton2Click"}
+
+if __ClaimButton.Parent.Parent.Visible == true and firesignal then
+    for i,Signal in next, __Signals do
+        firesignal(__ClaimButton[Signal])
+    end
+    for i,Signal in next, __Signals do
+        firesignal(__ExitButton[Signal])
+    end
+end
+
+
 local RaisedC = Players.LocalPlayer.leaderstats.Raised.value
 Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 	local playerWhoDonated
