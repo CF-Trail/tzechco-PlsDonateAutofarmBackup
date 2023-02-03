@@ -1521,7 +1521,7 @@ if getgenv().settings.autoBeg then
 	spamming = task.spawn(begging)
 end
 
-local PlayerGui = game:GetService("Players").LocalPlayer.PlayerGui
+--[[local PlayerGui = game:GetService("Players").LocalPlayer.PlayerGui
 
 if PlayerGui:FindFirstChild("PromptWearLastOutfit") then
     PlayerGui.PromptWearLastOutfit.PromptResult:FireServer(true)
@@ -1545,7 +1545,7 @@ if __ClaimButton.Parent.Parent.Visible == true and firesignal then
     for i,Signal in next, __Signals do
         firesignal(__ExitButton[Signal])
     end
-end
+end]]
 
 
 local RaisedC = Players.LocalPlayer.leaderstats.Raised.value
