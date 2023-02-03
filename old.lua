@@ -1660,7 +1660,9 @@ end)
 
 
 if getgenv().settings.webhookAfterSH then
+   pcall(function()
 	oldWebhook('serverhop > ' .. Players.LocalPlayer.Name)
+   end)
 end
 
 local msgdone = game:GetService('ReplicatedStorage').DefaultChatSystemChatEvents.OnMessageDoneFiltering
