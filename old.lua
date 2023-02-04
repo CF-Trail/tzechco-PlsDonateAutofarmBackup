@@ -524,6 +524,7 @@ function serverHop()
 				end
 			end)
 			game:GetService("TeleportService").TeleportInitFailed:Connect(function()
+			        task.wait()
 				game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
 			end)
 	end)
