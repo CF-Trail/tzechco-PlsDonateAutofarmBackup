@@ -376,7 +376,12 @@ local sNames = {
 	"fontSize",
 	'noFont',
 	'taggedBoothHop',
-	'rainbowText'
+	'rainbowText',
+	'helloResponce',
+	'botResponce',
+	"donateResponce",
+	"otherResponce",
+	"scamResponce"
 }
 
 local positionX = workspace:WaitForChild('Boomboxes'):WaitForChild('Spawn')
@@ -434,7 +439,31 @@ local sValues = {
 	5,
 	false,
 	false,
-	false
+	false,
+	{
+		'Hi',
+		'Sup',
+		'Hello'
+	},
+	{
+		'no im not',
+		'im not a bot'
+	},
+	{
+		"sorry im saving",
+		"i am saving for my dream item",
+		"sorry my robux is pending"
+	},
+	{
+		"..?",
+		"what",
+		"?"
+	},
+	{
+		"im no scam",
+		"im not a scammer",
+		"this is not a scam"
+	}
 }
 
 if #getgenv().settings ~= sNames then
@@ -1144,6 +1173,7 @@ local render = otherTab:AddSwitch("Disable Rendering", function(bool)
 		game:GetService("RunService"):Set3dRenderingEnabled(true)
 	end
 end)
+render:Set(getgenv().settings.render)
 local jumpswitch = otherTab:AddSwitch("Donation Jump", function(bool)
 	getgenv().settings.donationJump = bool
 	saveSettings()
@@ -1313,8 +1343,86 @@ standingPos:Add('Left')
 standingPos:Add('Right')
 standingPos:Add('Behind')
 
+otherTab2:AddLabel("Auto Near Replies")
+otherTab2:AddLabel("Responces to something similar to 'Hello'")
+local HelloResponce = otherTab2:AddConsole({
+	["y"] = 45,
+	["source"] = "",
+})
+local hfull = ''
+for i, v in ipairs(getgenv().settings.helloResponce) do
+	hfull = hfull .. v .. "\n"
+end
+HelloResponce:Set(hfull)
+otherTab2:AddLabel("Responces to something similar to 'You are a bot'")
+local BotResponce = otherTab2:AddConsole({
+	["y"] = 40,
+	["source"] = "",
+})
+otherTab2:AddLabel("Responces to something similar to 'pls donate'")
+local hfull = ''
+for i, v in ipairs(getgenv().settings.botResponce) do
+	hfull = hfull .. v .. "\n"
+end
+BotResponce:Set(hfull)
+local DonateResponce = otherTab2:AddConsole({
+	["y"] = 45,
+	["source"] = "",
+})
+local hfull = ''
+for i, v in ipairs(getgenv().settings.donateResponce) do
+	hfull = hfull .. v .. "\n"
+end
+DonateResponce:Set(hfull)
+otherTab2:AddLabel("Responces to something similar to 'you are a scammer'")
+local ScamResponce = otherTab2:AddConsole({
+	["y"] = 45,
+	["source"] = "",
+})
+local hfull = ''
+for i, v in ipairs(getgenv().settings.scamResponce) do
+	hfull = hfull .. v .. "\n"
+end
+ScamResponce:Set(hfull)
+otherTab2:AddLabel("Other Responses:")
+local OtherResponce = otherTab2:AddConsole({
+	["y"] = 45,
+	["source"] = "",
+})
+local hfull = ''
+for i, v in ipairs(getgenv().settings.otherResponce) do
+	hfull = hfull .. v .. "\n"
+end
+OtherResponce:Set(hfull)
+otherTab2:AddButton("Save Replies", function()
+	local rsplit = {}
+	for newline in string.gmatch(HelloResponce:Get(), "[^\n]+") do
+		table.insert(rsplit, newline)
+	end
+	getgenv().settings.helloResponce = rsplit
+	local rsplit = {}
+	for newline in string.gmatch(BotResponce:Get(), "[^\n]+") do
+		table.insert(rsplit, newline)
+	end
+	getgenv().settings.botResponce = rsplit
+	local rsplit = {}
+	for newline in string.gmatch(DonateResponce:Get(), "[^\n]+") do
+		table.insert(rsplit, newline)
+	end
+	getgenv().settings.donateResponce = rsplit
+	local rsplit = {}
+	for newline in string.gmatch(OtherResponce:Get(), "[^\n]+") do
+		table.insert(rsplit, newline)
+	end
+	getgenv().settings.otherResponce = rsplit
+	local rsplit = {}
+	for newline in string.gmatch(ScamResponce:Get(), "[^\n]+") do
+		table.insert(rsplit, newline)
+	end
+	getgenv().settings.scamResponce = rsplit
+	saveSettings()
+end)
 
-render:Set(getgenv().settings.render)
 boothTab:Show()
 library:FormatWindows()
 settingsLock = false
@@ -1519,7 +1627,7 @@ msgdone.OnClientEvent:Connect(function(msgdata)
 	local message = string.lower(msgdata.Message)
 	task.wait(2.1 + math.random(0.4, 1))
 	local plrChatted = game:GetService('Players')[speaker] or nil
-	if (plrChatted and plrChatted == game:GetService('Players').LocalPlayer) or getgenv().settings.autoNearReply == false or not plrChatted then
+	if (plrChatted and plrChatted == game:GetService('Players').LocalPlayer) or getgenv().settings.autoNearReply == false or not plrChatted  or string.find(message, 'donates') or string.find(message, "spamming") then
 		return
 	end
 	pcall(function()
@@ -1528,19 +1636,15 @@ msgdone.OnClientEvent:Connect(function(msgdata)
 			local root = chatChar.Humanoid.RootPart
 			if (root.Position - game:GetService('Players').LocalPlayer.Character.Humanoid.RootPart.Position).Magnitude < 11 then
 				if message == 'hello' or message == 'hi' or message == 'sup' or message == 'hey' then
-					messageRequest:FireServer("hello", 'All')
-				elseif string.find(message, 'jump') then
-					messageRequest:FireServer('ok', 'All')
-				elseif string.find(message, '?') and not string.find(message, 'bot') then
-					messageRequest:FireServer('yes', 'All')
+					messageRequest:FireServer(getgenv().settings.helloResponce[math.random(1, #getgenv().settings.helloResponce)], 'All')
 				elseif string.find(message, 'bot') then
-					messageRequest:FireServer(randombotmsgs[math.random(1, #randombotmsgs)], 'All')
+					messageRequest:FireServer(getgenv().settings.botResponce[math.random(1, #getgenv().settings.botResponce)], 'All')
 				elseif string.find(message, 'donate') then
-					messageRequest:FireServer('no', 'All')
+					messageRequest:FireServer(getgenv().settings.donateResponce[math.random(1, #getgenv().settings.donateResponce)], 'All')
 				elseif string.find(message, 'scam') then
-					messageRequest:FireServer('no i dont scam', 'All')
+					messageRequest:FireServer(getgenv().settings.scamResponce[math.random(1, #getgenv().settings.scamResponce)], 'All')
 				else
-					messageRequest:FireServer(randommsgs[math.random(1, #randommsgs)], 'All')
+					messageRequest:FireServer(getgenv().settings.otherResponce[math.random(1, #getgenv().settings.otherResponce)], 'All')
 				end
 			end
 		end
