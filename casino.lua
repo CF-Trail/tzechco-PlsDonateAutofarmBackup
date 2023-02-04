@@ -249,7 +249,7 @@ raised:GetPropertyChangedSignal('Value'):Connect(function()
 	local LogService = Game:GetService("LogService")
 	local logs = LogService:GetLogHistory()
 	if string.find(logs[#logs].message, Players.LocalPlayer.DisplayName) then
-		local msg = string.gsub(logs[#logs].message, ' tipped ', ''):gsub('', ''):gsub('💸', ''):gsub(' to ', ''):gsub(Players.LocalPlayer.DisplayName, ''):gsub(tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC), ''):gsub('',''):gsub("💰",''):gsub(' ', '')
+		local msg = string.gsub(logs[#logs].message, ' tipped ', ''):gsub('', ''):gsub('💸', ''):gsub(' to ', ''):gsub(Players.LocalPlayer.DisplayName, ''):gsub(tostring(RaisedN), ''):gsub('',''):gsub("💰",''):gsub(' ', '')
 		for i, v in next, Players:GetPlayers() do
 			if v.DisplayName == msg then
 				playerWhoDonated = v
