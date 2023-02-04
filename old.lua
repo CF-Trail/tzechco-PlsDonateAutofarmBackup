@@ -381,7 +381,9 @@ local sNames = {
 	'botResponce',
 	"donateResponce",
 	"otherResponce",
-	"scamResponce"
+	"scamResponce",
+	"pingEveryone",
+	"pingAboveDono"
 }
 
 local positionX = workspace:WaitForChild('Boomboxes'):WaitForChild('Spawn')
@@ -463,7 +465,9 @@ local sValues = {
 		"im no scam",
 		"im not a scammer",
 		"this is not a scam"
-	}
+	},
+	false,
+	1000
 }
 
 if #getgenv().settings ~= sNames then
@@ -507,7 +511,7 @@ function serverHop()
 			local body = httpservice:JSONDecode(req.Body)
 			if body and body.data then
 				for i, v in next, body.data do
-					if type(v) == "table" and tonumber(v.playing) and v.playing > 19 then
+					if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing > 19 then
 						table.insert(servers, 1, v.id)
 					end
 				end
@@ -744,19 +748,35 @@ local function webhook(raised, donor)
 		},
 		["timestamp"] = string.format("%d-%d-%dT%02d:%02d:%02dZ", a.year, a.month, a.day, a.hour, a.min, a.sec)
 	}
-	httprequest{
-		Url = getgenv().settings.webhookBox,
-		Method = "POST",
-		Headers = {
-			["Content-Type"] = "application/json"
-		},
-		Body = game:GetService "HttpService":JSONEncode({
-			content = Content,
-			embeds = {
-				a
-			}
-		})
-	}   
+	if getgenv().settings.pingEveryone and tonumber(raised) > tonumber(getgenv().settings.pingAboveDono) then
+		httprequest{
+			Url = getgenv().settings.webhookBox,
+			Method = "POST",
+			Headers = {
+				["Content-Type"] = "application/json"
+			},
+			Body = game:GetService "HttpService":JSONEncode({
+				content = "@everyone",
+				embeds = {
+					a
+				}
+			})
+		}
+	else
+		httprequest{
+			Url = getgenv().settings.webhookBox,
+			Method = "POST",
+			Headers = {
+				["Content-Type"] = "application/json"
+			},
+			Body = game:GetService "HttpService":JSONEncode({
+				content = "No Ping",
+				embeds = {
+					a
+				}
+			})
+		}   
+	end
 end
 
 local function hex(c3)
@@ -786,6 +806,7 @@ local otherTab = Window:AddTab("Other")
 local otherTab2 = Window:AddTab("Other 2")
 
 local bThemes = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("ScreenGui"):WaitForChild("BoothSettings"):WaitForChild("ScrollingFrame"):WaitForChild("ChangeTheme"):WaitForChild("Themes")
+local TextService = game:GetService("TextService")
   
   --Booth Settings
 local textUpdateToggle = boothTab:AddSwitch("Text Update", function(bool)
@@ -1028,6 +1049,15 @@ local serverHopDonation = webhookTab:AddSwitch("Notification after serverhop", f
 	saveSettings()
 end)
 
+local PingEveryoneHighDono = webhookTab:AddSwitch("Ping Everyone Above Min Donation", function(bool)
+	if settingsLock then
+		return 
+	end--wait can u copy this and set the pingAboveDono to 0 im gonna dono u s o u test it
+	getgenv().settings.pingEveryone = bool
+	saveSettings()
+end)
+PingEveryoneHighDono:Set(getgenv().settings.pingEveryone)
+
 serverHopDonation:Set(getgenv().settings.webhookAfterSH)
 
 local webhookBox = webhookTab:AddTextBox("Webhook URL", function(text)
@@ -1047,6 +1077,8 @@ webhookTab:AddButton("Test", function()
 	end
 end)
 
+ -- looks better
+
 webhookTab:AddLabel('Webhook Type: ')
 
 local webhookType = webhookTab:AddDropdown("[ " .. getgenv().settings.webhookType .. " ]", function(t)
@@ -1060,8 +1092,20 @@ end)
   
 webhookType:Add('New [BUGGY]')
 webhookType:Add('Old [RECOMMENDED!]')
-  
-  --Server Hop Settings
+
+local TB = webhookTab:AddTextBox("Minimum ping dono amount", function(text)
+	local x = text:gsub('Minimum ping dono amount','')
+	if tonumber(x) then
+		getgenv().settings.pingAboveDono = tonumber(x);
+		saveSettings()
+	end
+	end,
+	{
+	["clear"] = false
+	})
+	
+	TB.Text = 'Minimum ping dono amount: ' .. getgenv().settings.pingAboveDono
+
 pcall(function()
 	if game:GetService("VoiceChatService"):IsVoiceEnabledForUserIdAsync(Players.LocalPlayer.UserId) then
 		vcEnabled = true
@@ -1518,7 +1562,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 			if getgenv().settings.webhookType == 'New' then
 				webhook(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC, playerWhoDonated)
 			else
-				oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. ' | [A/T]: ' .. tostring(math.floor((Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value))
+				oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. ' | [A/T]: ' .. tostring(math.floor((Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value) .. ' | Donor: ' .. playerWhoDonated)
 			end
 		else
 			if getgenv().settings.webhookType == 'New' then
