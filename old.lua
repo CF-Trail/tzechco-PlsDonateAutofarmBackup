@@ -566,7 +566,7 @@ function serverHop()
 		end
 	end
 
-	while wait() do
+	while task.wait() do
 		pcall(function()
 			TPReturner(gameId)
 			if foundAnything ~= "" then
