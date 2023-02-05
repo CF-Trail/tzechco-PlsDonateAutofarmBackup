@@ -93,7 +93,7 @@ function serverHop()
 		game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
 	end
 	game:GetService("TeleportService").TeleportInitFailed:Connect(function()
-		task.wait(5)
+		task.wait(0.5)
 		game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
 	end)
 end
