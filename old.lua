@@ -486,50 +486,95 @@ local function saveSettings()
 		writefile('plsdonatesettings.txt', httpservice:JSONEncode(getgenv().settings))
 	end
 end
+local AllIDs = {}
+local foundAnything = ""
+local actualHour = os.date("!*t").hour
+local Deleted = false
+local S_T = game:GetService("TeleportService")
+local S_H = game:GetService("HttpService")
+local RandomName = tostring(math.random(1,999999))
+
+local File = pcall(function()
+	AllIDs = S_H:JSONDecode(readfile(RandomName..".json"))
+end)
+if not File then
+	table.insert(AllIDs, actualHour)
+	pcall(function()
+		writefile(RandomName..".json", S_H:JSONEncode(AllIDs))
+	end)
+
+end
+local function TPReturner(placeId)
+	local Site;
+	if foundAnything == "" then
+		Site = S_H:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. placeId .. '/servers/Public?sortOrder=Asc&limit=100'))
+	else
+		Site = S_H:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. placeId .. '/servers/Public?sortOrder=Asc&limit=100&cursor=' .. foundAnything))
+	end
+	local ID = ""
+	if Site.nextPageCursor and Site.nextPageCursor ~= "null" and Site.nextPageCursor ~= nil then
+		foundAnything = Site.nextPageCursor
+	end
+	local num = 0;
+	for i,v in pairs(Site.data) do
+		local Possible = true
+		ID = tostring(v.id)
+		if tonumber(v.maxPlayers) > tonumber(v.playing) and tonumber(v.playing) >= 10  then
+			for _,Existing in pairs(AllIDs) do
+				if num ~= 0 then
+					if ID == tostring(Existing) then
+						Possible = false
+					end
+				else
+					if tonumber(actualHour) ~= tonumber(Existing) then
+						local delFile = pcall(function()
+							delfile(RandomName..".json")
+							AllIDs = {}
+							table.insert(AllIDs, actualHour)
+						end)
+					end
+				end
+				num = num + 1
+			end
+			if Possible == true then
+				table.insert(AllIDs, ID)
+				wait()
+				pcall(function()
+					writefile(RandomName..".json", S_H:JSONEncode(AllIDs))
+					wait()
+					S_T:TeleportToPlaceInstance(placeId, ID, game.Players.LocalPlayer)
+				end)
+				wait(4)
+			end
+		end
+	end
+end
+
 function serverHop()
-	--local isVip = game:GetService('RobloxReplicatedStorage').GetServerType:InvokeServer()
-	--if isVip == "VIPServer" then return end
-	local gameId
-	gameId = "8737602449"
+    local gameId
+	gameId = 8737602449
 	if vcEnabled and getgenv().settings.vcServer then
-		gameId = "8943844393"
+		gameId = 8943844393
 	end
 	if getgenv().settings.AlternativeHop then
 		math.randomseed(tick())
 		local random = math.random(0, 1)
 		if random == 1 then
-			gameId = '8943844393'
+			gameId = 8943844393
 		else
-			gameId = '8737602449'
+			gameId = 8737602449
 		end
 	end
-	task.spawn(function()
-			local servers = {}
-			local req = httprequest({
-				Url = "https://games.roblox.com/v1/games/" .. gameId .. "/servers/Public?sortOrder=Desc&limit=100"
-			})
-			local body = httpservice:JSONDecode(req.Body)
-			if body and body.data then
-				for i, v in next, body.data do
-					if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing > 19 then
-						table.insert(servers, 1, v.id)
-					end
-				end
-			end
-			task.spawn(function()
-				while task.wait(0.5) do
-						if #servers > 0 then
-							game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
-						end
-				end
-			end)
-			game:GetService("TeleportService").TeleportInitFailed:Connect(function()
-			        task.wait()
-				game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
-			end)
-	end)
-end
 
+	while wait() do
+		pcall(function()
+			TPReturner(gameId)
+			if foundAnything ~= "" then
+				TPReturner(gameId)
+			end
+		end)
+	end
+end
 
 local function waitServerHop()
 	task.wait(getgenv().settings.serverHopDelay * 60)
