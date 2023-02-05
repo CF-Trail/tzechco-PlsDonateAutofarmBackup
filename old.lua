@@ -492,7 +492,7 @@ local actualHour = os.date("!*t").hour
 local Deleted = false
 local S_T = game:GetService("TeleportService")
 local S_H = game:GetService("HttpService")
-local RandomName = tostring(math.random(1,999999))
+local RandomName = tostring(math.random(1,999999)) .. tostring(math.random())
 
 local File = pcall(function()
 	AllIDs = S_H:JSONDecode(readfile(RandomName..".json"))
@@ -538,13 +538,13 @@ local function TPReturner(placeId)
 			end
 			if Possible == true then
 				table.insert(AllIDs, ID)
-				wait()
+				task.wait()
 				pcall(function()
 					writefile(RandomName..".json", S_H:JSONEncode(AllIDs))
-					wait()
-					S_T:TeleportToPlaceInstance(placeId, ID, game.Players.LocalPlayer)
+					task.wait()
+					S_T:TeleportToPlaceInstance(placeId, ID, game:GetService("Players").LocalPlayer)
 				end)
-				wait(4)
+				task.wait(4)
 			end
 		end
 	end
