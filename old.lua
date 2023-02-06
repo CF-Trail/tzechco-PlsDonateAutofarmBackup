@@ -31,7 +31,7 @@ until game:IsLoaded()
 if isfile and writefile and typeof(isfile) == 'function' and typeof(writefile) == 'function' then
 	if not isfile('PromptedDiscordCFCommunityPD.txt') then
 		writefile('PromptedDiscordCFCommunityPD.txt', game:GetService('HttpService'):JSONEncode('hi'))
-		local Module = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Discord%20Inviter/Source.lua"))()
+		local Module = loadstring(game:HttpGet("https://raw.githubusercontent.com/CF-Trail/random/main/DiscordModule"))()
 		Module.Prompt({
 			invite = "https://discord.gg/fNeggqVMZs",
 			name = "CF Community",
