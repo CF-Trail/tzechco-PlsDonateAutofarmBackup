@@ -492,7 +492,7 @@ local actualHour = os.date("!*t").hour
 local Deleted = false
 local S_T = game:GetService("TeleportService")
 local S_H = game:GetService("HttpService")
-local RandomName = tostring(math.random(1,999999)) .. tostring(math.random())
+local RandomName = "PlsDonateServerHop-Temp"
 
 local File = pcall(function()
 	AllIDs = S_H:JSONDecode(readfile(RandomName..".json"))
