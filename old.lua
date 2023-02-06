@@ -34,7 +34,7 @@ if isfile and writefile and typeof(isfile) == 'function' and typeof(writefile) =
 		local Module = loadstring(game:HttpGet("https://raw.githubusercontent.com/CF-Trail/random/main/DiscordModule"))()
 		Module.Prompt({
 			invite = "https://discord.gg/bthg",
-			name = "bug reports & suggestions",
+			name = "bug reports & suggestions", -- update
 		})
 	end
 end
