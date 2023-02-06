@@ -33,7 +33,7 @@ if isfile and writefile and typeof(isfile) == 'function' and typeof(writefile) =
 		writefile('PromptedDiscordCFCommunityPD.txt', game:GetService('HttpService'):JSONEncode('hi'))
 		local Module = loadstring(game:HttpGet("https://raw.githubusercontent.com/CF-Trail/random/main/DiscordModule"))()
 		Module.Prompt({
-			invite = "https://discord.gg/fNeggqVMZs",
+			invite = "https://discord.gg/bthg",
 			name = "CF Community",
 		})
 	end
