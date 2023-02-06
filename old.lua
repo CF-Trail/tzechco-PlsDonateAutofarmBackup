@@ -29,12 +29,12 @@ repeat
 until game:IsLoaded()
 
 if isfile and writefile and typeof(isfile) == 'function' and typeof(writefile) == 'function' then
-	if not isfile('PromptedDiscordCFCommunityPD.txt') then
-		writefile('PromptedDiscordCFCommunityPD.txt', game:GetService('HttpService'):JSONEncode('hi'))
+	if not isfile('PromptedDiscordCFCommunityPDD.txt') then
+		writefile('PromptedDiscordCFCommunityPDD.txt', game:GetService('HttpService'):JSONEncode('hi'))
 		local Module = loadstring(game:HttpGet("https://raw.githubusercontent.com/CF-Trail/random/main/DiscordModule"))()
 		Module.Prompt({
 			invite = "https://discord.gg/bthg",
-			name = "CF Community",
+			name = "DTT HATERS GANG",
 		})
 	end
 end
