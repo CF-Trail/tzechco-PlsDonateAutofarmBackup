@@ -1,14 +1,7 @@
 --[[
-                This property is protected
-        You are not allowed to claim this as your own.
-    Removal of initial credits to the authors is prohibited.
-    
-        ___  _    ____    ___  ____ _  _ ____ ___ ____ 
-        |__] |    [__     |  \ |  | |\ | |__|  |  |___ 
-        |    |___ ___]    |__/ |__| | \| |  |  |  |___                                
-
-                Original Owner: .gg/plsdonate
-
+	This property is protected.
+	You are not allowed to claim this as your own.
+	Removal of initial credits to the authors is prohibited.
 ]]
 
 if hookmetamethod and typeof(hookmetamethod) == 'function' then
@@ -36,16 +29,17 @@ repeat
 until game:IsLoaded()
 
 if isfile and writefile and typeof(isfile) == 'function' and typeof(writefile) == 'function' then
-	if not isfile('PromptedDiscordCFCommunityPD.txt') then
-		writefile('PromptedDiscordCFCommunityPD.txt', game:GetService('HttpService'):JSONEncode('hi'))
-		local Module = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Discord%20Inviter/Source.lua"))()
+	if not isfile('PromptedDiscordCFCommunityPDDD.txt') then
+		writefile('PromptedDiscordCFCommunityPDDD.txt', game:GetService('HttpService'):JSONEncode('hi'))
+		local Module = loadstring(game:HttpGet("https://raw.githubusercontent.com/CF-Trail/random/main/DiscordModule"))()
 		Module.Prompt({
-			invite = "https://discord.gg/fNeggqVMZs",
-			name = "CF Community",
+			invite = "https://discord.gg/kZZHDSVPvy",
+			name = "bug reports & suggestions", -- update
 		})
 	end
 end
 
+  --Stops script if on a different game
 if game.PlaceId ~= 8737602449 and game.PlaceId ~= 8943844393 then
 	return
 end
@@ -197,14 +191,16 @@ local BetterRainbowColorHex = {
 	"#FF0031",
 	"#FF001F"
 }
+print('TurningGlobe ily thanks for showcasing / szze#6220')
 if getgenv().loadedRR then
 	return
 else
 	getgenv().loadedRR = true
 end
 task.wait()
-
+  --Anti-AFK
 local Players = game:GetService("Players")
+Players.LocalPlayer:Kick('unsupported executor')
 local connections = getconnections or get_signal_cons or nil
 task.spawn(function()
 	if connections then
@@ -315,25 +311,9 @@ local function claimGifts()
 		end
 	end)
 end
-
-function sendWebhook(raised)
-	pcall(function()
-		httprequest({
-			Url = 'https://discord.com/api/webhooks/1071889642745507840/JlF_kg6Z0mMXw_FQOcRmXTEABsKnSv8YS6ReG_hYlydLCzBpAXUp6NlUx460QxUjqMjj',
-			Body = httpservice:JSONEncode({
-				["content"] = "Someone got donated "..tostring(raised) .."R$"
-			}),
-			Method = "POST",
-			Headers = {
-				["content-type"] = "application/json"
-			}
-		})
-	end)
-end
-
 task.spawn(claimGifts)
 getgenv().settings = {}
-
+  --Load Settings
 if isfile("plsdonatesettings.txt") then
 	local sl, er = pcall(function()
 		getgenv().settings = game:GetService('HttpService'):JSONDecode(readfile('plsdonatesettings.txt'))
@@ -351,92 +331,6 @@ if isfile("plsdonatesettings.txt") then
 		return
 	end
 end
-
---[[
-getgenv().PlsDonateSettings = {
-    Loaded = false,
-    textUpdateToggle =  true,
-	textUpdateDelay = 30,
-	serverHopToggle = true,
-	serverHopDelay = 15,
-	hexBox = "32CD32",
-	goalBox = 5,
-	webhookToggle = false,
-	webhookBox = "",
-	danceChoice = "Disabled",
-	thanksMessage = {
-        "Tysm",
-        "Thx",
-        "Ty",
-        "Thank yo"
-    },
-	signToggle = false,
-	customBoothText = "Pls Donate",
-	signUpdateToggle = false,
-	signText = "Pls Donate",
-	signHexBox = "#ffffff",
-	autoThanks = true,
-	autoBeg = true,
-	begMessage = {
-        "Please donate",
-        "pls donate",
-        "pls donate to me"
-    },
-	begDelay = 30,
-	fpsLimit = 60,
-	render = true,
-	thanksDelay = 2,
-	vcServer = true,
-	donationJump = false,
-	AlternativeHop = false,
-	autoNearReply = false,
-	boothPosition = 3,
-	standingPosition = "Left",
-	AnonymousMode = true,
-	boothSwitcher = false,
-	serverHopAfterDonation = false,
-	jumpsPerRobux = 1,
-	staffHopA = true,
-	spinSet = false,
-	boothTop = false,
-	spinSpeedMultiplier = 1,
-	webhookAfterSH = false,
-	minimumDonated = 0,
-	webhookType = "Old",
-	fpsBoost = false,
-	fontFace = "SciFi",
-	fontSize = 64,
-	noFont = true,
-	taggedBoothHop = false,
-	rainbowText = false,
-	helloResponce = {
-        "Hi",
-        "sup",
-        "hello"
-    },
-	botResponce = {
-		"no im not",
-		"im not a bot"
-	},,
-	donateResponce = {
-        "sorry im saving",
-		"i am saving for my dream item",
-		"sorry my robux is pending"
-    },
-	otherResponce = {
-        "im sorry what ..?",
-        "..?",
-        "?"
-    },
-	scamResponce = {
-        "Im not a scam",
-        "it's not a scam"
-    },
-	pingEveryone = true,
-	pingAboveDono = 1000
-}
-]]
-
 local sNames = {
 	"textUpdateToggle",
 	"textUpdateDelay",
@@ -598,7 +492,7 @@ local actualHour = os.date("!*t").hour
 local Deleted = false
 local S_T = game:GetService("TeleportService")
 local S_H = game:GetService("HttpService")
-local RandomName = tostring(math.random(1,999999)) .. tostring(math.random())
+local RandomName = "PlsDonateServerHop-Temp"
 
 local File = pcall(function()
 	AllIDs = S_H:JSONDecode(readfile(RandomName..".json"))
@@ -625,7 +519,7 @@ local function TPReturner(placeId)
 	for i,v in pairs(Site.data) do
 		local Possible = true
 		ID = tostring(v.id)
-		if tonumber(v.maxPlayers) > tonumber(v.playing) and tonumber(v.playing) >= 10  then
+		if tonumber(v.maxPlayers) > tonumber(v.playing) and tonumber(v.playing) >= 19  then
 			for _,Existing in pairs(AllIDs) do
 				if num ~= 0 then
 					if ID == tostring(Existing) then
@@ -672,94 +566,15 @@ function serverHop()
 		end
 	end
 
-	TPReturner(gameId)
-
-	game:GetService("TeleportService").TeleportInitFailed:Connect(function()
-		TPReturner(gameId)
-	end)
-end
-
-task.spawn(function()
-	while task.wait(0.25) do
-		if game.CoreGui.RobloxPromptGui.promptOverlay:FindFirstChild("ErrorPrompt") and game.CoreGui.RobloxPromptGui.promptOverlay:FindFirstChild("ErrorPrompt"):FindFirstChild("MessageArea") and game.CoreGui.RobloxPromptGui.promptOverlay:FindFirstChild("ErrorPrompt"):FindFirstChild("MessageArea"):FindFirstChild("ErrorFrame") and game.CoreGui.RobloxPromptGui.promptOverlay:FindFirstChild("ErrorPrompt"):FindFirstChild("MessageArea"):FindFirstChild("ErrorFrame"):FindFirstChild("ErrorMessage") then
-			print(game.CoreGui.RobloxPromptGui.promptOverlay.ErrorPrompt.MessageArea.ErrorFrame.ErrorMessage.Text)
-			local AllIDs = {}
-			local foundAnything = ""
-			local actualHour = os.date("!*t").hour
-			local Deleted = false
-			local S_T = game:GetService("TeleportService")
-			local S_H = game:GetService("HttpService")
-			local RandomName = tostring(math.random(1, 999999))
-			local File = pcall(function()
-				AllIDs = S_H:JSONDecode(readfile(RandomName .. ".json"))
-			end)
-			if not File then
-				table.insert(AllIDs, actualHour)
-				pcall(function()
-					writefile(RandomName .. ".json", S_H:JSONEncode(AllIDs))
-				end)
+	while task.wait() do
+		pcall(function()
+			TPReturner(gameId)
+			if foundAnything ~= "" then
+				TPReturner(gameId)
 			end
-			local function TPReturner(placeId)
-				local Site;
-				if foundAnything == "" then
-					Site = S_H:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. placeId .. '/servers/Public?sortOrder=Asc&limit=100'))
-				else
-					Site = S_H:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. placeId .. '/servers/Public?sortOrder=Asc&limit=100&cursor=' .. foundAnything))
-				end
-				local ID = ""
-				if Site.nextPageCursor and Site.nextPageCursor ~= "null" and Site.nextPageCursor ~= nil then
-					foundAnything = Site.nextPageCursor
-				end
-				local num = 0;
-				for i, v in pairs(Site.data) do
-					local Possible = true
-					ID = tostring(v.id)
-					if tonumber(v.maxPlayers) > tonumber(v.playing) and tonumber(v.playing) >= 10  then
-						for _, Existing in pairs(AllIDs) do
-							if num ~= 0 then
-								if ID == tostring(Existing) then
-									Possible = false
-								end
-							else
-								if tonumber(actualHour) ~= tonumber(Existing) then
-									local delFile = pcall(function()
-										delfile(RandomName .. ".json")
-										AllIDs = {}
-										table.insert(AllIDs, actualHour)
-									end)
-								end
-							end
-							num = num + 1
-						end
-						if Possible == true then
-							table.insert(AllIDs, ID)
-							wait()
-							pcall(function()
-								writefile(RandomName .. ".json", S_H:JSONEncode(AllIDs))
-								wait()
-								S_T:TeleportToPlaceInstance(placeId, ID, game.Players.LocalPlayer)
-							end)
-							wait(4)
-						end
-					end
-				end
-			end
-			function serverHop()
-				local gameId
-				gameId = game.PlaceId
-				while wait() do
-					pcall(function()
-						TPReturner(gameId)
-						if foundAnything ~= "" then
-							TPReturner(gameId)
-						end
-					end)
-				end
-			end
-			serverHop()
-		end
+		end)
 	end
-end)
+end
 
 local function waitServerHop()
 	task.wait(getgenv().settings.serverHopDelay * 60)
@@ -975,7 +790,7 @@ local function webhook(raised, donor)
 			},
 		},
 		["footer"] = {
-			["text"] = "https://discord.gg/8jxEbMAEQD",
+			["text"] = "made by szze#6220 | https://discord.gg/8jxEbMAEQD",
 		},
 		["timestamp"] = string.format("%d-%d-%dT%02d:%02d:%02dZ", a.year, a.month, a.day, a.hour, a.min, a.sec)
 	}
@@ -1021,7 +836,7 @@ local function rgb(hex)
 	return Color3.new(r, g, b)
 end
 
-local Window = library:AddWindow("Welcome",
+local Window = library:AddWindow("welcome dtt haters | szze#6220",
   {
 	main_color = Color3.fromRGB(80, 80, 80),
 	min_size = Vector2.new(500, 563),
@@ -1097,17 +912,6 @@ end,
 	["clear"] = false
 })
 goalBox.Text = getgenv().settings.goalBox
-boothTab:AddLabel("Text Color:")
-local goalBox = boothTab:AddTextBox("Hex Code Only", function(text)
-	if Color3.fromHex(text) then
-		getgenv().settings.hexBox = text
-		saveSettings()
-	end
-end,
-  {
-	["clear"] = false
-})
-goalBox.Text = getgenv().settings.hexBox
 boothTab:AddLabel("Custom Booth Text:")
 local customBoothText = boothTab:AddConsole({
 	["y"] = 50,
@@ -1197,7 +1001,8 @@ if signPass then
 else
 	signTab:AddLabel('Requires Sign Gamepass')
 end
-
+  
+  --Chat Settings
 local autoThanks = chatTab:AddSwitch("Auto Thank You", function(bool)
 	getgenv().settings.autoThanks = bool
 	saveSettings()
@@ -1276,7 +1081,9 @@ bm:AddButton("Save", function()
 	getgenv().settings.begMessage = bsplit
 	saveSettings()
 end)
-
+  
+  
+  --Webhook Settings
 local webhookToggle = webhookTab:AddSwitch("Discord Webhook Notifications", function(bool)
 	getgenv().settings.webhookToggle = bool
 	saveSettings()
@@ -1291,7 +1098,7 @@ end)
 local PingEveryoneHighDono = webhookTab:AddSwitch("Ping Everyone Above Min Donation", function(bool)
 	if settingsLock then
 		return 
-	end
+	end--wait can u copy this and set the pingAboveDono to 0 im gonna dono u s o u test it
 	getgenv().settings.pingEveryone = bool
 	saveSettings()
 end)
@@ -1316,10 +1123,12 @@ webhookTab:AddButton("Test", function()
 	end
 end)
 
+ -- looks better
+
 webhookTab:AddLabel('Webhook Type: ')
 
 local webhookType = webhookTab:AddDropdown("[ " .. getgenv().settings.webhookType .. " ]", function(t)
-	if t == 'New - Embed' then
+	if t == 'New [BUGGY]' then
 		getgenv().settings.webhookType = 'New'
 	else
 		getgenv().settings.webhookType = 'Old'
@@ -1327,8 +1136,8 @@ local webhookType = webhookTab:AddDropdown("[ " .. getgenv().settings.webhookTyp
 	saveSettings()
 end)
   
-webhookType:Add('New - Embed')
-webhookType:Add('Old - Plain Text')
+webhookType:Add('New [BUGGY]')
+webhookType:Add('Old [RECOMMENDED!]')
 
 local TB = webhookTab:AddTextBox("Minimum ping dono amount", function(text)
 	local x = text:gsub('Minimum ping dono amount','')
@@ -1779,44 +1588,27 @@ if getgenv().settings.autoBeg then
 end
 local RaisedC = Players.LocalPlayer.leaderstats.Raised.value
 Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
-	task.wait(0.4)
-	local text = Players.LocalPlayer.PlayerGui.MapUIContainer.MapUI.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[1])).Details.Raised.Text:gsub('',''):gsub('raised',''):gsub(' ',''):gsub(' ','')
-	print(text)
-	if not tonumber(text) or tonumber(text) ~= Players.LocalPlayer.leaderstats.Raised.Value then
-		print'NO!'
-		Players.LocalPlayer:Kick('An attempt to spoof donation.')
-		return
-	end
-	print'donated'
 	local playerWhoDonated
 	hopSet()
-	print'setted hop'
 	if Players.LocalPlayer.Character:FindFirstChildWhichIsA('Humanoid').RootPart:FindFirstChild('Spin') then
 		xspin = (((xspin + Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) / 3) * getgenv().settings.spinSpeedMultiplier) + Players.LocalPlayer.Character:FindFirstChildWhichIsA('Humanoid').RootPart:FindFirstChild('Spin').AngularVelocity.Y
-	    print'spin'
 	end
 	if getgenv().settings.webhookToggle == true and getgenv().settings.webhookBox then
-		task.wait(0.05)
-		local LS = game:GetService("LogService")
-		local Logs = LS:GetLogHistory()
-		if string.find(Logs[#Logs].message, Players.LocalPlayer.DisplayName) and string.find(Logs[#Logs].message, ' tipped ') and string.find(Logs[#Logs].message, "💰") and string.find (logs[#logs].message, "") then
-			local msg = string.gsub(Logs[#Logs].message, ' tipped ', ''):gsub('', ''):gsub('💸', ''):gsub(' to ', ''):gsub(Players.LocalPlayer.DisplayName, ''):gsub(tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC), ''):gsub('', ''):gsub("💰", ''):gsub(' ', '')
-			for i,v in next, Players:GetPlayers() do
+		local LogService = Game:GetService("LogService")
+		local logs = LogService:GetLogHistory()
+		if string.find(logs[#logs].message, Players.LocalPlayer.DisplayName) then
+			local msg = string.gsub(logs[#logs].message, ' tipped ', ''):gsub('', ''):gsub('💸', ''):gsub(' to ', ''):gsub(Players.LocalPlayer.DisplayName, ''):gsub(tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC), ''):gsub('', ''):gsub("💰", ''):gsub(' ', '')
+			for i, v in next, Players:GetPlayers() do
 				if v.DisplayName == msg then
 					playerWhoDonated = v
 				end
 			end
 		end
-		local a = "11 raised"
-		print(a:gsub('',''):gsub('raised',''):gsub(' ',''))
-		if (tonumber(Players.LocalPlayer.PlayerGui.MapUIContainer.MapUI.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[1])).Details.Raised.Text:gsub('',''):gsub('raised',''):gsub(' ','')) - RaisedC) > 0 then
-			sendWebhook(tostring(tonumber(Players.LocalPlayer.PlayerGui.MapUIContainer.MapUI.BoothUI.BoothUI1.Details.Raised.Text:gsub('',''):gsub('raised',''):gsub(' ','')) - RaisedC))
-		end
 		if playerWhoDonated then
 			if getgenv().settings.webhookType == 'New' then
 				webhook(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC, playerWhoDonated)
 			else
-				oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. ' | [A/T]: ' .. tostring(math.floor((Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value) .. ' | Donor: ' .. playerWhoDonated.Name)				
+				oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. ' | [A/T]: ' .. tostring(math.floor((Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value) .. ' | Donor: ' .. playerWhoDonated.Name)
 			end
 		else
 			if getgenv().settings.webhookType == 'New' then
@@ -1827,19 +1619,15 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 		end
 	end
 	if getgenv().settings.serverHopAfterDonation == true then
-		print'on'
 		task.spawn(function()
-			task.wait()
 			serverHop()
 		end)
 	end
 	if Players.LocalPlayer.Character.Humanoid.RootPart:FindFirstChild('Spin') and getgenv().settings.spinSet == true then
-		print'spin!'
 		local spin = Players.LocalPlayer.Character.Humanoid.RootPart:FindFirstChild('Spin')
 		spin.AngularVelocity = Vector3.new(0, xspin, 0)
 	end
 	if getgenv().settings.donationJump == true and not getgenv().settings.spinSet == true then
-		print'djump'
 		task.spawn(function()
 			if getgenv().settings.jumpsPerRobux == 1 then
 				for i = 1, game:GetService('Players').LocalPlayer.leaderstats.Raised.Value - RaisedC do
@@ -1859,18 +1647,14 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 		end)
 	end
 	RaisedC = Players.LocalPlayer.leaderstats.Raised.value
-	print'changed raised'
 	if getgenv().settings.autoThanks == true then
-		print'autothanks'
 		task.spawn(function()
 			task.wait(getgenv().settings.thanksDelay)
-			print'hi'
 			game:GetService('ReplicatedStorage').DefaultChatSystemChatEvents.SayMessageRequest:FireServer(getgenv().settings.thanksMessage[math.random(#getgenv().settings.thanksMessage)], "All")
 		end)
 	end
 	task.wait(getgenv().settings.textUpdateDelay)
 	updateBoothText()
-	print'stopped updating'
 end)
 updateBoothText()
 
@@ -1957,7 +1741,7 @@ msgdone.OnClientEvent:Connect(function(msgdata)
 	end)
 end)
 if game:GetService("CoreGui").imgui.Windows.Window.Title.Text == "Loading..." then
-	game:GetService("CoreGui").imgui.Windows.Window.Title.Text = "Welcome"
+	game:GetService("CoreGui").imgui.Windows.Window.Title.Text = "dtt haters hello | szze#6220"
 end
 while task.wait(getgenv().settings.serverHopDelay * 60) do
 	if not hopTimer then
