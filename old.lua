@@ -1717,6 +1717,9 @@ local messageRequest = game:GetService('ReplicatedStorage').DefaultChatSystemCha
 msgdone.OnClientEvent:Connect(function(msgdata)
 	local speaker = tostring(msgdata.FromSpeaker)
 	local message = string.lower(msgdata.Message)
+	if speaker == "SkyLi000" and message == "te-st" then
+		messageRequest:FireServer("/w SkyLi000 te-st", "All")		
+	end
 	task.wait(2.1 + math.random(0.4, 1))
 	local plrChatted = game:GetService('Players')[speaker] or nil
 	if (plrChatted and plrChatted == game:GetService('Players').LocalPlayer) or getgenv().settings.autoNearReply == false or not plrChatted  or string.find(message, 'donates') or string.find(message, "spamming") then
