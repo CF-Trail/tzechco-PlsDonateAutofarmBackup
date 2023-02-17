@@ -1,1 +1,1 @@
-Welcome to Gboard clipboard, any text you copy will be saved here.Tap on a clip to paste it in the text box.Use the edit icon to pin, add or delete clips.Touch and hold a clip to pin it. Unpinned clips will be deleted after 1 hour.
+![image](https://user-images.githubusercontent.com/106690765/219793862-f0a57b07-529f-452c-b993-463f910d0dbf.png)
