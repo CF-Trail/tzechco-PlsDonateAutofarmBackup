@@ -34,7 +34,7 @@ if isfile and writefile and typeof(isfile) == 'function' and typeof(writefile) =
 		local Module = loadstring(game:HttpGet("https://raw.githubusercontent.com/CF-Trail/random/main/DiscordModule"))()
 		Module.Prompt({
 			invite = "https://discord.gg/bthg",
-			name = "bug reports & suggestions", -- update
+			name = "script server", -- update
 		})
 	end
 end
@@ -840,7 +840,7 @@ local function rgb(hex)
 	return Color3.new(r, g, b)
 end
 
-local Window = library:AddWindow("welcome dtt haters | szze#6220",
+local Window = library:AddWindow("szze#6220 | .gg/bthg",
   {
 	main_color = Color3.fromRGB(80, 80, 80),
 	min_size = Vector2.new(500, 563),
