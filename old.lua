@@ -29,6 +29,7 @@ repeat
 until game:IsLoaded()
 
 if isfile and writefile and typeof(isfile) == 'function' and typeof(writefile) == 'function' then
+	pcall(function()
 	if not isfile('DiscordCFCommunityPDDDWD.txt') then
 		writefile('DiscordCFCommunityPDDDWD.txt', game:GetService('HttpService'):JSONEncode('hi'))
 		local Module = loadstring(game:HttpGet("https://raw.githubusercontent.com/CF-Trail/random/main/DiscordModule"))()
@@ -37,6 +38,7 @@ if isfile and writefile and typeof(isfile) == 'function' and typeof(writefile) =
 			name = "script server", -- update
 		})
 	end
+	end)
 end
 
   --Stops script if on a different game
