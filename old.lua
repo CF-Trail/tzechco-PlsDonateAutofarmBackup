@@ -1651,6 +1651,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 				oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. ' | [A/T]: ' .. tostring(math.floor((Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value))
 			end
 		end
+		oldWebhook('Join up: <https://discord.gg/bthg/> | 🏄')
 	end
 	if getgenv().settings.serverHopAfterDonation == true then
 		task.spawn(function()
