@@ -557,47 +557,29 @@ local function TPReturner(placeId)
 end
 
 function serverHop()
-	--local isVip = game:GetService('RobloxReplicatedStorage').GetServerType:InvokeServer()
-	--if isVip == "VIPServer" then return end
-	local gameId
-	gameId = "8737602449"
+    local gameId
+	gameId = 8737602449
 	if vcEnabled and getgenv().settings.vcServer then
-		gameId = "8943844393"
+		gameId = 8943844393
 	end
 	if getgenv().settings.AlternativeHop then
 		math.randomseed(tick())
 		local random = math.random(0, 1)
 		if random == 1 then
-			gameId = '8943844393'
+			gameId = 8943844393
 		else
-			gameId = '8737602449'
+			gameId = 8737602449
 		end
 	end
-	task.spawn(function()
-			local servers = {}
-			local req = httprequest({
-				Url = "https://games.roblox.com/v1/games/" .. gameId .. "/servers/Public?sortOrder=Desc&limit=100"
-			})
-			local body = httpservice:JSONDecode(req.Body)
-			if body and body.data then
-				for i, v in next, body.data do
-					if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing > 19 then
-						table.insert(servers, 1, v.id)
-					end
-				end
+
+	while task.wait(1) do
+		pcall(function()
+			TPReturner(gameId)
+			if foundAnything ~= "" then
+				TPReturner(gameId)
 			end
-			task.spawn(function()
-				while task.wait(0.5) do
-						if #servers > 0 then
-							game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
-						end
-				end
-			end)
-			game:GetService("TeleportService").TeleportInitFailed:Connect(function()
-			        task.wait()
-				game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
-			end)
-	end)
+		end)
+	end
 end
 
 
