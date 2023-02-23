@@ -330,6 +330,7 @@ if isfile("plsdonatesettings.txt") then
 			task.wait(15)
 			errMsg:Destroy()
 		end)
+                delfile("plsdonatesettings.txt")
 		task.wait(2)
 		forceServerHop()
 		return
