@@ -844,7 +844,7 @@ local function rgb(hex)
 	return Color3.new(r, g, b)
 end
 
-local Window = library:AddWindow("szze#6220 | .gg/bthg",
+local Window = library:AddWindow("szze#6220",
   {
 	main_color = Color3.fromRGB(80, 80, 80),
 	min_size = Vector2.new(500, 563),
@@ -1634,7 +1634,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 				oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. ' | [A/T]: ' .. tostring(math.floor((Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value))
 			end
 		end
-		oldWebhook('Join up: <https://discord.gg/bthg/> | 🏄')
+		oldWebhook('#~#~#~#~#~#~#~#~#~#~#~#~#~#~#~#~#~#~#~#')
 	end
 	if getgenv().settings.serverHopAfterDonation == true then
 		task.spawn(function()
