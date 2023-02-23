@@ -389,7 +389,8 @@ local sNames = {
 	"scamResponce",
 	"pingEveryone",
 	"pingAboveDono",
-	"removeHeadNametag"
+	"removeHeadNametag",
+	"gravitySwitch"
 }
 
 local positionX = workspace:WaitForChild('Boomboxes'):WaitForChild('Spawn')
@@ -474,6 +475,7 @@ local sValues = {
 	},
 	false,
 	1000,
+	false,
 	false
 }
 
@@ -1323,7 +1325,14 @@ local spinToggle = otherTab:AddSwitch('Spin [1R$ = +1 speed]', function(bool)
 	end
 	saveSettings()
 end)
+	
+local gravityToggle = otherTab:AddSwitch('Gravity [1R$ = -1 gravity]', function(bool)
+        if settingsLock then return end
+	getgenv().settings.gravitySwitch = bool
+	saveSettings()
+end)
 
+gravityToggle:Set(getgenv().settings.gravitySwitch)
 
 local fpsBoosts = otherTab:AddSwitch('CPU Saver', function(bool)
 	getgenv().settings.fpsBoost = bool
@@ -1645,6 +1654,11 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 		local spin = Players.LocalPlayer.Character.Humanoid.RootPart:FindFirstChild('Spin')
 		spin.AngularVelocity = Vector3.new(0, xspin, 0)
 	end
+	pcall(function()
+	   if getgenv().settings.gravitySwitch then
+		workspace.Gravity = workspace.Gravity - (Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)			
+	   end
+	end)
 	if getgenv().settings.donationJump == true and not getgenv().settings.spinSet == true then
 		task.spawn(function()
 			if getgenv().settings.jumpsPerRobux == 1 then
