@@ -1589,7 +1589,7 @@ local function walkToBooth()
 			break
 		end
 	end
-	game:GetService('VirtualInputManager'):SendKeyEvent(true, "LeftControl", false, game)
+	Players.LocalPlayer.Character.Humanoid.WalkSpeed = 32
 	local Controls = require(Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule")):GetControls()
 	Controls:Disable()
 	local atBooth = false
@@ -1598,12 +1598,14 @@ local function walkToBooth()
 	Players.LocalPlayer.Character.Humanoid.MoveToFinished:Connect(function(reached)
 		atBooth = true
 	end)
+        local atboothtick = 0
 	repeat
 		task.wait()
+		atboothtick += 1
+		if atboothtick > 999 then break end
 	until atBooth
 	Players.LocalPlayer.Character.Humanoid.RootPart.CFrame = CFrame.new(boothPos.Position)
 	Controls:Enable()
-	game:GetService('VirtualInputManager'):SendKeyEvent(false, "LeftControl", false, game)
 	Players.LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(Players.LocalPlayer.Character.HumanoidRootPart.Position, Vector3.new(40, 14, 101)))
 	task.wait(0.6)
 	Players:Chat('/e dance' .. getgenv().settings.danceChoice)
