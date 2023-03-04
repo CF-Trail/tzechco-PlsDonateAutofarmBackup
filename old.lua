@@ -34,7 +34,7 @@ if isfile and writefile and typeof(isfile) == 'function' and typeof(writefile) =
 		writefile('DiscordCFCommunityPDDDWD.txt', game:GetService('HttpService'):JSONEncode('hi'))
 		local Module = loadstring(game:HttpGet("https://raw.githubusercontent.com/CF-Trail/random/main/DiscordModule"))()
 		Module.Prompt({
-			invite = "https://discord.gg/bthg",
+			invite = "https://discord.gg/SuNqfnK",
 			name = "script server", -- update
 		})
 	end
@@ -800,7 +800,7 @@ local function webhook(raised, donor)
 			},
 		},
 		["footer"] = {
-			["text"] = "made by szze#6220 | https://discord.gg/bthg",
+			["text"] = "made by szze#6220 | https://discord.gg/SuNqfnK",
 		},
 		["timestamp"] = string.format("%d-%d-%dT%02d:%02d:%02dZ", a.year, a.month, a.day, a.hour, a.min, a.sec)
 	}
@@ -846,7 +846,7 @@ local function rgb(hex)
 	return Color3.new(r, g, b)
 end
 
-local Window = library:AddWindow("szze#6220 | .gg/bthg",
+local Window = library:AddWindow("szze#6220 | .gg/SuNqfnK",
   {
 	main_color = Color3.fromRGB(80, 80, 80),
 	min_size = Vector2.new(500, 563),
@@ -1643,7 +1643,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 				oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. ' | [A/T]: ' .. tostring(math.floor((Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value))
 			end
 		end
-		oldWebhook('Hop on peak: <https://discord.gg/bthg> | 🏂')
+		oldWebhook('Hop on peak: <https://discord.gg/SuNqfnK> | 🏂')
 	end
 	if getgenv().settings.serverHopAfterDonation == true then
 		task.spawn(function()
