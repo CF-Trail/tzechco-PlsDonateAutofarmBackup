@@ -1608,6 +1608,7 @@ local function walkToBooth()
 	Controls:Enable()
 	Players.LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(Players.LocalPlayer.Character.HumanoidRootPart.Position, Vector3.new(40, 14, 101)))
 	task.wait(0.6)
+	Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
 	Players:Chat('/e dance' .. getgenv().settings.danceChoice)
 end
 walkToBooth()
