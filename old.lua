@@ -390,7 +390,8 @@ local sNames = {
 	"pingEveryone",
 	"pingAboveDono",
 	"removeHeadNametag",
-	"gravitySwitch"
+	"gravitySwitch",
+	"jumpBoost"
 }
 
 local positionX = workspace:WaitForChild('Boomboxes'):WaitForChild('Spawn')
@@ -475,6 +476,7 @@ local sValues = {
 	},
 	false,
 	1000,
+	false,
 	false,
 	false
 }
@@ -1326,6 +1328,12 @@ local spinToggle = otherTab:AddSwitch('Spin [1R$ = +1 speed]', function(bool)
 	saveSettings()
 end)
 	
+local jumpSwitcher = otherTab:AddSwitch('1R$ = +1 jump power', function(bool)
+	if settingsLock then return end
+	getgenv().settings.jumpBoost = bool
+	saveSettings()
+end)
+	
 local gravityToggle = otherTab:AddSwitch('Gravity [1R$ = -1 gravity]', function(bool)
         if settingsLock then return end
 	getgenv().settings.gravitySwitch = bool
@@ -1656,6 +1664,9 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 	if Players.LocalPlayer.Character.Humanoid.RootPart:FindFirstChild('Spin') and getgenv().settings.spinSet == true then
 		local spin = Players.LocalPlayer.Character.Humanoid.RootPart:FindFirstChild('Spin')
 		spin.AngularVelocity = Vector3.new(0, xspin, 0)
+	end
+	if getgenv().settings.jumpBoost then
+	  pcall(function() Players.LocalPlayer.Character.Humanoid.JumpPower = Players.LocalPlayer.Character.Humanoid.JumpPower + (Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) end)		
 	end
 	pcall(function()
 	   if getgenv().settings.gravitySwitch then
