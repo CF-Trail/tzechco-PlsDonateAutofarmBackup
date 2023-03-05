@@ -1333,6 +1333,8 @@ local jumpSwitcher = otherTab:AddSwitch('1R$ = +1 jump power', function(bool)
 	getgenv().settings.jumpBoost = bool
 	saveSettings()
 end)
+
+jumpSwitcher:Set(getgenv().settings.jumpBoost)
 	
 local gravityToggle = otherTab:AddSwitch('Gravity [1R$ = -1 gravity]', function(bool)
         if settingsLock then return end
