@@ -848,6 +848,21 @@ local function rgb(hex)
 	return Color3.new(r, g, b)
 end
 
+if game:GetService('CoreGui'):FindFirstChild('RobloxPromptGui') then
+    for i,v in next, game:GetService("CoreGui").RobloxPromptGui:GetDescendants() do
+       if v:IsA('TextLabel') and string.find(v.Text,"You've been banned") then
+          oldWebhook('@everyone ||' .. Players.LocalPlayer.Name .. '|| got banned' .. v.Text:gsub("You've been banned",''):gsub('You were kicked from this experience:',''):gsub('(Error Code: 267)',''))
+       end
+    end
+end
+
+if game:GetService('CoreGui'):FindFirstChild('RobloxPromptGui') then
+    game:GetService('CoreGui').RobloxPromptGui.DescendantAdded:Connect(function(v)
+        if v:IsA('TextLabel') and string.find(v.Text,"You've been banned") then
+            oldWebhook('@everyone ||' .. Players.LocalPlayer.Name .. '|| got banned' .. v.Text:gsub("You've been banned",''):gsub('You were kicked from this experience:',''):gsub('(Error Code: 267)',''))
+         end
+    end)
+end
 local Window = library:AddWindow("szze#6220 | discord.gg/SuNqfnK",
   {
 	main_color = Color3.fromRGB(80, 80, 80),
@@ -1802,9 +1817,11 @@ msgdone.OnClientEvent:Connect(function(msgdata)
 		end
 	end)
 end)
+
 if game:GetService("CoreGui").imgui.Windows.Window.Title.Text == "Loading..." then
 	game:GetService("CoreGui").imgui.Windows.Window.Title.Text = "dtt haters hello | szze#6220"
 end
+
 while task.wait(getgenv().settings.serverHopDelay * 60) do
 	if not hopTimer then
 		hopSet()
