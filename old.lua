@@ -1626,6 +1626,7 @@ if getgenv().settings.autoBeg then
 	spamming = task.spawn(begging)
 end
 local RaisedC = Players.LocalPlayer.leaderstats.Raised.value
+local djset = false
 Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 	local playerWhoDonated
 	hopSet()
@@ -1675,6 +1676,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 	   end
 	end)
 	if getgenv().settings.donationJump == true and not getgenv().settings.spinSet == true then
+		djset = true
 		task.spawn(function()
 			if getgenv().settings.jumpsPerRobux == 1 then
 				for i = 1, game:GetService('Players').LocalPlayer.leaderstats.Raised.Value - RaisedC do
@@ -1691,6 +1693,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 					until game:GetService('Players').LocalPlayer.Character.Humanoid:GetState() == Enum.HumanoidStateType.Running
 				end
 			end
+			djset = false
 		end)
 	end
 	RaisedC = Players.LocalPlayer.leaderstats.Raised.value
@@ -1700,6 +1703,18 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 			game:GetService('ReplicatedStorage').DefaultChatSystemChatEvents.SayMessageRequest:FireServer(getgenv().settings.thanksMessage[math.random(#getgenv().settings.thanksMessage)], "All")
 		end)
 	end
+task.spawn(function()
+	repeat task.wait() until djset == false
+	task.wait(0.5)
+	local object = getgenv().settings.danceChoice
+	if object == "Disabled" then
+		Players:Chat("/e wave")
+	elseif object == "1" then
+		Players:Chat("/e dance")
+	else
+		Players:Chat("/e dance" .. object)
+	end
+end)
 	task.wait(getgenv().settings.textUpdateDelay)
 	updateBoothText()
 end)
