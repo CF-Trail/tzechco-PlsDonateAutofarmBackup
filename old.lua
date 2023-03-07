@@ -618,7 +618,7 @@ local function oldWebhook(msg)
 	end
 	pcall(function()
 		httprequest({
-			Url = getgenv().settings.webhookBox,
+			Url = getgenv().settings.webhookBox:gsub(' ',''),
 			Body = httpservice:JSONEncode({
 				["content"] = msg
 			}),
@@ -808,7 +808,7 @@ local function webhook(raised, donor)
 	}
 	if getgenv().settings.pingEveryone and tonumber(raised) > tonumber(getgenv().settings.pingAboveDono) then
 		httprequest{
-			Url = getgenv().settings.webhookBox,
+			Url = getgenv().settings.webhookBox:gsub(' ',''),
 			Method = "POST",
 			Headers = {
 				["Content-Type"] = "application/json"
@@ -1146,7 +1146,7 @@ webhookBox.Text = getgenv().settings.webhookBox
 webhookTab:AddLabel('Press Enter to Save')
 webhookTab:AddButton("Test", function()
 	if getgenv().settings.webhookBox then
-		oldWebhook("webhook works | dotgg")
+		oldWebhook("Webhook works!")
 	end
 end)
 
