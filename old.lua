@@ -820,6 +820,20 @@ local function webhook(raised, donor)
 				}
 			})
 		}
+	else
+		httprequest{
+			Url = getgenv().settings.webhookBox:gsub(' ',''),
+			Method = "POST",
+			Headers = {
+				["Content-Type"] = "application/json"
+			},
+			Body = game:GetService "HttpService":JSONEncode({
+				content = "",
+				embeds = {
+					a
+				}
+			})
+		}
 	end
 end
 
