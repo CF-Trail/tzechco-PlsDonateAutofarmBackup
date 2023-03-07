@@ -820,20 +820,6 @@ local function webhook(raised, donor)
 				}
 			})
 		}
-	else
-		httprequest{
-			Url = getgenv().settings.webhookBox,
-			Method = "POST",
-			Headers = {
-				["Content-Type"] = "application/json"
-			},
-			Body = game:GetService "HttpService":JSONEncode({
-				content = "No Ping",
-				embeds = {
-					a
-				}
-			})
-		}   
 	end
 end
 
@@ -1118,6 +1104,7 @@ end)
 webhookToggle:Set(getgenv().settings.webhookToggle)
 
 local serverHopDonation = webhookTab:AddSwitch("Notification after serverhop", function(bool)
+	if settingsLock then return end
 	getgenv().settings.webhookAfterSH = bool
 	saveSettings()
 end)
@@ -1125,12 +1112,11 @@ end)
 local PingEveryoneHighDono = webhookTab:AddSwitch("Ping Everyone Above Min Donation", function(bool)
 	if settingsLock then
 		return 
-	end--wait can u copy this and set the pingAboveDono to 0 im gonna dono u s o u test it
+	end 
 	getgenv().settings.pingEveryone = bool
 	saveSettings()
 end)
 PingEveryoneHighDono:Set(getgenv().settings.pingEveryone)
-
 serverHopDonation:Set(getgenv().settings.webhookAfterSH)
 
 local webhookBox = webhookTab:AddTextBox("Webhook URL", function(text)
@@ -1208,11 +1194,13 @@ if vcEnabled then
 end
 
 local alhop = serverHopTab:AddSwitch("Random Hop", function(bool)
+	if settingsLock then return end
 	getgenv().settings.AlternativeHop = bool
 	saveSettings()
 end)
 
 local sHopSwitch = serverHopTab:AddSwitch('ServerHop after donation', function(bool)
+        if settingsLock then return end
 	getgenv().settings.serverHopAfterDonation = bool
 	saveSettings()
 end)
@@ -1220,6 +1208,7 @@ end)
 sHopSwitch:Set(getgenv().settings.serverHopAfterDonation)
 
 local staffHopSwitch = serverHopTab:AddSwitch('ServerHop if Staff', function(bool)
+	 if settingsLock then return end
 	getgenv().settings.staffHopA = bool
 	saveSettings()
 end)
@@ -1227,6 +1216,7 @@ end)
 staffHopSwitch:Set(getgenv().settings.staffHopA)
 
 local taggedBoothHopSwitch = serverHopTab:AddSwitch('ServerHop if tagged booth', function(bool)
+        if settingsLock then return end
 	getgenv().settings.taggedBoothHop = bool
 	saveSettings()
 end)
@@ -1292,11 +1282,13 @@ local render = otherTab:AddSwitch("Disable Rendering", function(bool)
 end)
 render:Set(getgenv().settings.render)
 local jumpswitch = otherTab:AddSwitch("Donation Jump", function(bool)
+	if settingsLock then return end
 	getgenv().settings.donationJump = bool
 	saveSettings()
 end)
 jumpswitch:Set(getgenv().settings.donationJump)
 local autoReply = otherTab:AddSwitch("Auto Reply [Experimental]", function(bool)
+	if settingsLock then return end
 	getgenv().settings.autoNearReply = bool
 	saveSettings()
 end)
@@ -1772,7 +1764,7 @@ task.spawn(function()
 end)
 
 if getgenv().settings.webhookAfterSH then
-	webhook('hi hello ' .. Players.LocalPlayer.DisplayName .. ' (' .. Players.LocalPlayer.Name .. ') serverhopped')
+	oldWebhook(Players.LocalPlayer.DisplayName .. ' (' .. Players.LocalPlayer.Name .. ') serverhopped')
 end
 
 local msgdone = game:GetService('ReplicatedStorage').DefaultChatSystemChatEvents.OnMessageDoneFiltering
