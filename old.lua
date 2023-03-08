@@ -1,9 +1,3 @@
---[[
-	This property is protected.
-	You are not allowed to claim this as your own.
-	Removal of initial credits to the authors is prohibited.
-]]
-
 if hookmetamethod and typeof(hookmetamethod) == 'function' then
 	local oldHook
 	oldHook = hookmetamethod(game, "__namecall", function(self, ...)
@@ -30,14 +24,14 @@ until game:IsLoaded()
 
 if isfile and writefile and typeof(isfile) == 'function' and typeof(writefile) == 'function' then
 	pcall(function()
-	if not isfile('DiscordCFCommunityPDDDWD.txt') then
-		writefile('DiscordCFCommunityPDDDWD.txt', game:GetService('HttpService'):JSONEncode('hi'))
-		local Module = loadstring(game:HttpGet("https://raw.githubusercontent.com/CF-Trail/random/main/DiscordModule"))()
-		Module.Prompt({
-			invite = "https://discord.gg/SuNqfnK",
-			name = "script server", -- update
-		})
-	end
+		if not isfile('DiscordCFCommunityPDDDWD.txt') then
+			writefile('DiscordCFCommunityPDDDWD.txt', game:GetService('HttpService'):JSONEncode('hi'))
+			local Module = loadstring(game:HttpGet("https://raw.githubusercontent.com/CF-Trail/random/main/DiscordModule"))()
+			Module.Prompt({
+				invite = "https://discord.gg/SuNqfnK",
+				name = "script server", -- update
+			})
+		end
 	end)
 end
 
@@ -258,7 +252,7 @@ local queueonteleport = (syn and syn.queue_on_teleport) or queue_on_teleport or 
 local httprequest = (syn and syn.request) or http and http.request or http_request or (fluxus and fluxus.request) or request
 local httpservice = game:GetService('HttpService')
 if queueonteleport then
-  queueonteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/CF-Trail/tzechco-PlsDonateAutofarmBackup/main/old.lua'))()")
+	queueonteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/CF-Trail/tzechco-PlsDonateAutofarmBackup/main/old.lua'))()")
 end
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/CF-Trail/tzechco-PlsDonateAutofarmBackup/main/UI"))()
 function forceServerHop()
@@ -280,9 +274,9 @@ function forceServerHop()
 	end
 	task.spawn(function()
 		while task.wait(0.5) do
-				if #servers > 0 then
-					game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
-				end
+			if #servers > 0 then
+				game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
+			end
 		end
 	end)
 	game:GetService("TeleportService").TeleportInitFailed:Connect(function()
@@ -330,7 +324,7 @@ if isfile("plsdonatesettings.txt") then
 			task.wait(15)
 			errMsg:Destroy()
 		end)
-                delfile("plsdonatesettings.txt")
+		delfile("plsdonatesettings.txt")
 		task.wait(2)
 		forceServerHop()
 		return
@@ -391,7 +385,9 @@ local sNames = {
 	"pingAboveDono",
 	"removeHeadNametag",
 	"gravitySwitch",
-	"jumpBoost"
+	"jumpBoost",
+	'goalServerhopSwitch',
+	'goalServerhopGoal'
 }
 
 local positionX = workspace:WaitForChild('Boomboxes'):WaitForChild('Spawn')
@@ -478,7 +474,9 @@ local sValues = {
 	1000,
 	false,
 	false,
-	false
+	false,
+	false,
+	0
 }
 
 if #getgenv().settings ~= sNames then
@@ -506,12 +504,12 @@ local S_H = game:GetService("HttpService")
 local RandomName = "PlsDonateServerHop-Temp"
 
 local File = pcall(function()
-	AllIDs = S_H:JSONDecode(readfile(RandomName..".json"))
+	AllIDs = S_H:JSONDecode(readfile(RandomName .. ".json"))
 end)
 if not File then
 	table.insert(AllIDs, actualHour)
 	pcall(function()
-		writefile(RandomName..".json", S_H:JSONEncode(AllIDs))
+		writefile(RandomName .. ".json", S_H:JSONEncode(AllIDs))
 	end)
 
 end
@@ -527,11 +525,11 @@ local function TPReturner(placeId)
 		foundAnything = Site.nextPageCursor
 	end
 	local num = 0;
-	for i,v in pairs(Site.data) do
+	for i, v in pairs(Site.data) do
 		local Possible = true
 		ID = tostring(v.id)
 		if tonumber(v.maxPlayers) > tonumber(v.playing) and tonumber(v.playing) >= 19  then
-			for _,Existing in pairs(AllIDs) do
+			for _, Existing in pairs(AllIDs) do
 				if num ~= 0 then
 					if ID == tostring(Existing) then
 						Possible = false
@@ -539,7 +537,7 @@ local function TPReturner(placeId)
 				else
 					if tonumber(actualHour) ~= tonumber(Existing) then
 						local delFile = pcall(function()
-							delfile(RandomName..".json")
+							delfile(RandomName .. ".json")
 							AllIDs = {}
 							table.insert(AllIDs, actualHour)
 						end)
@@ -551,7 +549,7 @@ local function TPReturner(placeId)
 				table.insert(AllIDs, ID)
 				task.wait()
 				pcall(function()
-					writefile(RandomName..".json", S_H:JSONEncode(AllIDs))
+					writefile(RandomName .. ".json", S_H:JSONEncode(AllIDs))
 					task.wait()
 					S_T:TeleportToPlaceInstance(placeId, ID, game:GetService("Players").LocalPlayer)
 				end)
@@ -562,7 +560,7 @@ local function TPReturner(placeId)
 end
 
 function serverHop()
-    local gameId
+	local gameId
 	gameId = 8737602449
 	if vcEnabled and getgenv().settings.vcServer then
 		gameId = 8943844393
@@ -618,7 +616,7 @@ local function oldWebhook(msg)
 	end
 	pcall(function()
 		httprequest({
-			Url = getgenv().settings.webhookBox:gsub(' ',''),
+			Url = getgenv().settings.webhookBox:gsub(' ', ''),
 			Body = httpservice:JSONEncode({
 				["content"] = msg
 			}),
@@ -706,19 +704,21 @@ function updateBoothText()
 		end
 	end
 	if getgenv().settings.textUpdateToggle and getgenv().settings.customBoothText and getgenv().settings.rainbowText then
-	  while task.wait() and getgenv().settings.rainbowText do
-		task.wait(3)
-		for i,v in next, RainbowHexColors do
-			if not getgenv().settings.rainbowText then break end
-			if not getgenv().settings.noFont then
-				boothText = tostring('<font face="' .. getgenv().settings.fontFace .. '" size="' .. getgenv().settings.fontSize .. '" color="#' .. v .. '">' .. text .. '</font>')
-			else
-				boothText = tostring('<font color="' .. v .. '">' .. text .. '</font>')
-			end
-			require(game:GetService('ReplicatedStorage').Remotes).Event("SetBoothText"):FireServer(boothText, "booth")
+		while task.wait() and getgenv().settings.rainbowText do
 			task.wait(3)
+			for i, v in next, RainbowHexColors do
+				if not getgenv().settings.rainbowText then
+					break
+				end
+				if not getgenv().settings.noFont then
+					boothText = tostring('<font face="' .. getgenv().settings.fontFace .. '" size="' .. getgenv().settings.fontSize .. '" color="#' .. v .. '">' .. text .. '</font>')
+				else
+					boothText = tostring('<font color="' .. v .. '">' .. text .. '</font>')
+				end
+				require(game:GetService('ReplicatedStorage').Remotes).Event("SetBoothText"):FireServer(boothText, "booth")
+				task.wait(3)
+			end
 		end
-	  end
 	end
 	if getgenv().settings.signToggle and getgenv().settings.signUpdateToggle and getgenv().settings.signText and signPass then
 		local currentSign = game:GetService('Players').LocalPlayer.Character.DonateSign.TextSign.SurfaceGui.TextLabel.Text
@@ -808,7 +808,7 @@ local function webhook(raised, donor)
 	}
 	if getgenv().settings.pingEveryone and tonumber(raised) > tonumber(getgenv().settings.pingAboveDono) then
 		httprequest{
-			Url = getgenv().settings.webhookBox:gsub(' ',''),
+			Url = getgenv().settings.webhookBox:gsub(' ', ''),
 			Method = "POST",
 			Headers = {
 				["Content-Type"] = "application/json"
@@ -822,7 +822,7 @@ local function webhook(raised, donor)
 		}
 	else
 		httprequest{
-			Url = getgenv().settings.webhookBox:gsub(' ',''),
+			Url = getgenv().settings.webhookBox:gsub(' ', ''),
 			Method = "POST",
 			Headers = {
 				["Content-Type"] = "application/json"
@@ -849,19 +849,19 @@ local function rgb(hex)
 end
 
 if game:GetService('CoreGui'):FindFirstChild('RobloxPromptGui') then
-    for i,v in next, game:GetService("CoreGui").RobloxPromptGui:GetDescendants() do
-       if v:IsA('TextLabel') and string.find(v.Text,"You've been banned") then
-          oldWebhook('@everyone ||' .. Players.LocalPlayer.Name .. '|| got banned' .. v.Text:gsub("You've been banned",''):gsub('You were kicked from this experience:',''):gsub('(Error Code: 267)',''))
-       end
-    end
+	for i, v in next, game:GetService("CoreGui").RobloxPromptGui:GetDescendants() do
+		if v:IsA('TextLabel') and string.find(v.Text, "You've been banned") then
+			oldWebhook('@everyone ||' .. Players.LocalPlayer.Name .. '|| got banned' .. v.Text:gsub("You've been banned", ''):gsub('You were kicked from this experience:', ''):gsub('(Error Code: 267)', ''))
+		end
+	end
 end
 
 if game:GetService('CoreGui'):FindFirstChild('RobloxPromptGui') then
-    game:GetService('CoreGui').RobloxPromptGui.DescendantAdded:Connect(function(v)
-        if v:IsA('TextLabel') and string.find(v.Text,"You've been banned") then
-            oldWebhook('@everyone ||' .. Players.LocalPlayer.Name .. '|| got banned' .. v.Text:gsub("You've been banned",''):gsub('You were kicked from this experience:',''):gsub('(Error Code: 267)',''))
-         end
-    end)
+	game:GetService('CoreGui').RobloxPromptGui.DescendantAdded:Connect(function(v)
+		if v:IsA('TextLabel') and string.find(v.Text, "You've been banned") then
+			oldWebhook('@everyone ||' .. Players.LocalPlayer.Name .. '|| got banned' .. v.Text:gsub("You've been banned", ''):gsub('You were kicked from this experience:', ''):gsub('(Error Code: 267)', ''))
+		end
+	end)
 end
 local Window = library:AddWindow("szze#6220 | discord.gg/SuNqfnK",
   {
@@ -880,6 +880,7 @@ local otherTab2 = Window:AddTab("Other 2")
 
 local bThemes = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("ScreenGui"):WaitForChild("BoothSettings"):WaitForChild("ScrollingFrame"):WaitForChild("ChangeTheme"):WaitForChild("Themes")
 local TextService = game:GetService("TextService")
+local sgoalR = 0
   
   --Booth Settings
 local textUpdateToggle = boothTab:AddSwitch("Text Update", function(bool)
@@ -1118,7 +1119,9 @@ end)
 webhookToggle:Set(getgenv().settings.webhookToggle)
 
 local serverHopDonation = webhookTab:AddSwitch("Notification after serverhop", function(bool)
-	if settingsLock then return end
+	if settingsLock then
+		return
+	end
 	getgenv().settings.webhookAfterSH = bool
 	saveSettings()
 end)
@@ -1167,17 +1170,16 @@ webhookType:Add('New [BUGGY]')
 webhookType:Add('Old [RECOMMENDED!]')
 
 local TB = webhookTab:AddTextBox("Minimum ping dono amount", function(text)
-	local x = text:gsub('Minimum ping dono amount','')
+	local x = text:gsub('Minimum ping dono amount', '')
 	if tonumber(x) then
 		getgenv().settings.pingAboveDono = tonumber(x);
 		saveSettings()
 	end
-	end,
+end,
 	{
 	["clear"] = false
-	})
-	
-	TB.Text = 'Minimum ping dono amount: ' .. getgenv().settings.pingAboveDono
+})
+TB.Text = 'Minimum ping dono amount: ' .. getgenv().settings.pingAboveDono
 
 pcall(function()
 	if game:GetService("VoiceChatService"):IsVoiceEnabledForUserIdAsync(Players.LocalPlayer.UserId) then
@@ -1208,13 +1210,17 @@ if vcEnabled then
 end
 
 local alhop = serverHopTab:AddSwitch("Random Hop", function(bool)
-	if settingsLock then return end
+	if settingsLock then
+		return
+	end
 	getgenv().settings.AlternativeHop = bool
 	saveSettings()
 end)
 
 local sHopSwitch = serverHopTab:AddSwitch('ServerHop after donation', function(bool)
-        if settingsLock then return end
+	if settingsLock then
+		return
+	end
 	getgenv().settings.serverHopAfterDonation = bool
 	saveSettings()
 end)
@@ -1222,7 +1228,9 @@ end)
 sHopSwitch:Set(getgenv().settings.serverHopAfterDonation)
 
 local staffHopSwitch = serverHopTab:AddSwitch('ServerHop if Staff', function(bool)
-	 if settingsLock then return end
+	if settingsLock then
+		return
+	end
 	getgenv().settings.staffHopA = bool
 	saveSettings()
 end)
@@ -1230,24 +1238,46 @@ end)
 staffHopSwitch:Set(getgenv().settings.staffHopA)
 
 local taggedBoothHopSwitch = serverHopTab:AddSwitch('ServerHop if tagged booth', function(bool)
-        if settingsLock then return end
+	if settingsLock then
+		return
+	end
 	getgenv().settings.taggedBoothHop = bool
 	saveSettings()
 end)
 
+local gSHSwitch = serverHopTab:AddSwitch('ServerHop if ServerHop goal reached', function(bool)
+	if settingsLock then
+		return
+	end
+	getgenv().settings.goalServerhopSwitch = bool
+	saveSettings()
+end)
+
+gSHSwitch:Set(getgenv().settings.goalServerhopSwitch)
 alhop:Set(getgenv().settings.AlternativeHop)
 taggedBoothHopSwitch:Set(getgenv().settings.taggedBoothHop)
+
 serverHopTab:AddButton("Server Hop", function()
 	serverHop()
 end)
 
 local serverHopMinAmount = serverHopTab:AddTextBox("Minimum donated amount", function(text)
 	getgenv().settings.minimumDonated = tonumber(text) or 0
+	saveSettings()
 end,
   {
 	["clear"] = false
 })
-serverHopMinAmount.Text = getgenv().settings.minimumDonated
+serverHopMinAmount.Text = 'Minimum donated: ' .. getgenv().settings.minimumDonated
+
+local gSHAmount = serverHopTab:AddTextBox("Serverhop goal", function(text)
+	getgenv().settings.goalServerhopGoal = tonumber(text) or 0
+	saveSettings()
+end,
+  {
+	["clear"] = false
+})
+gSHAmount.Text = 'ServerHop goal: ' .. getgenv().settings.goalServerhopGoal
 
 local serverHopDelay = serverHopTab:AddSlider("Server Hop Delay (M)", function(x)
 	if settingsLock then
@@ -1296,13 +1326,17 @@ local render = otherTab:AddSwitch("Disable Rendering", function(bool)
 end)
 render:Set(getgenv().settings.render)
 local jumpswitch = otherTab:AddSwitch("Donation Jump", function(bool)
-	if settingsLock then return end
+	if settingsLock then
+		return
+	end
 	getgenv().settings.donationJump = bool
 	saveSettings()
 end)
 jumpswitch:Set(getgenv().settings.donationJump)
 local autoReply = otherTab:AddSwitch("Auto Reply [Experimental]", function(bool)
-	if settingsLock then return end
+	if settingsLock then
+		return
+	end
 	getgenv().settings.autoNearReply = bool
 	saveSettings()
 end)
@@ -1350,7 +1384,9 @@ local spinToggle = otherTab:AddSwitch('Spin [1R$ = +1 speed]', function(bool)
 end)
 	
 local jumpSwitcher = otherTab:AddSwitch('1R$ = +1 jump power', function(bool)
-	if settingsLock then return end
+	if settingsLock then
+		return
+	end
 	getgenv().settings.jumpBoost = bool
 	saveSettings()
 end)
@@ -1358,7 +1394,9 @@ end)
 jumpSwitcher:Set(getgenv().settings.jumpBoost)
 	
 local gravityToggle = otherTab:AddSwitch('Gravity [1R$ = -1 gravity]', function(bool)
-        if settingsLock then return end
+	if settingsLock then
+		return
+	end
 	getgenv().settings.gravitySwitch = bool
 	saveSettings()
 end)
@@ -1413,7 +1451,7 @@ fpsBoosts:Set(getgenv().settings.fpsBoost)
 local rHNM = otherTab:AddSwitch('Remove NameTag above head', function(bool)
 	getgenv().settings.removeHeadNametag = bool
 	if getgenv().settings.removeHeadNametag and Players.LocalPlayer.Character.Head:FindFirstChild('HeadTag') then
-	   Players.LocalPlayer.Character.Head:FindFirstChild('HeadTag'):Destroy()
+		Players.LocalPlayer.Character.Head:FindFirstChild('HeadTag'):Destroy()
 	end
 end)
 	
@@ -1629,11 +1667,13 @@ local function walkToBooth()
 	Players.LocalPlayer.Character.Humanoid.MoveToFinished:Connect(function(reached)
 		atBooth = true
 	end)
-        local atboothtick = 0
+	local atboothtick = 0
 	repeat
 		task.wait()
 		atboothtick += 1
-		if atboothtick > 999 then break end
+		if atboothtick > 999 then
+			break
+		end
 	until atBooth
 	Players.LocalPlayer.Character.Humanoid.RootPart.CFrame = CFrame.new(boothPos.Position)
 	Controls:Enable()
@@ -1650,6 +1690,8 @@ local RaisedC = Players.LocalPlayer.leaderstats.Raised.value
 local djset = false
 Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 	local playerWhoDonated
+	sgoalR = sgoalR + (Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
+	print(sgoalR)
 	hopSet()
 	if Players.LocalPlayer.Character:FindFirstChildWhichIsA('Humanoid').RootPart:FindFirstChild('Spin') then
 		xspin = (((xspin + Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) / 3) * getgenv().settings.spinSpeedMultiplier) + Players.LocalPlayer.Character:FindFirstChildWhichIsA('Humanoid').RootPart:FindFirstChild('Spin').AngularVelocity.Y
@@ -1689,12 +1731,14 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 		spin.AngularVelocity = Vector3.new(0, xspin, 0)
 	end
 	if getgenv().settings.jumpBoost then
-	  pcall(function() Players.LocalPlayer.Character.Humanoid.JumpPower = Players.LocalPlayer.Character.Humanoid.JumpPower + (Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) end)		
+		pcall(function()
+			Players.LocalPlayer.Character.Humanoid.JumpPower = Players.LocalPlayer.Character.Humanoid.JumpPower + (Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
+		end)		
 	end
 	pcall(function()
-	   if getgenv().settings.gravitySwitch then
-		workspace.Gravity = workspace.Gravity - (Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)			
-	   end
+		if getgenv().settings.gravitySwitch then
+			workspace.Gravity = workspace.Gravity - (Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
+		end
 	end)
 	if getgenv().settings.donationJump == true and not getgenv().settings.spinSet == true then
 		djset = true
@@ -1724,18 +1768,23 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 			game:GetService('ReplicatedStorage').DefaultChatSystemChatEvents.SayMessageRequest:FireServer(getgenv().settings.thanksMessage[math.random(#getgenv().settings.thanksMessage)], "All")
 		end)
 	end
-task.spawn(function()
-	repeat task.wait() until djset == false
-	task.wait(0.5)
-	local object = getgenv().settings.danceChoice
-	if object == "Disabled" then
-		Players:Chat("/e wave")
-	elseif object == "1" then
-		Players:Chat("/e dance")
-	else
-		Players:Chat("/e dance" .. object)
+	task.spawn(function()
+		repeat
+			task.wait()
+		until djset == false
+		task.wait(0.5)
+		local object = getgenv().settings.danceChoice
+		if object == "Disabled" then
+			Players:Chat("/e wave")
+		elseif object == "1" then
+			Players:Chat("/e dance")
+		else
+			Players:Chat("/e dance" .. object)
+		end
+	end)
+	if getgenv().settings.goalServerhopSwitch and sgoalR >= getgenv().settings.goalServerhopGoal then
+		serverHop()
 	end
-end)
 	task.wait(getgenv().settings.textUpdateDelay)
 	updateBoothText()
 end)
