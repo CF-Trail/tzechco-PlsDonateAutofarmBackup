@@ -1696,7 +1696,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 	if getgenv().settings.webhookToggle == true and getgenv().settings.webhookBox then
      for i, child in next, game:GetService("Players").LocalPlayer.PlayerGui:WaitForChild('Chat'):WaitForChild('Frame').ChatChannelParentFrame.Frame_MessageLogDisplay.Scroller:GetChildren() do
 		if child:IsA('Frame') and string.find(child:WaitForChild('TextLabel').Text,game:GetService('Players').LocalPlayer.DisplayName) and string.find(child:WaitForChild('TextLabel').Text,'') then
-				 local text = child.Text:gsub(' tipped ',''):gsub(' to ',''):gsub(game:GetService('Players').LocalPlayer.DisplayName,''):gsub(tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC),''):gsub('',''):gsub('',''):gsub(' ','')
+				 local text = child.TextLabel.Text:gsub(' tipped ',''):gsub(' to ',''):gsub(game:GetService('Players').LocalPlayer.DisplayName,''):gsub(tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC),''):gsub('',''):gsub('',''):gsub(' ','')
 				 for i,v in next, game:GetService('Players'):GetPlayers() do
 					if v.DisplayName == text and v ~= Players.LocalPlayer then
 						playerWhoDonated = v
