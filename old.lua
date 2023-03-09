@@ -796,7 +796,7 @@ local function webhook(raised, donor)
 			},
 			{
 				["name"] = "Donor",
-				["value"] = '`' .. (donor and donor.Name) or 'hi im crazyblox' .. '`',
+				["value"] = '`' .. (donor ~= nil and typeof(donor) == "Instance" and donor.Name) or 'hi im crazyblox' .. '`',
 				["inline"] = true
 			},
 			{
