@@ -765,7 +765,7 @@ local function webhook(raised, donor)
 		["title"] = '**' .. game:GetService('Players').LocalPlayer.Name .. '**',
 		["description"] = "",
 		["type"] = "rich",
-		["color"] = tonumber(getgenv().embedcolor),
+		["color"] = tonumber(0x2ECC71),
 		["thumbnail"] = {
 			["url"] = "https://www.roblox.com/headshot-thumbnail/image?userId=" ..
                Players.LocalPlayer.UserId .. "&width=420&height=420&format=png"
@@ -796,7 +796,7 @@ local function webhook(raised, donor)
 			},
 			{
 				["name"] = "Donor",
-				["value"] = '`' .. tostring(donor) .. '`',
+				["value"] = '`' .. (donor and donor.Name) or 'hi im crazyblox' .. '`',
 				["inline"] = true
 			},
 			{
