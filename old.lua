@@ -1439,9 +1439,6 @@ local fpsBoosts = otherTab:AddSwitch('CPU Saver', function(bool)
 			for i, v in next, game:GetService("Lighting"):GetChildren() do
 				v:Destroy()
 			end
-			if settings then
-				settings().Rendering.QualityLevel = 1
-			end
 		end
 	end)
 end)
@@ -1697,16 +1694,16 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 		xspin = (((xspin + Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) / 3) * getgenv().settings.spinSpeedMultiplier) + Players.LocalPlayer.Character:FindFirstChildWhichIsA('Humanoid').RootPart:FindFirstChild('Spin').AngularVelocity.Y
 	end
 	if getgenv().settings.webhookToggle == true and getgenv().settings.webhookBox then
-		local LogService = Game:GetService("LogService")
-		local logs = LogService:GetLogHistory()
-		if string.find(logs[#logs].message, Players.LocalPlayer.DisplayName) then
-			local msg = string.gsub(logs[#logs].message, ' tipped ', ''):gsub('', ''):gsub('💸', ''):gsub(' to ', ''):gsub(Players.LocalPlayer.DisplayName, ''):gsub(tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC), ''):gsub('', ''):gsub("💰", ''):gsub(' ', '')
-			for i, v in next, Players:GetPlayers() do
-				if v.DisplayName == msg then
-					playerWhoDonated = v
-				end
+     for i, child in next, game:GetService("Players").LocalPlayer.PlayerGui:WaitForChild('Chat'):WaitForChild('Frame').ChatChannelParentFrame.Frame_MessageLogDisplay.Scroller:GetChildren() do
+		if child:IsA('Frame') and string.find(child:WaitForChild('TextLabel').Text,game:GetService('Players').LocalPlayer.DisplayName) and string.find(child:WaitForChild('TextLabel').Text,'') then
+				 local text = child.Text:gsub(' tipped ',''):gsub(' to ',''):gsub(game:GetService('Players').LocalPlayer.DisplayName,''):gsub(tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC),''):gsub('',''):gsub('',''):gsub(' ','')
+				 for i,v in next, game:GetService('Players'):GetPlayers() do
+					if v.DisplayName == text and v ~= Players.LocalPlayer then
+						playerWhoDonated = v
+					end
+				 end
 			end
-		end
+	 end
 		if playerWhoDonated then
 			if getgenv().settings.webhookType == 'New' then
 				webhook(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC, playerWhoDonated)
