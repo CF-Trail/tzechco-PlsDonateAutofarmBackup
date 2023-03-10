@@ -1653,9 +1653,16 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 	sgoalR = sgoalR + (Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
 	print(sgoalR)
 	hopSet()
-	if Players.LocalPlayer.Character:FindFirstChildWhichIsA('Humanoid').RootPart:FindFirstChild('Spin') then
-		xspin = (((xspin + Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) / 3) * getgenv().settings.spinSpeedMultiplier) + Players.LocalPlayer.Character:FindFirstChildWhichIsA('Humanoid').RootPart:FindFirstChild('Spin').AngularVelocity.Y
-	end
+	if Players.LocalPlayer.Character:FindFirstChildWhichIsA('Humanoid').RootPart:FindFirstChild('Spin') and getgenv().settings.spinSet then
+        local raisedValue = Players.LocalPlayer.leaderstats.Raised.Value
+        local humanoid = Players.LocalPlayer.Character:FindFirstChildWhichIsA('Humanoid')
+        local spinPart = humanoid.RootPart:FindFirstChild('Spin')
+        local sSM = getgenv().settings.spinSpeedMultiplier
+        local deltaRaised = raisedValue - RaisedC
+        local averageDelta = deltaRaised / 3
+        local spinYVelocity = spinPart.AngularVelocity.Y
+        xspin = (averageDelta * sSM) + spinYVelocity
+    end
 	if getgenv().settings.webhookToggle == true and getgenv().settings.webhookBox then
      for i, child in next, game:GetService("Players").LocalPlayer.PlayerGui:WaitForChild('Chat'):WaitForChild('Frame').ChatChannelParentFrame.Frame_MessageLogDisplay.Scroller:GetChildren() do
 		if child:IsA('Frame') and string.find(child:WaitForChild('TextLabel').Text,game:GetService('Players').LocalPlayer.DisplayName) and string.find(child:WaitForChild('TextLabel').Text,'') and not child:GetAttribute('Checked') then
