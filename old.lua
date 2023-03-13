@@ -709,7 +709,7 @@ function updateBoothText()
 	end
 	if getgenv().settings.textUpdateToggle and getgenv().settings.customBoothText and getgenv().settings.rainbowText then
 		while task.wait() and getgenv().settings.rainbowText do
-			task.wait(3)
+			task.wait(4.5)
 			for i, v in next, RainbowHexColors do
 				if not getgenv().settings.rainbowText then
 					break
