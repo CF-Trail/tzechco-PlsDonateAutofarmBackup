@@ -812,7 +812,7 @@ local function webhook(raised, donor)
 		},
 		["timestamp"] = string.format("%d-%d-%dT%02d:%02d:%02dZ", a.year, a.month, a.day, a.hour, a.min, a.sec)
 	}
-	if getgenv().settings.pingEveryone and tonumber(raised) > tonumber(getgenv().settings.pingAboveDono) then
+	if getgenv().settings.pingEveryone and tonumber(raised) >= tonumber(getgenv().settings.pingAboveDono) then
 		httprequest{
 			Url = getgenv().settings.webhookBox:gsub(' ', ''),
 			Method = "POST",
