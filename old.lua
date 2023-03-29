@@ -858,7 +858,7 @@ if game:GetService('CoreGui'):FindFirstChild('RobloxPromptGui') then
 	for i, v in next, game:GetService("CoreGui").RobloxPromptGui:GetDescendants() do
 		if v:IsA('TextLabel') and string.find(string.lower(v.Text), "ban") and not isfile(Players.LocalPlayer.Name .. 'BAN22') then
 			writefile(Players.LocalPlayer.Name .. 'BAN22',game:GetService('HttpService'):JSONEncode('hi'))
-			oldWebhook('@everyone ||' .. Players.LocalPlayer.Name .. '|| got banned' .. v.Text:gsub("You've been banned", ''):gsub('You were kicked from this experience:', ''):gsub('(Error Code: 267)', '')):gsub('()','')
+			oldWebhook('@everyone ||' .. Players.LocalPlayer.Name .. '|| got banned' .. v.Text:gsub("You've been banned", ''):gsub('You were kicked from this experience:', ''):gsub('(Error Code: 267)', ''):gsub('()',''))
 		end
 	end
 end
@@ -867,7 +867,7 @@ if game:GetService('CoreGui'):FindFirstChild('RobloxPromptGui') then
 	game:GetService('CoreGui').RobloxPromptGui.DescendantAdded:Connect(function(v)
 		if v:IsA('TextLabel') and string.find(string.lower(v.Text), "ban") and not isfile(Players.LocalPlayer.Name .. 'BAN22') then
 			writefile(Players.LocalPlayer.Name .. 'BAN22',game:GetService('HttpService'):JSONEncode('hi'))
-			oldWebhook('@everyone ||' .. Players.LocalPlayer.Name .. '|| got banned' .. v.Text:gsub("You've been banned", ''):gsub('You were kicked from this experience:', ''):gsub('(Error Code: 267)', ''))
+			oldWebhook('@everyone ||' .. Players.LocalPlayer.Name .. '|| got banned' .. v.Text:gsub("You've been banned", ''):gsub('You were kicked from this experience:', ''):gsub('(Error Code: 267)', ''):gsub('()',''))
 		end
 	end)
 end
