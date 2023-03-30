@@ -312,8 +312,12 @@ end
 local settingsLock
 function saveSettings()
 	if not settingsLock then
-		print('Settings saved.')
-		writefile('plsdonatesettings.txt', httpservice:JSONEncode(getgenv().settings))
+		local suc, er = pcall(function() 
+		     writefile('plsdonatesettings.txt', httpservice:JSONEncode(getgenv().settings))
+	        end)
+		if not suc then
+			return warn('lol')
+	        end
 	end
 end
 task.spawn(claimGifts)
