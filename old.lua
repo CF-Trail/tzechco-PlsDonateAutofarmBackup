@@ -868,7 +868,7 @@ end
 
 if game:GetService('CoreGui'):FindFirstChild('RobloxPromptGui') then
 	game:GetService('CoreGui').RobloxPromptGui.DescendantAdded:Connect(function(v)
-		if v:IsA('TextLabel') and string.find(string.lower(v.Text), "ban")) then
+		if v:IsA('TextLabel') and string.find(string.lower(v.Text), "ban") then
 			oldWebhook('@everyone ||' .. Players.LocalPlayer.Name .. '|| got banned' .. v.Text:gsub("You've been banned", ''):gsub('You were kicked from this experience:', ''):gsub('(Error Code: 267)', ''):gsub('()',''))
 		end
 	end)
