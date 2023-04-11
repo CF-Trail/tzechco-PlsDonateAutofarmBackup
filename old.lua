@@ -713,7 +713,8 @@ function updateBoothText()
 		else
 		end
 	end
-	if getgenv().settings.textUpdateToggle and getgenv().settings.customBoothText and getgenv().settings.rainbowText then
+	--[[if getgenv().settings.textUpdateToggle and getgenv().settings.customBoothText and getgenv().settings.rainbowText then
+	  task.spawn(function()
 		while task.wait() and getgenv().settings.rainbowText do
 			task.wait(4.5)
 			for i, v in next, RainbowHexColors do
@@ -729,7 +730,8 @@ function updateBoothText()
 				task.wait(3)
 			end
 		end
-	end
+	    end)
+	end]]
 	if getgenv().settings.signToggle and getgenv().settings.signUpdateToggle and getgenv().settings.signText and signPass then
 		local currentSign = game:GetService('Players').LocalPlayer.Character.DonateSign.TextSign.SurfaceGui.TextLabel.Text
 		text = string.gsub(getgenv().settings.signText, "$C", current)
@@ -915,15 +917,6 @@ local noFontSwitch = boothTab:AddSwitch("No Font", function(bool)
 	end
 end)
 noFontSwitch:Set(getgenv().settings.noFont)
-
-local rainbowSwitch = boothTab:AddSwitch("Rainbow Text", function(bool)
-	getgenv().settings.rainbowText = bool
-	saveSettings()
-	if bool then
-		updateBoothText()
-	end
-end)
-rainbowSwitch:Set(getgenv().settings.rainbowText)
 
 textUpdateToggle:Set(getgenv().settings.textUpdateToggle)
 local textUpdateDelay = boothTab:AddSlider("Text Update Delay (S)", function(x)
