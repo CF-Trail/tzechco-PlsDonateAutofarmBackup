@@ -1,3 +1,9 @@
+--[[
+	This property is protected.
+	You are not allowed to claim this as your own.
+	Removal of initial credits to the authors is prohibited.
+]]
+
 if hookmetamethod and typeof(hookmetamethod) == 'function' then
 	local oldHook
 	oldHook = hookmetamethod(game, "__namecall", function(self, ...)
