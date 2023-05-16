@@ -896,6 +896,7 @@ local webhookTab = Window:AddTab("Webhook")
 local serverHopTab = Window:AddTab("Server")
 local otherTab = Window:AddTab("Other")
 local otherTab2 = Window:AddTab("Other 2")
+local supportTab = Window:AddTab("Support")
 
 local TextService = game:GetService("TextService")
 local sgoalR = 0
@@ -1614,7 +1615,18 @@ otherTab2:AddButton("Save Replies", function()
 	saveSettings()
 end)
 
+supportTab:AddLabel("Hello. This script is free but I won't")
+supportTab:AddLabel("resist from some robux :3")
+supportTab:AddLabel("If you want to donate, click here")
+supportTab:AddButton('Donation game',function()
+	game:GetService('TeleportService'):Teleport(13461969417)
+end)
+supportTab:AddLabel('you WILL BE TELEPORTED to other game')
+
 boothTab:Show()
+otherTab:Show()
+otherTab2:Show()
+supportTab:Show()
 library:FormatWindows()
 settingsLock = false
   
@@ -1694,7 +1706,6 @@ if getgenv().settings.autoBeg then
 end
 local RaisedC = Players.LocalPlayer.leaderstats.Raised.value
 local djset = false
-local part = Instance.new('Part',workspace)
 Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 	local playerWhoDonated
 	sgoalR = sgoalR + (Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
