@@ -1624,9 +1624,6 @@ end)
 supportTab:AddLabel('You can also send me a message there for free!')
 
 boothTab:Show()
-otherTab:Show()
-otherTab2:Show()
-supportTab:Show()
 library:FormatWindows()
 settingsLock = false
   
