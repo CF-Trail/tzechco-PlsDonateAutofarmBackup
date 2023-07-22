@@ -3,7 +3,6 @@
 	You are not allowed to claim this as your own.
 	Removal of initial credits to the authors is prohibited.
 ]]
---skidded!! (ty DekuDimz)
 
 repeat
 	task.wait()
