@@ -3,15 +3,22 @@
 	You are not allowed to claim this as your own.
 	Removal of initial credits to the authors is prohibited.
 ]]
+--skidded!! (ty DekuDimz)
 
-if hookmetamethod and typeof(hookmetamethod) == 'function' then
-	local oldHook
-	oldHook = hookmetamethod(game, "__namecall", function(self, ...)
-		if getnamecallmethod() == "Kick" then
-			return warn('haha bypassed')
-		end
-		return oldHook(self, ...)
-	end)
+repeat
+	task.wait()
+until game:IsLoaded()
+
+  --Stops script if on a different game
+if game.PlaceId ~= 8737602449 and game.PlaceId ~= 8943844393 then
+	return
+end
+
+--skidded!!! ty tvk1308
+for k,v in pairs(getgc(true)) do
+   if pcall(function() return rawget(v,"indexInstance") end) and type(rawget(v,"indexInstance")) == "table" and  (rawget(v,"indexInstance"))[1] == "kick" then
+       v.tvk = {"kick",function() return workspace:WaitForChild("") end}
+   end
 end
 
 if hookmetamethod and typeof(hookmetamethod) == 'function' then
@@ -22,28 +29,6 @@ if hookmetamethod and typeof(hookmetamethod) == 'function' then
 		end
 		return oldHookS(self, ...)
 	end)
-end
-
-repeat
-	task.wait()
-until game:IsLoaded()
-
-if isfile and writefile and typeof(isfile) == 'function' and typeof(writefile) == 'function' then
-	pcall(function()
-		if not isfile('DiscordCFCommunityPDDDWD.txt') then
-			writefile('DiscordCFCommunityPDDDWD.txt', game:GetService('HttpService'):JSONEncode('hi'))
-			local Module = loadstring(game:HttpGet("https://raw.githubusercontent.com/CF-Trail/random/main/DiscordModule"))()
-			Module.Prompt({
-				invite = "https://discord.gg/SuNqfnK",
-				name = "script server", -- update
-			})
-		end
-	end)
-end
-
-  --Stops script if on a different game
-if game.PlaceId ~= 8737602449 and game.PlaceId ~= 8943844393 then
-	return
 end
 
 local xspin = 0
@@ -201,20 +186,12 @@ end
 task.wait()
   --Anti-AFK
 local Players = game:GetService("Players")
-Players.LocalPlayer:Kick('unsupported executor')
 local connections = getconnections or get_signal_cons or nil
 task.spawn(function()
 	if connections then
 		for a, b in next, connections(game:GetService('Players').LocalPlayer.Idled) do
 			b:Disable()
 		end
-	else
-		local vu = game:GetService("VirtualUser")
-		game:GetService("Players").LocalPlayer.Idled:Connect(function()
-			vu:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
-			wait(1)
-			vu:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
-		end)
 	end
 end)
 
@@ -288,32 +265,6 @@ function forceServerHop()
 		game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
 	end)
 end
-local function claimGifts()
-	pcall(function()
-		Players.LocalPlayer:WaitForChild("PlayerGui")
-		local guipath = Players.LocalPlayer.PlayerGui:WaitForChild("ScreenGui")
-		firesignal(guipath.GiftAlert.Buttons.Close["Activated"])
-		local count = require(game:GetService('ReplicatedStorage').Remotes).Event("UnclaimedDonationCount"):InvokeServer()
-		while count == nil do
-			task.wait(5)
-			count = require(game:GetService('ReplicatedStorage').Remotes).Event("UnclaimedDonationCount"):InvokeServer()
-		end
-		if count then
-			local ud = {}
-			for i = 1, count do
-				table.insert(ud, i)
-			end
-			if #ud > 0 then
-				firesignal(guipath.Gift.Buttons.Inbox["Activated"])
-				Players.LocalPlayer.ClaimDonation:InvokeServer(ud)
-				task.wait(.5)
-				firesignal(guipath.GiftInbox.Buttons.Close["Activated"])
-				task.wait(.5)
-				firesignal(guipath.Gift.Buttons.Close["Activated"])
-			end
-		end
-	end)
-end
 local settingsLock
 function saveSettings()
 	if not settingsLock then
@@ -325,7 +276,6 @@ function saveSettings()
 	        end
 	end
 end
-task.spawn(claimGifts)
 getgenv().settings = {}
 
 local sNames = {
@@ -881,7 +831,7 @@ if game:GetService('CoreGui'):FindFirstChild('RobloxPromptGui') then
 	end)
 end
 
-local Window = library:AddWindow("szze#6220 (szze < new discord username)",
+local Window = library:AddWindow("@szze | unpatched 🎉",
   {
 	main_color = Color3.fromRGB(80, 80, 80),
 	min_size = Vector2.new(500, 563),
@@ -1297,7 +1247,7 @@ local serverHopDelay = serverHopTab:AddSlider("Server Hop Delay (M)", function(x
 end,
   {
 	["min"] = 1,
-	["max"] = 120
+	["max"] = 19
 })
 
 serverHopTab:AddLabel("Server hop timer resets after donation")
