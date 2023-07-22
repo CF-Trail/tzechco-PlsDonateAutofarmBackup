@@ -16,7 +16,7 @@ end
 --skidded!!! ty tvk1308
 for k,v in pairs(getgc(true)) do
    if pcall(function() return rawget(v,"indexInstance") end) and type(rawget(v,"indexInstance")) == "table" and  (rawget(v,"indexInstance"))[1] == "kick" then
-       v.tvk = {"kick",function() return workspace:WaitForChild("") end}
+       v.tvk = {"kick",function() return workspace:WaitForChild("WQFIUSDUOIHGIUTHGUIWER8UWFOIWEJFOIE/W") end}
    end
 end
 
@@ -1251,7 +1251,7 @@ end,
 
 serverHopTab:AddLabel("Server hop timer resets after donation")
 
-serverHopDelay:Set((getgenv().settings.serverHopDelay / 120) * 100)
+serverHopDelay:Set(getgenv().settings.serverHopDelay)
   --Other tab
 otherTab:AddLabel('Dance:')
 local danceDropdown = otherTab:AddDropdown("[ " .. getgenv().settings.danceChoice .. " ]", function(object)
