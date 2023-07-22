@@ -1167,7 +1167,7 @@ if vcEnabled then
 	vcToggle:Set(getgenv().settings.vcServer)
 end
 
-local alhop = serverHopTab:AddSwitch("Random Hop", function(bool)
+local alhop = serverHopTab:AddSwitch("Random between normal/voice", function(bool)
 	if settingsLock then
 		return
 	end
