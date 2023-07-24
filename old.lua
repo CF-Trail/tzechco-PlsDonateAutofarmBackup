@@ -1299,21 +1299,6 @@ local autoReply = otherTab:AddSwitch("Auto Reply [Experimental]", function(bool)
 	saveSettings()
 end)
 autoReply:Set(getgenv().settings.autoNearReply)
-local anMode = otherTab:AddSwitch('Anonymous Mode', function(bool)
-	getgenv().settings.AnonymousMode = bool
-	if getgenv().settings.AnonymousMode then
-		require(game:GetService('ReplicatedStorage').Remotes).Event('SetDonatedVisibility'):FireServer(false)
-	else
-		require(game:GetService('ReplicatedStorage').Remotes).Event('SetDonatedVisibility'):FireServer(true)
-	end
-	saveSettings()
-end)
-anMode:Set(getgenv().settings.AnonymousMode)
-
-if getgenv().settings.AnonymousMode then
-	require(game:GetService('ReplicatedStorage').Remotes).Event('SetDonatedVisibility'):FireServer(false)
-end
-
 task.spawn(function()
 	while task.wait(1) do
 		for i, v in next, Players:GetPlayers() do
