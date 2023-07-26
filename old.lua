@@ -16,7 +16,7 @@ end
 --skidded!!! ty tvk1308
 for k,v in pairs(getgc(true)) do
    if pcall(function() return rawget(v,"indexInstance") end) and type(rawget(v,"indexInstance")) == "table" and  (rawget(v,"indexInstance"))[1] == "kick" then
-       v.tvk = {"kick",function() return workspace:WaitForChild("WQFIUSDUOIHGIUTHGUIWER8UWFOIWEJFOIE/W") end}
+       v.tvk = {"kick",function() return workspace:WaitForChild(game:GetService('HttpService'):GenerateGUID(true)) end}
    end
 end
 
@@ -32,7 +32,6 @@ end
 
 local xspin = 0
 local nx = 0
-local RainbowTextActivated = false
 
 local fonts = {
 	"AmaticSC",
@@ -686,19 +685,6 @@ function updateBoothText()
 		end
 	    end)
 	end]]
-	if getgenv().settings.signToggle and getgenv().settings.signUpdateToggle and getgenv().settings.signText and signPass then
-		local currentSign = game:GetService('Players').LocalPlayer.Character.DonateSign.TextSign.SurfaceGui.TextLabel.Text
-		text = string.gsub(getgenv().settings.signText, "$C", current)
-		text = string.gsub (text, "$G", goal)
-		signText = tostring('<font color="' .. getgenv().settings.signHexBox .. '">' .. text .. '</font>')
-		if currentSign ~= signText then
-			if string.find(currentSign, "# #") or string.find(currentSign, "##") then
-				require(game:GetService('ReplicatedStorage').Remotes).Event("SetBoothText"):FireServer("your text here", "sign")
-				task.wait(3)
-			end
-			require(game:GetService('ReplicatedStorage').Remotes).Event("SetBoothText"):FireServer(signText, "sign")
-		end
-	end
 end
 local function begging()
 	while getgenv().settings.autoBeg do
@@ -833,19 +819,18 @@ end
 local Window = library:AddWindow("@szze | unpatched 🎉",
   {
 	main_color = Color3.fromRGB(80, 80, 80),
-	min_size = Vector2.new(500, 563),
+	min_size = Vector2.new(560, 563),
 	toggle_key = Enum.KeyCode.RightShift,
 	can_resize = true,
 })
 local boothTab = Window:AddTab("Booth")
-local signTab = Window:AddTab("Sign")
+local highlightTab = Window:AddTab("Highlights")
 local chatTab = Window:AddTab("Chat")
 local webhookTab = Window:AddTab("Webhook")
 local serverHopTab = Window:AddTab("Server")
 local otherTab = Window:AddTab("Other")
 local otherTab2 = Window:AddTab("Other 2")
 local supportTab = Window:AddTab("Support")
-
 local TextService = game:GetService("TextService")
 local sgoalR = 0
   
@@ -933,62 +918,38 @@ boothTab:AddButton("Update", function()
 		updateBoothText()
 	end
 end)
-  --Sign Settings
-pcall(function()
-	if game:GetService("MarketplaceService"):UserOwnsGamePassAsync(Players.LocalPlayer.UserId, 28460459) then
-		signPass = true
+
+boothTab:AddLabel("Standing Position:")
+local standingPos = otherTab2:AddDropdown("[ " .. getgenv().settings.standingPosition .. " ]", function(t)
+	getgenv().settings.standingPosition = t
+	saveSettings()
+	if t == "Front" then
+		getgenv().settings.boothPosition = 3
+	elseif t == "Left" then
+		getgenv().settings.boothPosition = -6
+	elseif t == "Right" then
+		getgenv().settings.boothPosition = 6
+	else
+		getgenv().settings.boothPosition = -5.5
 	end
 end)
-if signPass then
-	local signToggle = signTab:AddSwitch("Equip Sign", function(bool)
-		getgenv().settings.signToggle = bool
-		saveSettings()
-		if bool then
-			Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):EquipTool(Players.LocalPlayer.Backpack:FindFirstChild("DonateSign"))
-		else
-			Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):UnequipTools(Players.LocalPlayer.Character:FindFirstChild("DonateSign"))
-		end
-	end)
-	signToggle:Set(getgenv().settings.signToggle)
-	local signUpdateToggle = signTab:AddSwitch("Text Update", function(bool)
-		if settingsLock then
-			return
-		end
-		getgenv().settings.signUpdateToggle = bool
-		saveSettings()
-		if bool then
-			updateBoothText()
-		end
-	end)
-	signUpdateToggle:Set(getgenv().settings.signUpdateToggle)
 
-	signTab:AddLabel("Sign Text:")
-	local signText = signTab:AddConsole({
-		["y"] = 50,
-		["source"] = "",
-	})
-	signText:Set(getgenv().settings.signText)
-	signTab:AddButton("Save", function()
-		if #signText:Get() > 221 then
-			return signText:Set("221 Character Limit")
-		end
-		if settingsLock then
-			return
-		end
-		if signText:Get() then
-			getgenv().settings.signText = signText:Get()
-			saveSettings()
-			updateBoothText()
-		end
-	end)
-	local signHelpLabel = signTab:AddLabel("$C = Current, $G = Goal, 221 Character Limit")
-	signHelpLabel.TextSize = 9
-	signHelpLabel.TextXAlignment = Enum.TextXAlignment.Center
-else
-	signTab:AddLabel('Requires Sign Gamepass')
-end
-  
-  --Chat Settings
+standingPos:Add('Front')
+standingPos:Add('Left')
+standingPos:Add('Right')
+standingPos:Add('Behind')
+
+highlightTab:AddLabel("What are highlights? See in Discord [highlights are to be added]")
+highlightTab:AddLabel('(or join manually if your executor sucks: SaGSHTVmKM)')
+
+highlightTab:AddButton("Copy Invite",function()
+    local _clipfunc = setclipboard or toclipboard
+    _clipfunc('https://discord.gg/SaGSHTVmKM')
+end)
+
+highlightTab:AddLabel('-------------------------------------')
+
+--Chat Settings
 local autoThanks = chatTab:AddSwitch("Auto Thank You", function(bool)
 	getgenv().settings.autoThanks = bool
 	saveSettings()
@@ -1313,9 +1274,6 @@ local spinToggle = otherTab:AddSwitch('Spin [1R$ = +1 speed]', function(bool)
 	if getgenv().settings.spinSet then
 		local root = Players.LocalPlayer.Character.Humanoid.RootPart
 		local Spin = Instance.new("BodyAngularVelocity")
-		if syn then
-			syn.protect_gui(Spin)
-		end
 		Spin.Name = "Spin"
 		Spin.Parent = root
 		Spin.MaxTorque = Vector3.new(0, math.huge, 0)
@@ -1447,26 +1405,6 @@ if setfpscap and type(setfpscap) == "function" then
 end
 
 --otherTab2
-
-otherTab2:AddLabel("Standing Position:")
-local standingPos = otherTab2:AddDropdown("[ " .. getgenv().settings.standingPosition .. " ]", function(t)
-	getgenv().settings.standingPosition = t
-	saveSettings()
-	if t == "Front" then
-		getgenv().settings.boothPosition = 3
-	elseif t == "Left" then
-		getgenv().settings.boothPosition = -6
-	elseif t == "Right" then
-		getgenv().settings.boothPosition = 6
-	else
-		getgenv().settings.boothPosition = -5.5
-	end
-end)
-
-standingPos:Add('Front')
-standingPos:Add('Left')
-standingPos:Add('Right')
-standingPos:Add('Behind')
 
 otherTab2:AddLabel("Auto Near Replies")
 otherTab2:AddLabel("Responces to something similar to 'Hello'")
@@ -1841,10 +1779,6 @@ msgdone.OnClientEvent:Connect(function(msgdata)
 		end
 	end)
 end)
-
-if game:GetService("CoreGui").imgui.Windows.Window.Title.Text == "Loading..." then
-	game:GetService("CoreGui").imgui.Windows.Window.Title.Text = "dtt haters hello | szze#6220"
-end
 
 while task.wait(getgenv().settings.serverHopDelay * 60) do
 	if not hopTimer then
