@@ -235,6 +235,7 @@ if queueonteleport then
 	queueonteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/CF-Trail/tzechco-PlsDonateAutofarmBackup/main/old.lua'))()")
 end
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/CF-Trail/tzechco-PlsDonateAutofarmBackup/main/UI"))()
+local _HIGHLIGHTLOADER = loadstring(game:HttpGet('https://raw.githubusercontent.com/CF-Trail/tzechco-PlsDonateAutofarmBackup/main/hl.lib.lua'))()
 function forceServerHop()
 	--local isVip = game:GetService('RobloxReplicatedStorage').GetServerType:InvokeServer()
 	--if isVip == "VIPServer" then return end
@@ -333,7 +334,8 @@ local sNames = {
 	"gravitySwitch",
 	"jumpBoost",
 	'goalServerhopSwitch',
-	'goalServerhopGoal'
+	'goalServerhopGoal',
+	'highlightSwitch'
 }
 
 local positionX = workspace:WaitForChild('Boomboxes'):WaitForChild('Spawn')
@@ -422,7 +424,8 @@ local sValues = {
 	false,
 	false,
 	false,
-	0
+	0,
+	false
 }
 
   --Load Settings
@@ -686,9 +689,21 @@ function updateBoothText()
 	    end)
 	end]]
 end
+
+local _TTSERVICE = game:GetService('TextChatService')
+
+local function chat(C_1:string)
+	if game:GetService('ReplicatedStorage'):FindFirstChild('DefaultChatSystemChatEvents') then
+		game:GetService('ReplicatedStorage').DefaultChatSystemChatEvents.SayMessageRequest:FireServer(C_1,'All')
+	else
+		local _TCHANNEL = _TTSERVICE.TextChannels.RBXGeneral
+		_TCHANNEL:SendAsync(C_1)
+	end
+end
+
 local function begging()
 	while getgenv().settings.autoBeg do
-		game:GetService('ReplicatedStorage').DefaultChatSystemChatEvents.SayMessageRequest:FireServer(getgenv().settings.begMessage[math.random(#getgenv().settings.begMessage)], "All")
+		chat(getgenv().settings.begMessage[math.random(#getgenv().settings.begMessage)])
 		task.wait(getgenv().settings.begDelay)
 	end
 end
@@ -939,7 +954,8 @@ standingPos:Add('Left')
 standingPos:Add('Right')
 standingPos:Add('Behind')
 
-highlightTab:AddLabel("What are highlights? See in Discord [highlights are to be added]")
+--highlights
+highlightTab:AddLabel("What are highlights? See in Discord")
 highlightTab:AddLabel('(or join manually if your executor sucks: SaGSHTVmKM)')
 
 highlightTab:AddButton("Copy Invite",function()
@@ -948,6 +964,17 @@ highlightTab:AddButton("Copy Invite",function()
 end)
 
 highlightTab:AddLabel('-------------------------------------')
+
+local _HLTOGGLE = highlightTab:AddSwitch('Helicoper on Donation [HIGHLIGHT]',function(bool)
+	getgenv().settings.highlightSwitch = bool
+	if bool then
+		_HIGHLIGHTLOADER.HLSetup(Players.LocalPlayer.Character)
+	else
+		_HIGHLIGHTLOADER.HLUnload(Players.LocalPlayer.Character)
+	end
+end)
+
+_HLTOGGLE:Set(getgenv().settings.highlightSwitch)
 
 --Chat Settings
 local autoThanks = chatTab:AddSwitch("Auto Thank You", function(bool)
@@ -1577,7 +1604,6 @@ local djset = false
 Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 	local playerWhoDonated
 	sgoalR = sgoalR + (Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
-	print(sgoalR)
 	hopSet()
 	if Players.LocalPlayer.Character:FindFirstChildWhichIsA('Humanoid').RootPart:FindFirstChild('Spin') and getgenv().settings.spinSet then
         local raisedValue = Players.LocalPlayer.leaderstats.Raised.Value
@@ -1629,21 +1655,21 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 			serverHop()
 		end)
 	end
-	if Players.LocalPlayer.Character.Humanoid.RootPart:FindFirstChild('Spin') and getgenv().settings.spinSet == true then
+	if Players.LocalPlayer.Character.Humanoid.RootPart:FindFirstChild('Spin') and getgenv().settings.spinSet == true and not getgenv().settings.highlightSwitch then
 		local spin = Players.LocalPlayer.Character.Humanoid.RootPart:FindFirstChild('Spin')
 		spin.AngularVelocity = Vector3.new(0, xspin, 0)
 	end
-	if getgenv().settings.jumpBoost then
+	if getgenv().settings.jumpBoost and not getgenv().settings.highlightSwitch then
 		pcall(function()
 			Players.LocalPlayer.Character.Humanoid.JumpPower = Players.LocalPlayer.Character.Humanoid.JumpPower + (Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
 		end)		
 	end
 	pcall(function()
-		if getgenv().settings.gravitySwitch then
+		if getgenv().settings.gravitySwitch and not getgenv().settings.highlightSwitch then
 			workspace.Gravity = workspace.Gravity - (Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
 		end
 	end)
-	if getgenv().settings.donationJump == true and not getgenv().settings.spinSet == true then
+	if getgenv().settings.donationJump == true and not getgenv().settings.spinSet == true and not getgenv().settings.highlightSwitch then
 		djset = true
 		task.spawn(function()
 			if getgenv().settings.jumpsPerRobux == 1 then
@@ -1664,11 +1690,16 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 			djset = false
 		end)
 	end
+	if getgenv().settings.highlightSwitch then
+		task.spawn(function()
+			_HIGHLIGHTLOADER.HLStart(Players.LocalPlayer.Character,Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
+		end)
+	end
 	RaisedC = Players.LocalPlayer.leaderstats.Raised.value
 	if getgenv().settings.autoThanks == true then
 		task.spawn(function()
 			task.wait(getgenv().settings.thanksDelay)
-			game:GetService('ReplicatedStorage').DefaultChatSystemChatEvents.SayMessageRequest:FireServer(getgenv().settings.thanksMessage[math.random(#getgenv().settings.thanksMessage)], "All")
+			chat(getgenv().settings.thanksMessage[math.random(#getgenv().settings.thanksMessage)])
 		end)
 	end
 	task.spawn(function()
@@ -1737,25 +1768,11 @@ if getgenv().settings.webhookAfterSH then
     end
 end
 
-local msgdone = game:GetService('ReplicatedStorage').DefaultChatSystemChatEvents.OnMessageDoneFiltering
-local randommsgs = {
-	'yes',
-	'ok',
-	'alr',
-	'yeah'
-}
-local randombotmsgs = {
-	'no im not a bot',
-	'why do yall think im a bot :(',
-	'bro im not a bot',
-	'bruh shut up im a real human'
-}
-local messageRequest = game:GetService('ReplicatedStorage').DefaultChatSystemChatEvents.SayMessageRequest
-msgdone.OnClientEvent:Connect(function(msgdata)
-	local speaker = tostring(msgdata.FromSpeaker)
-	local message = string.lower(msgdata.Message)
+Players.PlayerChatted:Connect(function(_____________________, player, message)
+	local speaker = tostring(player)
+	local message = string.lower(message)
 	task.wait(2.1 + math.random(0.4, 1))
-	local plrChatted = game:GetService('Players')[speaker] or nil
+	local plrChatted = game:GetService('Players'):FindFirstChild(speaker)
 	if (plrChatted and plrChatted == game:GetService('Players').LocalPlayer) or getgenv().settings.autoNearReply == false or not plrChatted  or string.find(message, 'donates') or string.find(message, "spamming") then
 		return
 	end
@@ -1765,15 +1782,15 @@ msgdone.OnClientEvent:Connect(function(msgdata)
 			local root = chatChar.Humanoid.RootPart
 			if (root.Position - game:GetService('Players').LocalPlayer.Character.Humanoid.RootPart.Position).Magnitude < 11 then
 				if message == 'hello' or message == 'hi' or message == 'sup' or message == 'hey' then
-					messageRequest:FireServer(getgenv().settings.helloResponce[math.random(1, #getgenv().settings.helloResponce)], 'All')
+					chat(getgenv().settings.helloResponce[math.random(1, #getgenv().settings.helloResponce)])
 				elseif string.find(message, 'bot') then
-					messageRequest:FireServer(getgenv().settings.botResponce[math.random(1, #getgenv().settings.botResponce)], 'All')
+					mchat(getgenv().settings.botResponce[math.random(1, #getgenv().settings.botResponce)])
 				elseif string.find(message, 'donate') then
-					messageRequest:FireServer(getgenv().settings.donateResponce[math.random(1, #getgenv().settings.donateResponce)], 'All')
+					chat(getgenv().settings.donateResponce[math.random(1, #getgenv().settings.donateResponce)])
 				elseif string.find(message, 'scam') then
-					messageRequest:FireServer(getgenv().settings.scamResponce[math.random(1, #getgenv().settings.scamResponce)], 'All')
+					chat(getgenv().settings.scamResponce[math.random(1, #getgenv().settings.scamResponce)])
 				else
-					messageRequest:FireServer(getgenv().settings.otherResponce[math.random(1, #getgenv().settings.otherResponce)], 'All')
+					chat(getgenv().settings.otherResponce[math.random(1, #getgenv().settings.otherResponce)])
 				end
 			end
 		end
