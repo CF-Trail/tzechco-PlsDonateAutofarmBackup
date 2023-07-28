@@ -10,7 +10,7 @@ local function chat(C_1:string)
 	if game:GetService('ReplicatedStorage'):FindFirstChild('DefaultChatSystemChatEvents') then
 		game:GetService('ReplicatedStorage').DefaultChatSystemChatEvents.SayMessageRequest:FireServer(C_1,'All')
 	else
-        local _TCHANNEL = _TTSERVICE.TextChannels.RBXGeneral
+                local _TCHANNEL = _TTSERVICE.TextChannels.RBXGeneral
 		_TCHANNEL:SendAsync(C_1)
 	end
 end
