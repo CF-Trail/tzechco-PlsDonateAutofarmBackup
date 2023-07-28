@@ -5,12 +5,12 @@ local function twn(...)
 end
 
 local _TTSERVICE = game:GetService('TextChatService')
+local _TCHANNEL = _TTSERVICE.TextChannels.RBXGeneral
 
 local function chat(C_1:string)
 	if game:GetService('ReplicatedStorage'):FindFirstChild('DefaultChatSystemChatEvents') then
 		game:GetService('ReplicatedStorage').DefaultChatSystemChatEvents.SayMessageRequest:FireServer(C_1,'All')
 	else
-		local _TCHANNEL = _TTSERVICE.TextChannels.RBXGeneral
 		_TCHANNEL:SendAsync(C_1)
 	end
 end
@@ -54,9 +54,13 @@ function lib.HLStart(char,raised)
     local C_OLDPOS = workspace['_HIGHLIGHT.CF'].Position
     local _TWN2 = twn(workspace['_HIGHLIGHT.CF'], TweenInfo.new(10,Enum.EasingStyle.Quad,Enum.EasingDirection.In),{CFrame = CFrame.new(C_OLDPOS + Vector3.new(0,70,0))})
     local _TWN3 = twn(workspace['_HIGHLIGHT.CF'], TweenInfo.new(10,Enum.EasingStyle.Quad,Enum.EasingDirection.In),{CFrame = CFrame.new(C_OLDPOS)})
+	local _TWN4 = twn(char.Humanoid.RootPart.HL1__HELI, TweenInfo.new(6, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {
+		AngularVelocity = Vector3.new(0, 1, 0)
+	})    
     _TWN2:Play()
     task.wait(10)
     _TWN3:Play()
+    _TWN4:Play()
 end
 
 return lib
