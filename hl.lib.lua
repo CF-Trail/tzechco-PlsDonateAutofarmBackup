@@ -38,7 +38,7 @@ function lib.HLUnload(char)
 end
 
 function lib.HLStart(char,raised)
-    workspace['_HIGHLIGHT.CF'].CFrame = CFrame.new(char.Humanoid.RootPart.Position - Vector3.new(0,3,0))
+    workspace:WaitForChild('_HIGHLIGHT.CF').CFrame = CFrame.new(char.Humanoid.RootPart.Position - Vector3.new(0,3,0))
     chat('Enabling engines...')
 	task.wait(3)
 	local _TWN = twn(char.Humanoid.RootPart.HL1__HELI, TweenInfo.new(6, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {
