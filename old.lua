@@ -965,7 +965,7 @@ end)
 
 highlightTab:AddLabel('-------------------------------------')
 
-local _HLTOGGLE = highlightTab:AddSwitch('Helicoper on Donation [HIGHLIGHT]',function(bool)
+local _HLTOGGLE = highlightTab:AddSwitch('1R$ = 1 Lap around the map [HIGHLIGHT]',function(bool)
 	getgenv().settings.highlightSwitch = bool
 	if bool then
 		_HIGHLIGHTLOADER.HLSetup(Players.LocalPlayer.Character)
@@ -1556,7 +1556,7 @@ while not pcall(boothclaim) do
 	errCount = errCount + 1
 end
 hopSet()
-local function walkToBooth()
+getgenv().walkToBooth = function()
 	local theCframe
 	if string.find(tostring(getgenv().settings.boothPosition), "6") then
 		theCframe = CFrame.new(getgenv().settings.boothPosition, 0, 0)
