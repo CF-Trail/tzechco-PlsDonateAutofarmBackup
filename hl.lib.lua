@@ -15,53 +15,44 @@ local function chat(C_1:string)
 	end
 end
 
+local _CFRAMETABLE = {{-30.9582253, 1.36195695, 100.472855},{13.1596403, 0.731242418, 152.176956},{69.3110199, 0.73332727, 150.993561},{92.6021729, 0.733850241, 130.599258},{96.9429169, 0.738471866, 75},{91.9788284, 0.762879133, 72.3707657},{70.7379608, 0.737098873, 50.9553299},{15.6208801, 0.751551986, 50.5339737},{{-30.9582253, 1.36195695, 100.472855}}}
+
 function lib.HLSetup(char)
-    local character = char
-    local root = character.Humanoid.RootPart
-	local Spin = Instance.new("BodyAngularVelocity")
-	Spin.Name = "HL1__HELI"
-	Spin.Parent = root
-	Spin.MaxTorque = Vector3.new(0, math.huge, 0)
-	Spin.AngularVelocity = Vector3.new(0, 1, 0)
-    local __PART = Instance.new('Part',workspace)
-    __PART.Name = '_HIGHLIGHT.CF'
-    __PART.Anchored = true
-    __PART.CFrame = CFrame.new(char.Humanoid.RootPart.Position - Vector3.new(0,3,0))
+    --[[for i,v in next, _CFRAMETABLE do
+        local _nPartC = Instance.new('Part',workspace)
+        _nPartC.Name = '_[lap//]'
+        _nPartC.Anchored = true
+        _nPartC.Transparency = 1
+        _nPartC.CanCollide = false
+        _nPartC.CFrame = CFrame.new(table.unpack(i))
+    end]]
 end
 
 
 function lib.HLUnload(char)
-    local character = char
-    local root = character.Humanoid.RootPart
-    root['HL1__HELI']:Destroy()
-    workspace['_HIGHLIGHT.CF']:Destroy()
+    --while workspace:FindFirstChild('_[lap//]') and task.wait() do
+   --     workspace:FindFirstChild('_[lap//]'):Destroy()
+ --   end
 end
 
 function lib.HLStart(char,raised)
-    workspace['_HIGHLIGHT.CF'].CFrame = CFrame.new(char.Humanoid.RootPart.Position - Vector3.new(0,3,0))
-    chat('Enabling engines...')
-	task.wait(3)
-	local _TWN = twn(char.Humanoid.RootPart.HL1__HELI, TweenInfo.new(6, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {
-		AngularVelocity = Vector3.new(0, 25, 0)
-	})
-    _TWN:Play()
-    task.wait(4)
-    chat('TAKEOFF IN 3')
-    task.wait(1)
-    chat('2')
-    task.wait(1)
-    chat('1')
-    task.wait(1)
-    local C_OLDPOS = workspace['_HIGHLIGHT.CF'].Position
-    local _TWN2 = twn(workspace['_HIGHLIGHT.CF'], TweenInfo.new(10,Enum.EasingStyle.Quad,Enum.EasingDirection.In),{CFrame = CFrame.new(C_OLDPOS + Vector3.new(0,70,0))})
-    local _TWN3 = twn(workspace['_HIGHLIGHT.CF'], TweenInfo.new(10,Enum.EasingStyle.Quad,Enum.EasingDirection.In),{CFrame = CFrame.new(C_OLDPOS)})
-	local _TWN4 = twn(char.Humanoid.RootPart.HL1__HELI, TweenInfo.new(6, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {
-		AngularVelocity = Vector3.new(0, 1, 0)
-	})    
-    _TWN2:Play()
-    task.wait(10)
-    _TWN3:Play()
-    _TWN4:Play()
+    twn(char.Humanoid.RootPart,TweenInfo.new(5,Enum.EasingStyle.Linear,Enum.EasingDirection.In),{CFrame = CFrame.new(-30.9582253, 1.36195695, 100.472855)}):Play()
+    task.wait(6)
+    for _i = 1, raised do
+        for i,v in next, _CFRAMETABLE do
+            local con
+            local _mtfinish
+            char.Humanoid:MoveTo(Vector3.new(unpack(v)))
+            con = char.Humanoid.MoveToFinished:Connect(function()
+                _mtfinish = true
+                con:Disconnect()
+            end)
+            repeat task.wait() until _mtfinish == true
+        end 
+    end
+    if walkToBooth then
+        walkToBooth()
+    end
 end
 
 return lib
