@@ -1239,7 +1239,7 @@ end,
 
 serverHopTab:AddLabel("Server hop timer resets after donation")
 
-serverHopDelay:Set(getgenv().settings.serverHopDelay)
+serverHopDelay:Set((getgenv().settings.serverHopDelay / 120) * 100)
   --Other tab
 otherTab:AddLabel('Dance:')
 local danceDropdown = otherTab:AddDropdown("[ " .. getgenv().settings.danceChoice .. " ]", function(object)
