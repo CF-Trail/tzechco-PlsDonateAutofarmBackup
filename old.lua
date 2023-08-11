@@ -965,7 +965,7 @@ end)
 
 highlightTab:AddLabel('-------------------------------------')
 
-local _HLTOGGLE = highlightTab:AddSwitch('1R$ = 1 Lap around the map [HIGHLIGHT]',function(bool)
+local _HLTOGGLE = highlightTab:AddSwitch('1R$ = 1 trampoline jump [HIGHLIGHT]',function(bool)
 	getgenv().settings.highlightSwitch = bool
 	if bool then
 		_HIGHLIGHTLOADER.HLSetup(Players.LocalPlayer.Character)
@@ -1239,7 +1239,7 @@ end,
 
 serverHopTab:AddLabel("Server hop timer resets after donation")
 
-serverHopDelay:Set((getgenv().settings.serverHopDelay / 120) * 100)
+serverHopDelay:Set(getgenv().settings.serverHopDelay)
   --Other tab
 otherTab:AddLabel('Dance:')
 local danceDropdown = otherTab:AddDropdown("[ " .. getgenv().settings.danceChoice .. " ]", function(object)
