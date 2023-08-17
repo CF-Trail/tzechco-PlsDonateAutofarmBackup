@@ -477,7 +477,6 @@ if not File then
 	pcall(function()
 		writefile(RandomName .. ".json", S_H:JSONEncode(AllIDs))
 	end)
-
 end
 local function TPReturner(placeId)
 	local Site;
@@ -1239,7 +1238,7 @@ end,
 
 serverHopTab:AddLabel("Server hop timer resets after donation")
 
-serverHopDelay:Set(getgenv().settings.serverHopDelay)
+serverHopDelay:Set((getgenv().settings.serverHopDelay * 60) / 120)
   --Other tab
 otherTab:AddLabel('Dance:')
 local danceDropdown = otherTab:AddDropdown("[ " .. getgenv().settings.danceChoice .. " ]", function(object)
