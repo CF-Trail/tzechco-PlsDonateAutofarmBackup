@@ -1723,7 +1723,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 end)
 updateBoothText()
 
-task.spawn(function()
+--[[task.spawn(function()
 	raisedV = 0
 	task.wait(5)
 	Players.LocalPlayer.CharacterRemoving:Connect(function()
@@ -1745,9 +1745,9 @@ task.spawn(function()
 	if raisedV < getgenv().settings.minimumDonated then
 		serverHop()
 	end
-end)
+end)]]
 
-task.spawn(function()
+--[[task.spawn(function()
 	while task.wait(5) do
 		saveSettings()
 		if (Players.LocalPlayer.Character and Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid').RootPart) then
@@ -1757,7 +1757,7 @@ task.spawn(function()
 			end
 		end
 	end
-end)
+end)]]
 
 if getgenv().settings.webhookAfterSH then
     if Players.LocalPlayer.DisplayName ~= Players.LocalPlayer.Name then
