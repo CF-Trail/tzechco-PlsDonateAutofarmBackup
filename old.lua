@@ -433,7 +433,7 @@ if isfile("plsdonatesettings.txt") then
 	local sl, er = pcall(function()
 		getgenv().settings = game:GetService('HttpService'):JSONDecode(readfile('plsdonatesettings.txt'))
 	end)
-	if er ~= nil then
+	if er ~= nil and (er:find('JSON')) then
 		task.spawn(function()
 			errMsg = Instance.new("Hint")
 			errMsg.Parent = game:GetService('CoreGui')
@@ -565,14 +565,7 @@ local function hopSet()
 end
 
 local function playerChecker(player)
-	if not getgenv().settings.staffHopA then
-		return
-	end
-	pcall(function()
-		if player:GetRankInGroup(12121240) >= 254 then
-			serverHop()
-		end
-	end)
+   return false
 end
 
 local function oldWebhook(msg)
