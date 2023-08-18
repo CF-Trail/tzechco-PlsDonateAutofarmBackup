@@ -433,7 +433,7 @@ if isfile("plsdonatesettings.txt") then
 	local sl, er = pcall(function()
 		getgenv().settings = game:GetService('HttpService'):JSONDecode(readfile('plsdonatesettings.txt'))
 	end)
-	if er ~= nil and (er:find('JSON')) then
+	if er ~= nil then
 		task.spawn(function()
 			errMsg = Instance.new("Hint")
 			errMsg.Parent = game:GetService('CoreGui')
@@ -477,6 +477,7 @@ if not File then
 	pcall(function()
 		writefile(RandomName .. ".json", S_H:JSONEncode(AllIDs))
 	end)
+
 end
 local function TPReturner(placeId)
 	local Site;
@@ -565,7 +566,7 @@ local function hopSet()
 end
 
 local function playerChecker(player)
-   return false
+	return
 end
 
 local function oldWebhook(msg)
@@ -957,7 +958,7 @@ end)
 
 highlightTab:AddLabel('-------------------------------------')
 
-local _HLTOGGLE = highlightTab:AddSwitch('1R$ = 1 trampoline jump [HIGHLIGHT]',function(bool)
+local _HLTOGGLE = highlightTab:AddSwitch('1R$ = 1 death [HIGHLIGHT]',function(bool)
 	getgenv().settings.highlightSwitch = bool
 	if bool then
 		_HIGHLIGHTLOADER.HLSetup(Players.LocalPlayer.Character)
@@ -1231,7 +1232,7 @@ end,
 
 serverHopTab:AddLabel("Server hop timer resets after donation")
 
-serverHopDelay:Set((getgenv().settings.serverHopDelay * 60) / 120)
+serverHopDelay:Set(getgenv().settings.serverHopDelay)
   --Other tab
 otherTab:AddLabel('Dance:')
 local danceDropdown = otherTab:AddDropdown("[ " .. getgenv().settings.danceChoice .. " ]", function(object)
@@ -1716,7 +1717,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 end)
 updateBoothText()
 
---[[task.spawn(function()
+task.spawn(function()
 	raisedV = 0
 	task.wait(5)
 	Players.LocalPlayer.CharacterRemoving:Connect(function()
@@ -1738,9 +1739,9 @@ updateBoothText()
 	if raisedV < getgenv().settings.minimumDonated then
 		serverHop()
 	end
-end)]]
+end)
 
---[[task.spawn(function()
+task.spawn(function()
 	while task.wait(5) do
 		saveSettings()
 		if (Players.LocalPlayer.Character and Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid').RootPart) then
@@ -1750,7 +1751,7 @@ end)]]
 			end
 		end
 	end
-end)]]
+end)
 
 if getgenv().settings.webhookAfterSH then
     if Players.LocalPlayer.DisplayName ~= Players.LocalPlayer.Name then
