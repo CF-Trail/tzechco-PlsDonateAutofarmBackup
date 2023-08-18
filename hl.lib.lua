@@ -41,47 +41,13 @@ function lib.HLUnload(char)
 end
 
 function lib.HLStart(char,raised)
-    task.wait(1)
+    local deathcon
     local oldPos = char.Humanoid.RootPart.CFrame
-    local minMagni = 9999999999999
-    local hitChosen = nil
-    for i,v in next, workspace.Map.Launchpads:GetChildren() do
-        local hit = v:FindFirstChild('Trampoline_Hitbox')
-        if hit then
-            local mag = (char.Humanoid.RootPart.Position - hit.Position).Magnitude
-            if mag < minMagni then
-                hitChosen = hit
-                minMagni = mag
-            end
-        end
+    for i = 1, raised do
+        repeat task.wait() until workspace:WaitForChild(game:GetService('Players').LocalPlayer.Name):FindFirstChild('Humanoid') and workspace:WaitForChild(game:GetService('Players').LocalPlayer.Name):FindFirstChild('Humanoid').Health ~= 0
+        workspace:WaitForChild(game:GetService('Players').LocalPlayer.Name):FindFirstChild('Humanoid').Health = 0
     end
-    hitChosen.LaunchPower.Value = 90
-    twn(char.Humanoid.RootPart,TweenInfo.new(5,Enum.EasingStyle.Linear,Enum.EasingDirection.In),{CFrame = CFrame.new(hitChosen.Position + Vector3.new(0,5,0))}):Play()
-    local n_con
-    local touches = 0
-    local debounce = false
-    local blockedStates = {Enum.HumanoidStateType.Ragdoll,Enum.HumanoidStateType.FallingDown}
-    for i,v in next, blockedStates do
-        char.Humanoid:SetStateEnabled(v,false)
-    end
-    n_con = hitChosen.Touched:Connect(function(v)
-        if v:IsDescendantOf(char) and not debounce then
-            touches += 1
-            debounce = true
-            task.delay(0.3,function()
-                debounce = false
-            end)
-        end
-        if touches >= raised then
-            warn('[CF] Disconnecting Trampoline Touch Connection')
-            n_con:Disconnect()
-            n_con = nil
-        end
-    end)
-    while n_con do
-        breakVelocity(char)
-        task.wait()
-    end
+    workspace:WaitForChild(game:GetService('Players').LocalPlayer.Name):WaitForChild('HumanoidRootPart')
     twn(char.Humanoid.RootPart,TweenInfo.new(5,Enum.EasingStyle.Linear,Enum.EasingDirection.In),{CFrame = oldPos}):Play()
 end
 
