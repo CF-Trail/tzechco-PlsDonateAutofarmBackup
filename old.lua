@@ -1721,7 +1721,7 @@ task.spawn(function()
 	raisedV = 0
 	task.wait(5)
 	Players.LocalPlayer.CharacterRemoving:Connect(function()
-		if getgenv().settings.spinSet then
+		if getgenv().settings.spinSet and not getgenv().settings.highlightSwitch then
 			serverHop()
 		end
 	end)
