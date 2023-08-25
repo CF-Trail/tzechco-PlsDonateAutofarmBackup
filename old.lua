@@ -958,7 +958,7 @@ end)
 
 highlightTab:AddLabel('-------------------------------------')
 
-local _HLTOGGLE = highlightTab:AddSwitch('1R$ = 1 death [HIGHLIGHT]',function(bool)
+local _HLTOGGLE = highlightTab:AddSwitch('Helicopter on-donation [HIGHLIGHT]',function(bool)
 	getgenv().settings.highlightSwitch = bool
 	if bool then
 		_HIGHLIGHTLOADER.HLSetup(Players.LocalPlayer.Character)
