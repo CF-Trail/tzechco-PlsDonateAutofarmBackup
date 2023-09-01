@@ -1,3 +1,9 @@
+--[[
+	This property is protected.
+	You are not allowed to claim this as your own.
+	Removal of initial credits to the authors is prohibited.
+]]
+
 repeat
 	task.wait()
 until game:IsLoaded()
