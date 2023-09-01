@@ -1326,9 +1326,9 @@ end)
 gravityToggle:Set(getgenv().settings.gravitySwitch)
 
 local heliToggle = otherTab:AddSwitch('Helicopter On-Donation', function(bool)
+	getgenv().settings.helicopterEnabled = bool
 	local character = Players.LocalPlayer.Character
 	local root = character:FindFirstChildOfClass('Humanoid').RootPart
-	getgenv().settings.helicopterEnabled = bool
 	if not bool then
 		root['HL1__HELI']:Destroy()
 		workspace['_HIGHLIGHT.CF']:Destroy()
@@ -1345,6 +1345,8 @@ local heliToggle = otherTab:AddSwitch('Helicopter On-Donation', function(bool)
 	end
 	saveSettings()
 end)
+
+heliToggle:Set(getgenv().settings.helicopterEnabled)
 
 local fpsBoosts = otherTab:AddSwitch('CPU Saver', function(bool)
 	getgenv().settings.fpsBoost = bool
