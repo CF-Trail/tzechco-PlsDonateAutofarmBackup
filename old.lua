@@ -1,9 +1,3 @@
---[[
-	This property is protected.
-	You are not allowed to claim this as your own.
-	Removal of initial credits to the authors is prohibited.
-]]
-
 repeat
 	task.wait()
 until game:IsLoaded()
@@ -14,10 +8,17 @@ if game.PlaceId ~= 8737602449 and game.PlaceId ~= 8943844393 then
 end
 
 --skidded!!! ty tvk1308
-for k,v in pairs(getgc(true)) do
-   if pcall(function() return rawget(v,"indexInstance") end) and type(rawget(v,"indexInstance")) == "table" and  (rawget(v,"indexInstance"))[1] == "kick" then
-       v.tvk = {"kick",function() return workspace:WaitForChild(game:GetService('HttpService'):GenerateGUID(true)) end}
-   end
+for k, v in pairs(getgc(true)) do
+	if pcall(function()
+		return rawget(v, "indexInstance")
+	end) and type(rawget(v, "indexInstance")) == "table" and  (rawget(v, "indexInstance"))[1] == "kick" then
+		v.tvk = {
+			"kick",
+			function()
+				return workspace:WaitForChild(game:GetService('HttpService'):GenerateGUID(true))
+			end
+		}
+	end
 end
 
 if hookmetamethod and typeof(hookmetamethod) == 'function' then
@@ -267,12 +268,12 @@ end
 local settingsLock
 function saveSettings()
 	if not settingsLock then
-		local suc, er = pcall(function() 
-		     writefile('plsdonatesettings.txt', httpservice:JSONEncode(getgenv().settings))
-	        end)
+		local suc, er = pcall(function()
+			writefile('plsdonatesettings.txt', httpservice:JSONEncode(getgenv().settings))
+		end)
 		if not suc then
 			return warn('lol')
-	        end
+		end
 	end
 end
 getgenv().settings = {}
@@ -335,7 +336,8 @@ local sNames = {
 	"jumpBoost",
 	'goalServerhopSwitch',
 	'goalServerhopGoal',
-	'highlightSwitch'
+	'highlightSwitch',
+	'helicopterEnabled'
 }
 
 local positionX = workspace:WaitForChild('Boomboxes'):WaitForChild('Spawn')
@@ -425,6 +427,7 @@ local sValues = {
 	false,
 	false,
 	0,
+	false,
 	false
 }
 
@@ -541,7 +544,14 @@ function serverHop()
 		end
 	end
 
-	while task.wait(1) do
+	pcall(function()
+		TPReturner(gameId)
+		if foundAnything ~= "" then
+			TPReturner(gameId)
+		end
+	end)
+
+	while task.wait(5) do
 		pcall(function()
 			TPReturner(gameId)
 			if foundAnything ~= "" then
@@ -567,6 +577,10 @@ end
 
 local function playerChecker(player)
 	return
+end
+
+local function twn(...)
+	return game:GetService('TweenService'):Create(...)
 end
 
 local function oldWebhook(msg)
@@ -662,32 +676,13 @@ function updateBoothText()
 		else
 		end
 	end
-	--[[if getgenv().settings.textUpdateToggle and getgenv().settings.customBoothText and getgenv().settings.rainbowText then
-	  task.spawn(function()
-		while task.wait() and getgenv().settings.rainbowText do
-			task.wait(4.5)
-			for i, v in next, RainbowHexColors do
-				if not getgenv().settings.rainbowText then
-					break
-				end
-				if not getgenv().settings.noFont then
-					boothText = tostring('<font face="' .. getgenv().settings.fontFace .. '" size="' .. getgenv().settings.fontSize .. '" color="#' .. v .. '">' .. text .. '</font>')
-				else
-					boothText = tostring('<font color="' .. v .. '">' .. text .. '</font>')
-				end
-				require(game:GetService('ReplicatedStorage').Remotes).Event("SetBoothText"):FireServer(boothText, "booth")
-				task.wait(3)
-			end
-		end
-	    end)
-	end]]
 end
 
 local _TTSERVICE = game:GetService('TextChatService')
 
-local function chat(C_1:string)
+local function chat(C_1)
 	if game:GetService('ReplicatedStorage'):FindFirstChild('DefaultChatSystemChatEvents') then
-		game:GetService('ReplicatedStorage').DefaultChatSystemChatEvents.SayMessageRequest:FireServer(C_1,'All')
+		game:GetService('ReplicatedStorage').DefaultChatSystemChatEvents.SayMessageRequest:FireServer(C_1, 'All')
 	else
 		local _TCHANNEL = _TTSERVICE.TextChannels.RBXGeneral
 		_TCHANNEL:SendAsync(C_1)
@@ -721,7 +716,7 @@ local function webhook(raised, donor)
 		["title"] = '**' .. game:GetService('Players').LocalPlayer.Name .. '**',
 		["description"] = "",
 		["type"] = "rich",
-		["color"] = tonumber(0x2ECC71),
+		["color"] = tonumber(3066993),
 		["thumbnail"] = {
 			["url"] = "https://www.roblox.com/headshot-thumbnail/image?userId=" ..
                Players.LocalPlayer.UserId .. "&width=420&height=420&format=png"
@@ -811,7 +806,7 @@ end
 if game:GetService('CoreGui'):FindFirstChild('RobloxPromptGui') then
 	for i, v in next, game:GetService("CoreGui").RobloxPromptGui:GetDescendants() do
 		if v:IsA('TextLabel') and string.find(string.lower(v.Text), "ban") then
-			oldWebhook('@everyone ||' .. Players.LocalPlayer.Name .. '|| got banned' .. v.Text:gsub("You've been banned", ''):gsub('You were kicked from this experience:', ''):gsub('(Error Code: 267)', ''):gsub('()',''))
+			oldWebhook('@everyone ||' .. Players.LocalPlayer.Name .. '|| got banned' .. v.Text:gsub("You've been banned", ''):gsub('You were kicked from this experience:', ''):gsub('(Error Code: 267)', ''):gsub('()', ''))
 		end
 	end
 end
@@ -819,7 +814,7 @@ end
 if game:GetService('CoreGui'):FindFirstChild('RobloxPromptGui') then
 	game:GetService('CoreGui').RobloxPromptGui.DescendantAdded:Connect(function(v)
 		if v:IsA('TextLabel') and string.find(string.lower(v.Text), "ban") then
-			oldWebhook('@everyone ||' .. Players.LocalPlayer.Name .. '|| got banned' .. v.Text:gsub("You've been banned", ''):gsub('You were kicked from this experience:', ''):gsub('(Error Code: 267)', ''):gsub('()',''))
+			oldWebhook('@everyone ||' .. Players.LocalPlayer.Name .. '|| got banned' .. v.Text:gsub("You've been banned", ''):gsub('You were kicked from this experience:', ''):gsub('(Error Code: 267)', ''):gsub('()', ''))
 		end
 	end)
 end
@@ -951,14 +946,14 @@ standingPos:Add('Behind')
 highlightTab:AddLabel("What are highlights? See in Discord")
 highlightTab:AddLabel('(or join manually if your executor sucks: SaGSHTVmKM)')
 
-highlightTab:AddButton("Copy Invite",function()
-    local _clipfunc = setclipboard or toclipboard
-    _clipfunc('https://discord.gg/SaGSHTVmKM')
+highlightTab:AddButton("Copy Invite", function()
+	local _clipfunc = setclipboard or toclipboard
+	_clipfunc('https://discord.gg/SaGSHTVmKM')
 end)
 
 highlightTab:AddLabel('-------------------------------------')
 
-local _HLTOGGLE = highlightTab:AddSwitch('Helicopter on-donation [HIGHLIGHT]',function(bool)
+local _HLTOGGLE = highlightTab:AddSwitch('Rotation on donation [HIGHLIGHT]', function(bool)
 	getgenv().settings.highlightSwitch = bool
 	if bool then
 		_HIGHLIGHTLOADER.HLSetup(Players.LocalPlayer.Character)
@@ -1323,15 +1318,27 @@ local gravityToggle = otherTab:AddSwitch('Gravity [1R$ = -1 gravity]', function(
 end)
 
 gravityToggle:Set(getgenv().settings.gravitySwitch)
-	
-local rHNM = otherTab:AddSwitch('Remove NameTag above head', function(bool)
-	getgenv().settings.removeHeadNametag = bool
-	if getgenv().settings.removeHeadNametag and Players.LocalPlayer.Character.Head:FindFirstChild('HeadTag') then
-		Players.LocalPlayer.Character.Head:FindFirstChild('HeadTag'):Destroy()
+
+local heliToggle = otherTab:AddSwitch('Helicopter On-Donation', function(bool)
+	local character = Players.LocalPlayer.Character
+	local root = character:FindFirstChildOfClass('Humanoid').RootPart
+	getgenv().settings.helicopterEnabled = bool
+	if not bool then
+		root['HL1__HELI']:Destroy()
+		workspace['_HIGHLIGHT.CF']:Destroy()
+	else
+		local Spin = Instance.new("BodyAngularVelocity")
+		Spin.Name = "HL1__HELI"
+		Spin.Parent = root
+		Spin.MaxTorque = Vector3.new(0, math.huge , 0)
+		Spin.AngularVelocity = Vector3.new(0, 1, 0)
+		local __PART = Instance.new('Part', workspace)
+		__PART.Name = '_HIGHLIGHT.CF'
+		__PART.Anchored = true
+		__PART.CFrame = CFrame.new(root.Position - Vector3.new(0, 3, 0))
 	end
+	saveSettings()
 end)
-	
-rHNM:Set(getgenv().settings.removeHeadNametag)
 
 local fpsBoosts = otherTab:AddSwitch('CPU Saver', function(bool)
 	getgenv().settings.fpsBoost = bool
@@ -1509,7 +1516,7 @@ end)
 supportTab:AddLabel("Hello. This script is free but I won't resist")
 supportTab:AddLabel("from some robux :3")
 supportTab:AddLabel("If you want to donate me, click here: ")
-supportTab:AddButton('Teleport',function()
+supportTab:AddButton('Teleport', function()
 	game:GetService('TeleportService'):Teleport(13461969417)
 end)
 supportTab:AddLabel('You can also send me a message there for free!')
@@ -1599,54 +1606,54 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 	sgoalR = sgoalR + (Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
 	hopSet()
 	if Players.LocalPlayer.Character:FindFirstChildWhichIsA('Humanoid').RootPart:FindFirstChild('Spin') and getgenv().settings.spinSet then
-        local raisedValue = Players.LocalPlayer.leaderstats.Raised.Value
-        local humanoid = Players.LocalPlayer.Character:FindFirstChildWhichIsA('Humanoid')
-        local spinPart = humanoid.RootPart:FindFirstChild('Spin')
-        local sSM = getgenv().settings.spinSpeedMultiplier
-        local deltaRaised = raisedValue - RaisedC
-        local averageDelta = deltaRaised / 3
-        local spinYVelocity = spinPart.AngularVelocity.Y
-        xspin = (averageDelta * sSM) + spinYVelocity
-    end
+		local raisedValue = Players.LocalPlayer.leaderstats.Raised.Value
+		local humanoid = Players.LocalPlayer.Character:FindFirstChildWhichIsA('Humanoid')
+		local spinPart = humanoid.RootPart:FindFirstChild('Spin')
+		local sSM = getgenv().settings.spinSpeedMultiplier
+		local deltaRaised = raisedValue - RaisedC
+		local averageDelta = deltaRaised / 3
+		local spinYVelocity = spinPart.AngularVelocity.Y
+		xspin = (averageDelta * sSM) + spinYVelocity
+	end
 	if getgenv().settings.webhookToggle == true and getgenv().settings.webhookBox then
-     for i, child in next, game:GetService("Players").LocalPlayer.PlayerGui:WaitForChild('Chat'):WaitForChild('Frame').ChatChannelParentFrame.Frame_MessageLogDisplay.Scroller:GetChildren() do
-		if child:IsA('Frame') and string.find(child:WaitForChild('TextLabel').Text,game:GetService('Players').LocalPlayer.DisplayName) and string.find(child:WaitForChild('TextLabel').Text,'') and not child:GetAttribute('Checked') then
-				 local text = child.TextLabel.Text:gsub(' tipped ',''):gsub(' to ',''):gsub(game:GetService('Players').LocalPlayer.DisplayName,''):gsub(tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC),''):gsub('',''):gsub('',''):gsub(' ','')
-				 for i,v in next, game:GetService('Players'):GetPlayers() do
-					if v.DisplayName == text and v ~= Players.LocalPlayer then
-						playerWhoDonated = v
-						child:SetAttribute('Checked',true)
-						break
+		task.spawn(function()
+			for i, child in next, game:GetService("Players").LocalPlayer.PlayerGui:WaitForChild('Chat'):WaitForChild('Frame').ChatChannelParentFrame.Frame_MessageLogDisplay.Scroller:GetChildren() do
+				if child:IsA('Frame') and string.find(child:WaitForChild('TextLabel').Text, game:GetService('Players').LocalPlayer.DisplayName) and string.find(child:WaitForChild('TextLabel').Text, '') and not child:GetAttribute('Checked') then
+					local text = child.TextLabel.Text:gsub(' tipped ', ''):gsub(' to ', ''):gsub(game:GetService('Players').LocalPlayer.DisplayName, ''):gsub(tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC), ''):gsub('', ''):gsub('', ''):gsub(' ', '')
+					for i, v in next, game:GetService('Players'):GetPlayers() do
+						if v.DisplayName == text and v ~= Players.LocalPlayer then
+							playerWhoDonated = v
+							child:SetAttribute('Checked', true)
+							break
+						end
 					end
-				 end
+				end
 			end
-	 end
-		if playerWhoDonated then
-			if getgenv().settings.webhookType == 'New' then
-			 pcall(function()
-				webhook(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC, playerWhoDonated.Name)
-			 end)
+			if playerWhoDonated then
+				if getgenv().settings.webhookType == 'New' then
+					pcall(function()
+						webhook(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC, playerWhoDonated.Name)
+					end)
+				else
+					pcall(function()
+						oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. ' | [A/T]: ' .. tostring(math.floor((Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value) .. ' | Donor: ' .. playerWhoDonated.Name)
+					end)
+				end
 			else
-			  pcall(function()
-				oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. ' | [A/T]: ' .. tostring(math.floor((Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value) .. ' | Donor: ' .. playerWhoDonated.Name)
-			  end)
+				if getgenv().settings.webhookType == 'New' then
+					pcall(function()
+						webhook(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC, "Hi, I'm Crazyblox.")
+					end)
+				else
+					pcall(function()
+						oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. ' | [A/T]: ' .. tostring(math.floor((Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value))
+					end)
+				end
 			end
-		else
-			if getgenv().settings.webhookType == 'New' then
-				pcall(function()
-					webhook(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC, "Hi, I'm Crazyblox.")
-				 end)			
-			else
-				pcall(function()
-					oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. ' | [A/T]: ' .. tostring(math.floor((Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value))
-				end)
-			end
-		end
+		end)
 	end
 	if getgenv().settings.serverHopAfterDonation == true then
-		task.spawn(function()
-			serverHop()
-		end)
+		task.spawn(serverHop)
 	end
 	if Players.LocalPlayer.Character.Humanoid.RootPart:FindFirstChild('Spin') and getgenv().settings.spinSet == true and not getgenv().settings.highlightSwitch then
 		local spin = Players.LocalPlayer.Character.Humanoid.RootPart:FindFirstChild('Spin')
@@ -1660,6 +1667,39 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 	pcall(function()
 		if getgenv().settings.gravitySwitch and not getgenv().settings.highlightSwitch then
 			workspace.Gravity = workspace.Gravity - (Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
+		end
+	end)
+	task.spawn(function()
+		if getgenv().settings.helicopterEnabled and not getgenv().settings.highlightSwitch then
+			local char = Players.LocalPlayer.Character
+			workspace['_HIGHLIGHT.CF'].CFrame = CFrame.new(char.Humanoid.RootPart.Position - Vector3.new(0, 3, 0))
+			chat('Enabling engines...')
+			task.wait(3)
+			local _TWN = twn(char.Humanoid.RootPart.HL1__HELI, TweenInfo.new(6, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {
+				AngularVelocity = Vector3.new(0, 25, 0)
+			})
+			_TWN:Play()
+			task.wait(4)
+			chat('TAKEOFF IN 3')
+			task.wait(1)
+			chat('2')
+			task.wait(1)
+			chat('1')
+			task.wait(1)
+			local C_OLDPOS = workspace['_HIGHLIGHT.CF'].Position
+			local _TWN2 = twn(workspace['_HIGHLIGHT.CF'], TweenInfo.new(10, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+				CFrame = CFrame.new(C_OLDPOS + Vector3.new(0, 70, 0))
+			})
+			local _TWN3 = twn(workspace['_HIGHLIGHT.CF'], TweenInfo.new(10, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+				CFrame = CFrame.new(C_OLDPOS)
+			})
+			local _TWN4 = twn(char.Humanoid.RootPart.HL1__HELI, TweenInfo.new(6, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {
+				AngularVelocity = Vector3.new(0, 1, 0)
+			})    
+			_TWN2:Play()
+			task.wait(10)
+			_TWN3:Play()
+			_TWN4:Play()
 		end
 	end)
 	if getgenv().settings.donationJump == true and not getgenv().settings.spinSet == true and not getgenv().settings.highlightSwitch then
@@ -1685,7 +1725,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 	end
 	if getgenv().settings.highlightSwitch then
 		task.spawn(function()
-			_HIGHLIGHTLOADER.HLStart(Players.LocalPlayer.Character,Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
+			_HIGHLIGHTLOADER.HLStart(Players.LocalPlayer.Character, Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
 		end)
 	end
 	RaisedC = Players.LocalPlayer.leaderstats.Raised.value
@@ -1743,7 +1783,6 @@ end)
 
 task.spawn(function()
 	while task.wait(5) do
-		saveSettings()
 		if (Players.LocalPlayer.Character and Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid').RootPart) then
 			local root = Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid').RootPart
 			if (root.Position - positionX.Position).Magnitude > 1100 or (root.Position - positionX.Position).Magnitude < -1100 then
@@ -1754,18 +1793,18 @@ task.spawn(function()
 end)
 
 if getgenv().settings.webhookAfterSH then
-    if Players.LocalPlayer.DisplayName ~= Players.LocalPlayer.Name then
-        oldWebhook(Players.LocalPlayer.DisplayName .. ' (' .. Players.LocalPlayer.Name .. ') serverhopped')
-    else
-        oldWebhook(Players.LocalPlayer.Name .. ' serverhopped')        
-    end
+	if Players.LocalPlayer.DisplayName ~= Players.LocalPlayer.Name then
+		oldWebhook(Players.LocalPlayer.DisplayName .. ' (@' .. Players.LocalPlayer.Name .. ') serverhopped')
+	else
+		oldWebhook('@' .. Players.LocalPlayer.Name .. ' serverhopped')
+	end
 end
 
 Players.PlayerChatted:Connect(function(_____________________, player, message)
 	local speaker = tostring(player)
 	local message = string.lower(message)
-	task.wait(2.1 + math.random(0.4, 1))
 	local plrChatted = game:GetService('Players'):FindFirstChild(speaker)
+	task.wait(2.1 + math.random(0.4, 1))
 	if (plrChatted and plrChatted == game:GetService('Players').LocalPlayer) or getgenv().settings.autoNearReply == false or not plrChatted  or string.find(message, 'donates') or string.find(message, "spamming") then
 		return
 	end
