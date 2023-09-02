@@ -380,7 +380,7 @@ local sValues = {
 	false,
 	3,
 	true,
-	true,
+	false,
 	false,
 	false,
 	3,
