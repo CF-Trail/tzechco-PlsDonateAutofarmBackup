@@ -205,6 +205,7 @@ local counter = 0
 local donation, boothText, spamming, hopTimer, vcEnabled
 local signPass = false
 local errCount = 0
+local uid = game:GetService('Players').LocalPlayer.UserId
 local booths = {
 	["1"] = "72, 3, 36",
 	["2"] = "83, 3, 161",
@@ -343,7 +344,8 @@ local sNames = {
 	'goalServerhopSwitch',
 	'goalServerhopGoal',
 	'highlightSwitch',
-	'helicopterEnabled'
+	'helicopterEnabled',
+	'friendHop'
 }
 
 local positionX = workspace:WaitForChild('Boomboxes'):WaitForChild('Spawn')
@@ -434,7 +436,8 @@ local sValues = {
 	false,
 	0,
 	false,
-	false
+	false,
+	true
 }
 
   --Load Settings
@@ -881,6 +884,25 @@ end,
 })
 textUpdateDelay:Set((getgenv().settings.textUpdateDelay / 120) * 100)
 
+boothTab:AddLabel("Text Color:")
+local hexBox = boothTab:AddTextBox("Hex Codes Only", function(text)
+	if settingsLock then
+		return
+	end
+	local success = pcall(function()
+		return Color3.fromHex(text)
+	end)
+	if success and string.find(text, "#") then
+		getgenv().settings.hexBox = text
+		saveSettings()
+		update()
+	end
+end,
+  {
+	["clear"] = false
+})
+hexBox.Text = getgenv().settings.hexBox
+
 boothTab:AddLabel("Goal Increase:")
 local goalBox = boothTab:AddTextBox("Numbers Only", function(text)
 	if tonumber(text) then
@@ -1175,6 +1197,15 @@ local staffHopSwitch = serverHopTab:AddSwitch('ServerHop if Staff', function(boo
 	saveSettings()
 end)
 
+local friendHopSwitch = serverHopTab:AddSwitch('ServerHop if friend joined',function(bool)
+	if settingsLock then
+		return 
+	end
+	getgenv().settings.friendHop = bool
+	saveSettings()
+end)
+
+friendHopSwitch:Set(getgenv().settings.friendHop)
 staffHopSwitch:Set(getgenv().settings.staffHopA)
 
 local taggedBoothHopSwitch = serverHopTab:AddSwitch('ServerHop if tagged booth', function(bool)
@@ -1835,6 +1866,12 @@ Players.PlayerChatted:Connect(function(_____________________, player, message)
 			end
 		end
 	end)
+end)
+
+game:GetService('Players').PlayerAdded:Connect(function(player)
+	if player:IsFriendsWith(uid) and getgenv().settings.friendHop then
+		serverHop()
+	end
 end)
 
 while task.wait(getgenv().settings.serverHopDelay * 60) do
