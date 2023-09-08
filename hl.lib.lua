@@ -6,7 +6,7 @@ end
 
 local _TTSERVICE = game:GetService('TextChatService')
 
-local function chat(C_1:string)
+local function chat(C_1)
 	if game:GetService('ReplicatedStorage'):FindFirstChild('DefaultChatSystemChatEvents') then
 		game:GetService('ReplicatedStorage').DefaultChatSystemChatEvents.SayMessageRequest:FireServer(C_1, 'All')
 	else
@@ -78,29 +78,97 @@ local _CFRAMETABLE = {
 }
 
 local n = false
+local highlightcon
+
+local function _singsong()
+	local httprequest = (syn and syn.request) or http and http.request or http_request or (fluxus and fluxus.request) or request
+	local songName, plr
+	local debounce = false
+	getgenv().stopped = false
+	game:GetService('ReplicatedStorage').DefaultChatSystemChatEvents:WaitForChild('OnMessageDoneFiltering').OnClientEvent:Connect(function(msgdata)
+		if plr ~= nil and (msgdata.FromSpeaker == plr or msgdata.FromSpeaker == game:GetService('Players').LocalPlayer.Name) then
+			if string.lower(msgdata.Message) == '>stop' then
+				getgenv().stopped = true
+				debounce = true
+				task.wait(3)
+				debounce = false
+			end
+		end
+		if debounce or game:GetService('Players')[msgdata.FromSpeaker]:GetAttribute('Don') or not string.match(msgdata.Message, '>lyrics ') or string.gsub(msgdata.Message, '>lyrics', '') == '' or game:GetService('Players')[msgdata.FromSpeaker] == game:GetService('Players').LocalPlayer then
+			return
+		end
+		task.spawn(function()
+			chat("I'm a lyrics bot. Donate me and I can sing your favorite song!")
+		end)
+		debounce = true
+		local speaker = msgdata.FromSpeaker
+		local msg = string.lower(msgdata.Message):gsub('>lyrics ', ''):gsub('"', ''):gsub(' by ', '/')
+		local speakerDisplay = game:GetService('Players')[speaker].DisplayName
+		plr = game:GetService('Players')[speaker].Name
+		songName = string.gsub(msg, " ", ""):lower()
+		local response
+		local suc, er = pcall(function()
+			response = httprequest({
+				Url = "https://lyrist.vercel.app/api/" .. songName,
+				Method = "GET",
+			})
+		end)
+		if not suc then
+			chat("Unexpected error. Please retry, you don't need to donate again.")
+			task.wait(3)
+			debounce = false
+			return
+		end
+		local lyricsData = game:GetService('HttpService'):JSONDecode(response.Body)
+		local lyricsTable = {}
+		if lyricsData.error and lyricsData.error == "Lyrics Not found" then
+			debounce = true
+			chat("Lyrics were not found. Please retry, you don't need to donate again.")
+			task.wait(3)
+			debounce = false
+			return
+		end
+		for line in string.gmatch(lyricsData.lyrics, "[^\n]+") do
+			table.insert(lyricsTable, line)
+		end
+		game:GetService('Players')[msgdata.FromSpeaker]:SetAttribute('Don',false)
+		chat('Fetched lyrics')
+		task.wait(2)
+		chat('Playing song requested by ' .. speakerDisplay .. '. They can stop it by saying ">stop"')
+		task.wait(3)
+		for i, line in ipairs(lyricsTable) do
+			if getgenv().stopped then
+				getgenv().stopped = false
+				break
+			end
+			chat('🎙️ | ' .. line)
+			task.wait(4.5)
+		end
+		task.wait(3)
+		debounce = false
+		chat('Ended. Donate me if you wish I singed a song again.')
+	end)
+end
 
 function lib.HLSetup(char)
-
+	highlightcon = task.spawn(_singsong)
 end
 
 
 function lib.HLUnload(char)
-
+	if highlightcon then
+		task.cancel(highlightcon)
+		highlightcon = nil
+	end
 end
 
-function lib.HLStart(char, raised)
-	n = false
-	task.delay(1, function()
-		n = true
-	end)
-	task.spawn(function()
-		while not n do
-			char.Humanoid.RootPart.Velocity = Vector3.zero
-			char.Humanoid.RootPart.RotVelocity = Vector3.zero
-			game.RunService.Heartbeat:Wait()
-		end
-	end)
-	char.Humanoid.RootPart.Rotation = char.Humanoid.RootPart.Rotation + Vector3.new(0,0,raised)
+function lib.HLStart(char, raised, plr)
+	if plr then
+		chat("Thanks for the tip! Type '>lyrics songName' so I started singing!")
+		plr:SetAttribute('Don',true)
+		task.wait(3)
+		chat('e.x: >lyrics RB Battles')
+	end
 end
 
 return lib
