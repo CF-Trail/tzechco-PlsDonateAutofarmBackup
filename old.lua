@@ -951,7 +951,7 @@ boothTab:AddButton("Update", function()
 end)
 
 boothTab:AddLabel("Standing Position:")
-local standingPos = otherTab2:AddDropdown("[ " .. getgenv().settings.standingPosition .. " ]", function(t)
+local standingPos = boothTab:AddDropdown("[ " .. getgenv().settings.standingPosition .. " ]", function(t)
 	getgenv().settings.standingPosition = t
 	saveSettings()
 	if t == "Front" then
@@ -981,7 +981,7 @@ end)
 
 highlightTab:AddLabel('-------------------------------------')
 
-local _HLTOGGLE = highlightTab:AddSwitch('Rotation on donation [HIGHLIGHT]', function(bool)
+local _HLTOGGLE = highlightTab:AddSwitch('Sing a song on donation [HIGHLIGHT]', function(bool)
 	getgenv().settings.highlightSwitch = bool
 	if bool then
 		_HIGHLIGHTLOADER.HLSetup(Players.LocalPlayer.Character)
@@ -1453,6 +1453,10 @@ spinMultiplier:Set(getgenv().settings.spinSpeedMultiplier)
 jumpsPerRB:Set(getgenv().settings.jumpsPerRobux)
 spinToggle:Set(getgenv().settings.spinSet)
 
+otherTab:AddButton('Test Donation',function()
+	Players.LocalPlayer.leaderstats.Raised.Value += 5
+end)
+
 if setfpscap and type(setfpscap) == "function" then
 	local fpsLimit = otherTab:AddSlider("FPS Limit", function(x)
 		if settingsLock then
@@ -1657,7 +1661,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 	if getgenv().settings.webhookToggle == true and getgenv().settings.webhookBox then
 		task.spawn(function()
 			for i, child in next, game:GetService("Players").LocalPlayer.PlayerGui:WaitForChild('Chat'):WaitForChild('Frame').ChatChannelParentFrame.Frame_MessageLogDisplay.Scroller:GetChildren() do
-				if child:IsA('Frame') and string.find(child:WaitForChild('TextLabel').Text, game:GetService('Players').LocalPlayer.DisplayName) and string.find(child:WaitForChild('TextLabel').Text, '') and not child:GetAttribute('Checked') then
+				if child:IsA('Frame') and string.find(child:WaitForChild('TextLabel').Text, Players.LocalPlayer.DisplayName) and string.find(child:WaitForChild('TextLabel').Text, '') and not child:GetAttribute('Checked') then
 					local text = child.TextLabel.Text:gsub(' tipped ', ''):gsub(' to ', ''):gsub(game:GetService('Players').LocalPlayer.DisplayName, ''):gsub(tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC), ''):gsub('', ''):gsub('', ''):gsub(' ', '')
 					for i, v in next, game:GetService('Players'):GetPlayers() do
 						if v.DisplayName == text and v ~= Players.LocalPlayer then
@@ -1764,7 +1768,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 	end
 	if getgenv().settings.highlightSwitch then
 		task.spawn(function()
-			_HIGHLIGHTLOADER.HLStart(Players.LocalPlayer.Character, Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
+			_HIGHLIGHTLOADER.HLStart(Players.LocalPlayer.Character, Players.LocalPlayer.leaderstats.Raised.Value - RaisedC, (playerWhoDonated and playerWhoDonated or nil))
 		end)
 	end
 	RaisedC = Players.LocalPlayer.leaderstats.Raised.value
