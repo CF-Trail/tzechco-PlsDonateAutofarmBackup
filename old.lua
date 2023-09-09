@@ -1644,6 +1644,7 @@ if getgenv().settings.autoBeg then
 end
 local RaisedC = Players.LocalPlayer.leaderstats.Raised.value
 local djset = false
+local helidebounce = false
 Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 	local playerWhoDonated
 	sgoalR = sgoalR + (Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
@@ -1662,8 +1663,8 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 		task.spawn(function()
 			for i, child in next, game:GetService("Players").LocalPlayer.PlayerGui:WaitForChild('Chat'):WaitForChild('Frame').ChatChannelParentFrame.Frame_MessageLogDisplay.Scroller:GetChildren() do
 				if child:IsA('Frame') and string.find(child:WaitForChild('TextLabel').Text, Players.LocalPlayer.DisplayName) and string.find(child:WaitForChild('TextLabel').Text, '') and not child:GetAttribute('Checked') then
-					local text = child.TextLabel.Text:gsub(' tipped ', ''):gsub(' to ', ''):gsub(game:GetService('Players').LocalPlayer.DisplayName, ''):gsub(tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC), ''):gsub('', ''):gsub('', ''):gsub(' ', '')
-					for i, v in next, game:GetService('Players'):GetPlayers() do
+					local text = child.TextLabel.Text:gsub(' tipped ', ''):gsub(' to ', ''):gsub(Players.LocalPlayer.DisplayName, ''):gsub(tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC), ''):gsub('', ''):gsub('', ''):gsub(' ', ''):gsub('.',''):gsub(',','')
+					for i, v in next, Players:GetPlayers() do
 						if v.DisplayName == text and v ~= Players.LocalPlayer then
 							playerWhoDonated = v
 							child:SetAttribute('Checked', true)
@@ -1714,6 +1715,10 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 	end)
 	task.spawn(function()
 		if getgenv().settings.helicopterEnabled and not getgenv().settings.highlightSwitch then
+			if helidebounce then
+				return
+			end
+			helidebounce = true
 			local char = Players.LocalPlayer.Character
 			workspace['_HIGHLIGHT.CF'].CFrame = CFrame.new(char.Humanoid.RootPart.Position - Vector3.new(0, 3, 0))
 			chat('Enabling engines...')
@@ -1743,6 +1748,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 			task.wait(10)
 			_TWN3:Play()
 			_TWN4:Play()
+			helidebounce = false
 		end
 	end)
 	if getgenv().settings.donationJump == true and not getgenv().settings.spinSet == true and not getgenv().settings.highlightSwitch then
