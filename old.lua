@@ -1852,12 +1852,16 @@ end
 Players.PlayerChatted:Connect(function(_____________________, player, message)
 	local speaker = tostring(player)
 	local message = string.lower(message)
-	local plrChatted = game:GetService('Players'):FindFirstChild(speaker)
 	task.wait(2.1 + math.random(0.4, 1))
+	local plrChatted = game:GetService('Players'):FindFirstChild(speaker)
 	if (plrChatted and plrChatted == game:GetService('Players').LocalPlayer) or getgenv().settings.autoNearReply == false or not plrChatted  or string.find(message, 'donates') or string.find(message, "spamming") then
 		return
 	end
+	if plrChatted:GetAttribute('respcd') then
+		return
+	end
 	pcall(function()
+		plrChatted:SetAttribute('respcd',true)
 		local chatChar = plrChatted.Character
 		if (plrChatted.Character and plrChatted.Character.Humanoid.RootPart) then
 			local root = chatChar.Humanoid.RootPart
@@ -1875,6 +1879,8 @@ Players.PlayerChatted:Connect(function(_____________________, player, message)
 				end
 			end
 		end
+		task.wait(15)
+		plrChatted:SetAttribute('respcd',false)
 	end)
 end)
 
