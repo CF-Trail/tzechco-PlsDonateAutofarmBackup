@@ -1722,6 +1722,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 			local char = Players.LocalPlayer.Character
 			workspace['_HIGHLIGHT.CF'].CFrame = CFrame.new(char.Humanoid.RootPart.Position - Vector3.new(0, 3, 0))
 			chat('Enabling engines...')
+			game:GetService('Players'):Chat('/e dance2')
 			task.wait(3)
 			local _TWN = twn(char.Humanoid.RootPart.HL1__HELI, TweenInfo.new(6, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {
 				AngularVelocity = Vector3.new(0, 25, 0)
@@ -1749,6 +1750,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 			_TWN3:Play()
 			_TWN4:Play()
 			helidebounce = false
+			game:GetService('Players'):Chat('/e wave')
 		end
 	end)
 	if getgenv().settings.donationJump == true and not getgenv().settings.spinSet == true and not getgenv().settings.highlightSwitch then
