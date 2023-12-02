@@ -9,7 +9,7 @@ repeat
 until game:IsLoaded()
 
 local wip = Instance.new('Hint',workspace)
-wip.Text = "This script is currently under maintenace, it won't work. Join my discord if something.")
+wip.Text = "This script is currently under maintenace, it won't work. Join my discord for updates"
 
   --Stops script if on a different game
 if game.PlaceId ~= 8737602449 and game.PlaceId ~= 8943844393 then
