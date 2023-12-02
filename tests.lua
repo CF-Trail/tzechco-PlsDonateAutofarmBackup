@@ -1579,7 +1579,13 @@ settingsLock = false
 local function findUnclaimed()
 	for i, v in pairs(Players.LocalPlayer.PlayerGui:WaitForChild('MapUIContainer'):WaitForChild('MapUI'):WaitForChild('BoothUI'):GetChildren()) do
 		if (v.Details.Owner.Text == "unclaimed") then
-			table.insert(unclaimed, tonumber(string.match(tostring(v), "%d+")))
+			local _boothnum = tonumber(string.match(tostring(v), "%d+"))
+			for i, v in ipairs(game:GetService("Workspace").BoothInteractions:GetChildren()) do
+		              if v:GetAttribute("BoothSlot") == _boothnum and (v.Position - mainCheckPosition).Magnitude > 50 then
+				   table.insert(unclaimed,_boothnum)
+			           break
+		              end
+	                 end
 		end
 	end
 end
@@ -1615,7 +1621,7 @@ getgenv().walkToBooth = function()
 	end
 	local boothPos, mainPosX
 	for i, v in ipairs(game:GetService("Workspace").BoothInteractions:GetChildren()) do
-		if v:GetAttribute("BoothSlot") == unclaimed[1] and (v.Position - mainCheckPosition).Magnitude > 50 then
+		if v:GetAttribute("BoothSlot") == unclaimed[1] then
 			print((v.Position - mainCheckPosition).Magnitude)
 			mainPosX = v.CFrame
 			boothPos = v.CFrame * theCframe
