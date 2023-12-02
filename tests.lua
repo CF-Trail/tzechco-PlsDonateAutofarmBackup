@@ -672,11 +672,7 @@ function updateBoothText()
 		text = string.gsub(getgenv().settings.customBoothText, "$C", current)
 		text = string.gsub (text, "$G", goal)
 		text = string.gsub(text, '$D', tostring(getgenv().settings.jumpsPerRobux))
-		if not getgenv().settings.noFont then
-			boothText = tostring('<font face="' .. getgenv().settings.fontFace .. '" size="' .. getgenv().settings.fontSize .. '" color="#' .. getgenv().settings.hexBox .. '">' .. text .. '</font>')
-		else
-			boothText = tostring('<font color="#' .. getgenv().settings.hexBox .. '">' .. text .. '</font>')
-		end
+		boothText = text
 		--Updates the booth text
 		local myBooth = Players.LocalPlayer.PlayerGui.MapUIContainer.MapUI.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[1]))
 		if myBooth.Sign.TextLabel.Text ~= boothText then
@@ -880,18 +876,6 @@ local textUpdateToggle = boothTab:AddSwitch("Text Update", function(bool)
 		updateBoothText()
 	end
 end)
-
-local noFontSwitch = boothTab:AddSwitch("No Font", function(bool)
-	if settingsLock then
-		return
-	end
-	getgenv().settings.noFont = bool
-	saveSettings()
-	if bool then
-		updateBoothText()
-	end
-end)
-noFontSwitch:Set(getgenv().settings.noFont)
 
 textUpdateToggle:Set(getgenv().settings.textUpdateToggle)
 local textUpdateDelay = boothTab:AddSlider("Text Update Delay (S)", function(x)
@@ -1834,9 +1818,6 @@ oldRaisedFormat.Changed:Connect(function()
 	task.wait(getgenv().settings.textUpdateDelay)
 	updateBoothText()
 end)
-Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
-    
-end)
 updateBoothText()
 
 task.spawn(function()
@@ -1850,11 +1831,11 @@ task.spawn(function()
 	for i, v in next, Players:GetPlayers() do
 		if v:FindFirstChild('leaderstats') and v ~= Players.LocalPlayer then
 			if raisedV ~= nil then
-				if tonumber(v.leaderstats.Raised.Value:gsub('','')) > raisedV then
-					raisedV = tonumber(v.leaderstats.Raised.Value:gsub('',''))
+				if tonumber(oldRaisedFormat.Value) > raisedV then
+					raisedV = tonumber(oldRaisedFormat.Value)
 				end
 			else
-				raisedV = tonumber(v.leaderstats.Raised.Value:gsub('',''))
+				raisedV = tonumber(oldRaisedFormat.Value)
 			end
 		end
 	end
@@ -1867,7 +1848,7 @@ task.spawn(function()
 	while task.wait(5) do
 		if (Players.LocalPlayer.Character and Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid').RootPart) then
 			local root = Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid').RootPart
-			if (root.Position - positionX.Position).Magnitude > 1100 or (root.Position - positionX.Position).Magnitude < -1100 then
+			if (root.Position - positionX).Magnitude > 1100 or (root.Position - positionX).Magnitude < -1100 then
 				serverHop()
 			end
 		end
