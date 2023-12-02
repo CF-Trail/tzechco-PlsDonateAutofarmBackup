@@ -202,6 +202,7 @@ end)
 
 local unclaimed = {}
 local counter = 0
+local mainCheckPosition = Vector3.new(165.715, 21.3212, 507.079) * Vector3.new(1,0.5,1)
 local donation, boothText, spamming, hopTimer, vcEnabled
 local signPass = false
 local errCount = 0
@@ -1608,7 +1609,7 @@ getgenv().walkToBooth = function()
 	end
 	local boothPos, mainPosX
 	for i, v in ipairs(game:GetService("Workspace").BoothInteractions:GetChildren()) do
-		if v:GetAttribute("BoothSlot") == unclaimed[1] then
+		if v:GetAttribute("BoothSlot") == unclaimed[1] and (v.Position - mainCheckPosition).Magnitude > 30 then
 			mainPosX = v.CFrame
 			boothPos = v.CFrame * theCframe
 			break
