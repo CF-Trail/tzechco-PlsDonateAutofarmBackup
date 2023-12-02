@@ -632,7 +632,7 @@ end
 
 function updateBoothText()
 	local text
-	local current = Players.LocalPlayer.leaderstats.Raised.Value
+	local current = Players.LocalPlayer.leaderstats.Raised.Value:gsub('','')
 	local goal = current + tonumber(getgenv().settings.goalBox)
 	if goal == 420 or goal == 425 then
 		goal = goal + 10
@@ -742,7 +742,7 @@ local function webhook(raised, donor)
 			},
 			{
 				["name"] = "Total",
-				["value"] = '`' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value) .. '`',
+				["value"] = '`' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value:gsub('','')) .. '`',
 				["inline"] = true
 			},
 			{
@@ -752,7 +752,7 @@ local function webhook(raised, donor)
 			},
 			{
 				["name"] = "After Tax [TOTAL]",
-				["value"] = '`' .. math.floor(tostring(Players.LocalPlayer.leaderstats.Raised.Value * 0.6)) .. '`',
+				["value"] = '`' .. math.floor(tostring(Players.LocalPlayer.leaderstats.Raised.Value:gsub('','') * 0.6)) .. '`',
 				["inline"] = true
 			},
 			{
@@ -1453,10 +1453,6 @@ end,
 spinMultiplier:Set(getgenv().settings.spinSpeedMultiplier)
 jumpsPerRB:Set(getgenv().settings.jumpsPerRobux)
 spinToggle:Set(getgenv().settings.spinSet)
-
-otherTab:AddButton('Test Donation',function()
-	Players.LocalPlayer.leaderstats.Raised.Value += 5
-end)
 
 if setfpscap and type(setfpscap) == "function" then
 	local fpsLimit = otherTab:AddSlider("FPS Limit", function(x)
