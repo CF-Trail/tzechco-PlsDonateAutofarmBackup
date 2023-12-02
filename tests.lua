@@ -1618,7 +1618,7 @@ getgenv().walkToBooth = function()
 	local Controls = require(Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule")):GetControls()
 	Controls:Disable()
 	local atBooth = false
-	game:GetService("Workspace").Map.Main.Bench:Destroy()
+	game:GetService("Workspace").Map.Decorations.Benches:Destroy()
 	Players.LocalPlayer.Character.Humanoid:MoveTo(boothPos.Position)
 	Players.LocalPlayer.Character.Humanoid.MoveToFinished:Connect(function(reached)
 		atBooth = true
@@ -1642,15 +1642,15 @@ walkToBooth()
 if getgenv().settings.autoBeg then
 	spamming = task.spawn(begging)
 end
-local RaisedC = Players.LocalPlayer.leaderstats.Raised.value
+local RaisedC = Players.LocalPlayer.leaderstats.Raised.value:gsub('','')
 local djset = false
 local helidebounce = false
 Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 	local playerWhoDonated
-	sgoalR = sgoalR + (Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
+	sgoalR = sgoalR + (Players.LocalPlayer.leaderstats.Raised.Value:gsub('','') - RaisedC)
 	hopSet()
 	if Players.LocalPlayer.Character:FindFirstChildWhichIsA('Humanoid').RootPart:FindFirstChild('Spin') and getgenv().settings.spinSet then
-		local raisedValue = Players.LocalPlayer.leaderstats.Raised.Value
+		local raisedValue = Players.LocalPlayer.leaderstats.Raised.Value:gsub('','')
 		local humanoid = Players.LocalPlayer.Character:FindFirstChildWhichIsA('Humanoid')
 		local spinPart = humanoid.RootPart:FindFirstChild('Spin')
 		local sSM = getgenv().settings.spinSpeedMultiplier
@@ -1676,7 +1676,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 			if playerWhoDonated then
 				if getgenv().settings.webhookType == 'New' then
 					pcall(function()
-						webhook(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC, playerWhoDonated.Name)
+						webhook(Players.LocalPlayer.leaderstats.Raised.Value:gsub('','') - RaisedC, playerWhoDonated.Name)
 					end)
 				else
 					pcall(function()
@@ -1686,11 +1686,11 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 			else
 				if getgenv().settings.webhookType == 'New' then
 					pcall(function()
-						webhook(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC, "Hi, I'm Crazyblox.")
+						webhook(Players.LocalPlayer.leaderstats.Raised.Value:gsub('','') - RaisedC, "Hi, I'm Crazyblox.")
 					end)
 				else
 					pcall(function()
-						oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. ' | [A/T]: ' .. tostring(math.floor((Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value))
+						oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value:gsub('','') - RaisedC) .. ' | [A/T]: ' .. tostring(math.floor((Players.LocalPlayer.leaderstats.Raised.Value:gsub('','') - RaisedC) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value:gsub('','')))
 					end)
 				end
 			end
@@ -1710,7 +1710,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 	end
 	pcall(function()
 		if getgenv().settings.gravitySwitch and not getgenv().settings.highlightSwitch then
-			workspace.Gravity = workspace.Gravity - (Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
+			workspace.Gravity = workspace.Gravity - (Players.LocalPlayer.leaderstats.Raised.Value:gsub('','') - RaisedC)
 		end
 	end)
 	task.spawn(function()
@@ -1757,14 +1757,14 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 		djset = true
 		task.spawn(function()
 			if getgenv().settings.jumpsPerRobux == 1 then
-				for i = 1, game:GetService('Players').LocalPlayer.leaderstats.Raised.Value - RaisedC do
+				for i = 1, game:GetService('Players').LocalPlayer.leaderstats.Raised.Value:gsub('','') - RaisedC do
 					game:GetService('Players').LocalPlayer.Character.Humanoid:ChangeState('Jumping')
 					repeat
 						task.wait()
 					until game:GetService('Players').LocalPlayer.Character.Humanoid:GetState() == Enum.HumanoidStateType.Running
 				end
 			else
-				for i = 1, (game:GetService('Players').LocalPlayer.leaderstats.Raised.Value - RaisedC) * getgenv().settings.jumpsPerRobux do
+				for i = 1, (game:GetService('Players').LocalPlayer.leaderstats.Raised.Value:gsub('','') - RaisedC) * getgenv().settings.jumpsPerRobux do
 					game:GetService('Players').LocalPlayer.Character.Humanoid:ChangeState('Jumping')
 					repeat
 						task.wait()
@@ -1776,10 +1776,10 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 	end
 	if getgenv().settings.highlightSwitch then
 		task.spawn(function()
-			_HIGHLIGHTLOADER.HLStart(Players.LocalPlayer.Character, Players.LocalPlayer.leaderstats.Raised.Value - RaisedC, (playerWhoDonated and playerWhoDonated or nil))
+			_HIGHLIGHTLOADER.HLStart(Players.LocalPlayer.Character, Players.LocalPlayer.leaderstats.Raised.Value:gsub('','') - RaisedC, (playerWhoDonated and playerWhoDonated or nil))
 		end)
 	end
-	RaisedC = Players.LocalPlayer.leaderstats.Raised.value
+	RaisedC = Players.LocalPlayer.leaderstats.Raised.value:gsub('','')
 	if getgenv().settings.autoThanks == true then
 		task.spawn(function()
 			task.wait(getgenv().settings.thanksDelay)
@@ -1819,11 +1819,11 @@ task.spawn(function()
 	for i, v in next, Players:GetPlayers() do
 		if v:FindFirstChild('leaderstats') and v ~= Players.LocalPlayer then
 			if raisedV ~= nil then
-				if v.leaderstats.Raised.Value > raisedV then
-					raisedV = v.leaderstats.Raised.Value
+				if v.leaderstats.Raised.Value:gsub('','') > raisedV then
+					raisedV = v.leaderstats.Raised.Value:gsub('','')
 				end
 			else
-				raisedV = v.leaderstats.Raised.Value
+				raisedV = v.leaderstats.Raised.Value:gsub('','')
 			end
 		end
 	end
