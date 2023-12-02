@@ -1606,8 +1606,10 @@ getgenv().walkToBooth = function()
 	local boothPos, mainPosX
 	for i, v in ipairs(game:GetService("Workspace").BoothInteractions:GetChildren()) do
 		if v:GetAttribute("BoothSlot") == unclaimed[1] and (v.Position - mainCheckPosition).Magnitude > 50 then
+			print((v.Position - mainCheckPosition).Magnitude)
 			mainPosX = v.CFrame
 			boothPos = v.CFrame * theCframe
+			game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.CFrame = mainPosX
 			break
 		end
 	end
