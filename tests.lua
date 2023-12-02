@@ -1618,7 +1618,7 @@ getgenv().walkToBooth = function()
 	local Controls = require(Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule")):GetControls()
 	Controls:Disable()
 	local atBooth = false
-	game:GetService("Workspace").Map.Decorations.Benches:Destroy()
+	game:GetService("Workspace").Map.Decoration.Benches:Destroy()
 	Players.LocalPlayer.Character.Humanoid:MoveTo(boothPos.Position)
 	Players.LocalPlayer.Character.Humanoid.MoveToFinished:Connect(function(reached)
 		atBooth = true
