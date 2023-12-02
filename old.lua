@@ -348,7 +348,7 @@ local sNames = {
 	'friendHop'
 }
 
-local positionX = workspace:WaitForChild('Boomboxes'):WaitForChild('Spawn')
+local positionX = (game:GetService('Players').LocalPlayer.Character or game:GetService('Players').LocalPlayer.CharacterAdded:Wait()):WaitForChild('HumanoidRootPart').Position
 
 local sValues = {
 	true,
