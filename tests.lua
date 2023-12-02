@@ -688,10 +688,22 @@ function updateBoothText()
 						nx = 8
 					end
 				end
-				require(game:GetService("ReplicatedStorage").Remotes).Event("SetBoothText"):FireServer("your text here", "booth")
+				require(game:GetService("ReplicatedStorage").Remotes).Event("SetCustomization"):FireServer({
+						['textFont'] = getgenv().settings.fontFace,
+						['richText'] = true,
+						['buttonTextFont'] = getgenv().settings.fontFace,
+						['text'] = 'your text here',
+						['strokeOpacity'] = 0
+				}, "booth")
 				task.wait(3)
 			end
-			require(game:GetService('ReplicatedStorage').Remotes).Event("SetBoothText"):FireServer(boothText, "booth")
+				require(game:GetService("ReplicatedStorage").Remotes).Event("SetCustomization"):FireServer({
+						['textFont'] = getgenv().settings.fontFace,
+						['richText'] = true,
+						['buttonTextFont'] = getgenv().settings.fontFace,
+						['text'] = boothText,
+						['strokeOpacity'] = 0
+				}, "booth")
 			task.wait(3)
 		else
 		end
