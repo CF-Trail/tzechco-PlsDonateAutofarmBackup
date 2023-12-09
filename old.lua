@@ -208,15 +208,7 @@ local donation, boothText, spamming, hopTimer, vcEnabled
 local signPass = false
 local errCount = 0
 local uid = game:GetService('Players').LocalPlayer.UserId
-local oldRaisedFormat = Instance.new('NumberValue',Players.LocalPlayer:WaitForChild('leaderstats'))
-oldRaisedFormat.Name = 'ORF'
 local newRaisedFormat = Players.LocalPlayer:WaitForChild('leaderstats'):WaitForChild('Raised')
-newRaisedFormat.Changed:Connect(function()
-	task.delay(0.5,function()
-	    oldRaisedFormat.Value = newRaisedFormat.Value
-	end)
-end)
-oldRaisedFormat.Value = newRaisedFormat.Value
 local booths = {
 	["1"] = "72, 3, 36",
 	["2"] = "83, 3, 161",
@@ -642,7 +634,7 @@ end
 
 function updateBoothText()
 	local text
-	local current = tonumber(oldRaisedFormat.Value)
+	local current = tonumber(newRaisedFormat.Value)
 	local goal = current + tonumber(getgenv().settings.goalBox)
 	if goal == 420 or goal == 425 then
 		goal = goal + 10
@@ -760,7 +752,7 @@ local function webhook(raised, donor)
 			},
 			{
 				["name"] = "Total",
-				["value"] = '`' .. tostring(tonumber(oldRaisedFormat.Value)) .. '`',
+				["value"] = '`' .. tostring(tonumber(newRaisedFormat.Value)) .. '`',
 				["inline"] = true
 			},
 			{
@@ -770,7 +762,7 @@ local function webhook(raised, donor)
 			},
 			{
 				["name"] = "After Tax [TOTAL]",
-				["value"] = '`' .. math.floor(tostring(tonumber(oldRaisedFormat.Value) * 0.6)) .. '`',
+				["value"] = '`' .. math.floor(tostring(tonumber(newRaisedFormat.Value) * 0.6)) .. '`',
 				["inline"] = true
 			},
 			{
@@ -847,7 +839,7 @@ if game:GetService('CoreGui'):FindFirstChild('RobloxPromptGui') then
 	end)
 end
 
-local Window = library:AddWindow("@szze | uwu",
+local Window = library:AddWindow("@szze | Happy Thanksgiving!",
   {
 	main_color = Color3.fromRGB(80, 80, 80),
 	min_size = Vector2.new(560, 563),
@@ -1654,15 +1646,15 @@ if getgenv().settings.autoBeg then
 	spamming = task.spawn(begging)
 end
 
-local RaisedC = tonumber(oldRaisedFormat.Value)
+local RaisedC = Players.LocalPlayer.leaderstats.Raised.value
 local djset = false
 local helidebounce = false
-oldRaisedFormat.Changed:Connect(function()
+Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 	local playerWhoDonated
-	sgoalR = sgoalR + oldRaisedFormat.Value
+	sgoalR = sgoalR + (Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
 	hopSet()
 	if Players.LocalPlayer.Character:FindFirstChildWhichIsA('Humanoid').RootPart:FindFirstChild('Spin') and getgenv().settings.spinSet then
-		local raisedValue = oldRaisedFormat.Value
+		local raisedValue = Players.LocalPlayer.leaderstats.Raised.Value
 		local humanoid = Players.LocalPlayer.Character:FindFirstChildWhichIsA('Humanoid')
 		local spinPart = humanoid.RootPart:FindFirstChild('Spin')
 		local sSM = getgenv().settings.spinSpeedMultiplier
@@ -1673,36 +1665,25 @@ oldRaisedFormat.Changed:Connect(function()
 	end
 	if getgenv().settings.webhookToggle == true and getgenv().settings.webhookBox then
 		task.spawn(function()
-			for i, child in next, game:GetService("Players").LocalPlayer.PlayerGui:WaitForChild('Chat'):WaitForChild('Frame').ChatChannelParentFrame.Frame_MessageLogDisplay.Scroller:GetChildren() do
-				if child:IsA('Frame') and string.find(child:WaitForChild('TextLabel').Text, Players.LocalPlayer.DisplayName) and string.find(child:WaitForChild('TextLabel').Text, '') and not child:GetAttribute('Checked') then
-					local text = child.TextLabel.Text:gsub(' tipped ', ''):gsub(' to ', ''):gsub(Players.LocalPlayer.DisplayName, ''):gsub(tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC), ''):gsub('', ''):gsub('', ''):gsub(' ', ''):gsub('.',''):gsub(',','')
-					for i, v in next, Players:GetPlayers() do
-						if v.DisplayName == text and v ~= Players.LocalPlayer then
-							playerWhoDonated = v
-							child:SetAttribute('Checked', true)
-							break
-						end
-					end
-				end
-			end
+			playerWhoDonated = nil
 			if playerWhoDonated then
 				if getgenv().settings.webhookType == 'New' then
 					pcall(function()
-						webhook(tonumber(oldRaisedFormat.Value) - RaisedC, playerWhoDonated.Name)
+						webhook(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC, playerWhoDonated.Name)
 					end)
 				else
 					pcall(function()
-						oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. ' | [A/T]: ' .. tostring(math.floor((tonumber(oldRaisedFormat.Value)) * 0.6)) .. ' | Total: ' .. tostring(tonumber(oldRaisedFormat.Value)) .. ' | Donor: ' .. playerWhoDonated.Name)
+						oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. ' | [A/T]: ' .. tostring(math.floor((Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value) .. ' | Donor: ' .. playerWhoDonated.Name)
 					end)
 				end
 			else
 				if getgenv().settings.webhookType == 'New' then
 					pcall(function()
-						webhook(oldRaisedFormat.Value - RaisedC, "Hi, I'm Crazyblox.")
+						webhook(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC, "Hi, I'm Crazyblox.")
 					end)
 				else
 					pcall(function()
-						oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(tonumber(oldRaisedFormat.Value) - RaisedC) .. ' | [A/T]: ' .. tostring(math.floor((tonumber(oldRaisedFormat.Value) - RaisedC) * 0.6)) .. ' | Total: ' .. tostring(tonumber(oldRaisedFormat.Value)))
+						oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. ' | [A/T]: ' .. tostring(math.floor((Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value))
 					end)
 				end
 			end
@@ -1722,7 +1703,7 @@ oldRaisedFormat.Changed:Connect(function()
 	end
 	pcall(function()
 		if getgenv().settings.gravitySwitch and not getgenv().settings.highlightSwitch then
-			workspace.Gravity = workspace.Gravity - (tonumber(oldRaisedFormat.Value) - RaisedC)
+			workspace.Gravity = workspace.Gravity - (Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
 		end
 	end)
 	task.spawn(function()
@@ -1769,14 +1750,14 @@ oldRaisedFormat.Changed:Connect(function()
 		djset = true
 		task.spawn(function()
 			if getgenv().settings.jumpsPerRobux == 1 then
-				for i = 1, tonumber(oldRaisedFormat.Value) - RaisedC do
+				for i = 1, game:GetService('Players').LocalPlayer.leaderstats.Raised.Value - RaisedC do
 					game:GetService('Players').LocalPlayer.Character.Humanoid:ChangeState('Jumping')
 					repeat
 						task.wait()
 					until game:GetService('Players').LocalPlayer.Character.Humanoid:GetState() == Enum.HumanoidStateType.Running
 				end
 			else
-				for i = 1, (gtonumber(oldRaisedFormat.Value) - RaisedC) * getgenv().settings.jumpsPerRobux do
+				for i = 1, (game:GetService('Players').LocalPlayer.leaderstats.Raised.Value - RaisedC) * getgenv().settings.jumpsPerRobux do
 					game:GetService('Players').LocalPlayer.Character.Humanoid:ChangeState('Jumping')
 					repeat
 						task.wait()
@@ -1788,10 +1769,10 @@ oldRaisedFormat.Changed:Connect(function()
 	end
 	if getgenv().settings.highlightSwitch then
 		task.spawn(function()
-			_HIGHLIGHTLOADER.HLStart(Players.LocalPlayer.Character, tonumber(oldRaisedFormat.Value) - RaisedC, (playerWhoDonated and playerWhoDonated or nil))
+			_HIGHLIGHTLOADER.HLStart(Players.LocalPlayer.Character, Players.LocalPlayer.leaderstats.Raised.Value - RaisedC, (playerWhoDonated and playerWhoDonated or nil))
 		end)
 	end
-	RaisedC = tonumber(oldRaisedFormat.Value)
+	RaisedC = Players.LocalPlayer.leaderstats.Raised.value
 	if getgenv().settings.autoThanks == true then
 		task.spawn(function()
 			task.wait(getgenv().settings.thanksDelay)
@@ -1831,11 +1812,11 @@ task.spawn(function()
 	for i, v in next, Players:GetPlayers() do
 		if v:FindFirstChild('leaderstats') and v ~= Players.LocalPlayer then
 			if raisedV ~= nil then
-				if tonumber(oldRaisedFormat.Value) > raisedV then
-					raisedV = tonumber(oldRaisedFormat.Value)
+				if v.leaderstats.Raised.Value > raisedV then
+					raisedV = v.leaderstats.Raised.Value
 				end
 			else
-				raisedV = tonumber(oldRaisedFormat.Value)
+				raisedV = v.leaderstats.Raised.Value
 			end
 		end
 	end
