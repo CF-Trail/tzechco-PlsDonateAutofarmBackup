@@ -213,10 +213,10 @@ oldRaisedFormat.Name = 'ORF'
 local newRaisedFormat = Players.LocalPlayer:WaitForChild('leaderstats'):WaitForChild('Raised')
 newRaisedFormat.Changed:Connect(function()
 	task.delay(0.5,function()
-	    oldRaisedFormat.Value = string.sub(newRaisedFormat.Value,2,#newRaisedFormat.Value)
+	    oldRaisedFormat.Value = newRaisedFormat.Value
 	end)
 end)
-oldRaisedFormat.Value = string.sub(newRaisedFormat.Value,2,#newRaisedFormat.Value)
+oldRaisedFormat.Value = newRaisedFormat.Value
 local booths = {
 	["1"] = "72, 3, 36",
 	["2"] = "83, 3, 161",
