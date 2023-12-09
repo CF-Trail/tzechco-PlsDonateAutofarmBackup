@@ -1665,18 +1665,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 	end
 	if getgenv().settings.webhookToggle == true and getgenv().settings.webhookBox then
 		task.spawn(function()
-			for i, child in next, game:GetService("Players").LocalPlayer.PlayerGui:WaitForChild('Chat'):WaitForChild('Frame').ChatChannelParentFrame.Frame_MessageLogDisplay.Scroller:GetChildren() do
-				if child:IsA('Frame') and string.find(child:WaitForChild('TextLabel').Text, Players.LocalPlayer.DisplayName) and string.find(child:WaitForChild('TextLabel').Text, '') and not child:GetAttribute('Checked') then
-					local text = child.TextLabel.Text:gsub(' tipped ', ''):gsub(' to ', ''):gsub(Players.LocalPlayer.DisplayName, ''):gsub(tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC), ''):gsub('', ''):gsub('', ''):gsub(' ', ''):gsub('.',''):gsub(',','')
-					for i, v in next, Players:GetPlayers() do
-						if v.DisplayName == text and v ~= Players.LocalPlayer then
-							playerWhoDonated = v
-							child:SetAttribute('Checked', true)
-							break
-						end
-					end
-				end
-			end
+			playerWhoDonated = nil
 			if playerWhoDonated then
 				if getgenv().settings.webhookType == 'New' then
 					pcall(function()
