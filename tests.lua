@@ -669,13 +669,6 @@ function updateBoothText()
 		local myBooth = Players.LocalPlayer.PlayerGui.MapUIContainer.MapUI.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[1]))
 		if myBooth.Sign.TextLabel.Text ~= boothText then
 			if string.find(myBooth.Sign.TextLabel.Text, "# #") or string.find(myBooth.Sign.TextLabel.Text, "##") then
-				if getgenv().settings.taggedBoothHop then
-					if nx >= 1 then
-						serverHop()
-					else
-						nx = 8
-					end
-				end
 				require(game:GetService("ReplicatedStorage").Remotes).Event("SetCustomization"):FireServer({
 						['textFont'] = getgenv().settings.fontFace,
 						['richText'] = true,
@@ -1584,9 +1577,9 @@ local claimCount = #unclaimed
   --Claim booth function
 local function boothclaim()
 	require(game:GetService('ReplicatedStorage').Remotes).Event("ClaimBooth"):InvokeServer(unclaimed[1])
-	if not string.find(Players.LocalPlayer.PlayerGui.MapUIContainer.MapUI.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[1])).Details.Owner.Text, Players.LocalPlayer.DisplayName) then
+	if not string.find(Players.LocalPlayer.PlayerGui:WaitForChild('MapUIContainer').MapUI.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[1])).Details.Owner.Text, Players.LocalPlayer.DisplayName) then
 		task.wait(1)
-		if not string.find(Players.LocalPlayer.PlayerGui.MapUIContainer.MapUI.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[1])).Details.Owner.Text, Players.LocalPlayer.DisplayName) then
+		if not string.find(Players.LocalPlayer.PlayerGui:WaitForChild('MapUIContainer').MapUI.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[1])).Details.Owner.Text, Players.LocalPlayer.DisplayName) then
 			error()
 		end
 	end
