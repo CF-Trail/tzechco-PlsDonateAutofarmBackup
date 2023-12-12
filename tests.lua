@@ -634,7 +634,7 @@ end
 
 local _shuffled = workspace:WaitForChild('MapUI',3)
 local _shufflerandom = 0
-if not _shuffled 
+if not _shuffled then
    _shufflerandom = 1
 end
 local _boothlocation
