@@ -1576,7 +1576,6 @@ library:FormatWindows()
 settingsLock = false
   --Finds unclaimed booths
 local function findUnclaimed()
-	l
 	for i, v in pairs(_boothlocation:WaitForChild('BoothUI'):GetChildren()) do
 		if (v.Details.Owner.Text == "unclaimed") then
 			local _boothnum = tonumber(string.match(tostring(v), "%d+"))
