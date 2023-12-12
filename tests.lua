@@ -1565,7 +1565,7 @@ settingsLock = false
   
   --Finds unclaimed booths
 local function findUnclaimed()
-	for i, v in pairs(Players.LocalPlayer.PlayerGui:WaitForChild('MapUIContainer'):WaitForChild('MapUI'):WaitForChild('BoothUI'):GetChildren()) do
+	for i, v in next, workspace:WaitForChild('MapUI'):WaitForChild('BoothUI'):GetChildren() do
 		if (v.Details.Owner.Text == "unclaimed") then
 			local _boothnum = tonumber(string.match(tostring(v), "%d+"))
 			for i, v in ipairs(game:GetService("Workspace").BoothInteractions:GetChildren()) do
