@@ -632,6 +632,18 @@ local function slider(value, whichSlider)
 	end
 end
 
+local _shuffled = workspace:WaitForChild('MapUI',3)
+local _shufflerandom = 0
+if not _shuffled 
+   _shufflerandom = 1
+end
+local _boothlocation
+if _shufflerandom == 1 then
+   _boothlocation = Players.LocalPlayer:WaitForChild('PlayerGui'):WaitForChild('MapUIContainer'):WaitForChild('MapUI')
+else
+   _boothlocation = _shuffled
+end
+
 function updateBoothText()
 	local text
 	local current = tonumber(newRaisedFormat.Value)
@@ -666,7 +678,7 @@ function updateBoothText()
 		text = string.gsub(text, '$D', tostring(getgenv().settings.jumpsPerRobux))
 		boothText = text
 		--Updates the booth text
-		local myBooth = Players.LocalPlayer.PlayerGui.MapUIContainer.MapUI.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[1]))
+		local myBooth = _boothlocation.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[1]))
 		if myBooth.Sign.TextLabel.Text ~= boothText then
 			if string.find(myBooth.Sign.TextLabel.Text, "# #") or string.find(myBooth.Sign.TextLabel.Text, "##") then
 				if getgenv().settings.taggedBoothHop then
@@ -1562,10 +1574,10 @@ supportTab:AddLabel('You can also send me a message there for free!')
 boothTab:Show()
 library:FormatWindows()
 settingsLock = false
-  
   --Finds unclaimed booths
 local function findUnclaimed()
-	for i, v in pairs(Players.LocalPlayer.PlayerGui:WaitForChild('MapUIContainer'):WaitForChild('MapUI'):WaitForChild('BoothUI'):GetChildren()) do
+	l
+	for i, v in pairs(_boothlocation:WaitForChild('BoothUI'):GetChildren()) do
 		if (v.Details.Owner.Text == "unclaimed") then
 			local _boothnum = tonumber(string.match(tostring(v), "%d+"))
 			for i, v in ipairs(game:GetService("Workspace").BoothInteractions:GetChildren()) do
@@ -1584,9 +1596,9 @@ local claimCount = #unclaimed
   --Claim booth function
 local function boothclaim()
 	require(game:GetService('ReplicatedStorage').Remotes).Event("ClaimBooth"):InvokeServer(unclaimed[1])
-	if not string.find(Players.LocalPlayer.PlayerGui.MapUIContainer.MapUI.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[1])).Details.Owner.Text, Players.LocalPlayer.DisplayName) then
+	if not string.find(_boothlocation.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[1])).Details.Owner.Text, Players.LocalPlayer.DisplayName) then
 		task.wait(1)
-		if not string.find(Players.LocalPlayer.PlayerGui.MapUIContainer.MapUI.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[1])).Details.Owner.Text, Players.LocalPlayer.DisplayName) then
+		if not string.find(_boothlocation.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[1])).Details.Owner.Text, Players.LocalPlayer.DisplayName) then
 			error()
 		end
 	end
