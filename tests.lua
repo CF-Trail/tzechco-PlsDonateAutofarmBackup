@@ -639,9 +639,9 @@ if not _shuffled
 end
 local _boothlocation
 if _shufflerandom == 1 then
-   _boothlocation = Players.LocalPlayer:WaitForChild('PlayerGui'):WaitForChild('MapUIContainer'):WaitForChild('MapUI')
+   _boothlocation = game:GetService('Players').LocalPlayer:WaitForChild('PlayerGui'):WaitForChild('MapUIContainer'):WaitForChild('MapUI')
 else
-   _boothlocation = _shuffled
+   _boothlocation = _shuffled or workspace:WaitForChild('MapUI')
 end
 
 function updateBoothText()
