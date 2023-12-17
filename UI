@@ -1312,7 +1312,7 @@ function library:AddWindow(title, options)
 
 						title.Text = slider_text
 
-						do -- Slider Math
+						do -- gay sex
 							local Entered = false
 							slider.MouseEnter:Connect(function()
 								Entered = true
@@ -1325,7 +1325,7 @@ function library:AddWindow(title, options)
 
 							local function UpdateSlider(input)
 								if Entered and not slider_options.readonly then
-									local location = (input.UserInputType == Enum.UserInputType.Touch) and input.Position or gMouse()
+									local location = typeof(input) == 'Vector2' and input or gMouse()
 									local x = (slider.AbsoluteSize.X - (slider.AbsoluteSize.X - ((location.X - slider.AbsolutePosition.X)) + 1)) / slider.AbsoluteSize.X
 									local mouse_location = gMouse()
 									local x = (slider.AbsoluteSize.X - (slider.AbsoluteSize.X - ((mouse_location.X - slider.AbsolutePosition.X)) + 1)) / slider.AbsoluteSize.X
