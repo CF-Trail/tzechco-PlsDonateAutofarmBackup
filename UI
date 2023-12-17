@@ -1371,13 +1371,16 @@ function library:AddWindow(title, options)
 							UIS.InputEnded:Connect(function(inputObject)
 								if inputObject.UserInputType == Enum.UserInputType.MouseButton1 or inputObject.UserInputType == Enum.UserInputType.Touch then
 									Held = false
+                                                                        Window.Draggable = true
 								end
 							end)
 							UIS.TouchPan:Connect(function(touchPositions, totalTranslation, velocity, state)
 								if state == Enum.UserInputState.Begin or state == Enum.UserInputState.Change then
+                                                                        Window.Draggable = false
 									Entered = true
 									UpdateSlider(touchPositions[1])
 								elseif state == Enum.UserInputState.End then
+                                                                        Window.Draggable = true
 									Entered = false
 								end
 							end)
