@@ -574,10 +574,14 @@ function serverHop()
 end
 
 
-local function waitServerHop()
-	task.wait(getgenv().settings.serverHopDelay * 60)
+function waitServerHop()
+	task.wait(getgenv().settings.serverHopDelay and getgenv().settings.serverHopDelay * 60 or function()
+		getgenv().settings.serverHopDelay = 10
+		waitServerHop()
+	end)
 	serverHop()
 end
+
 local function hopSet()
 	if hopTimer then
 		task.cancel(hopTimer)
@@ -882,18 +886,18 @@ local textUpdateToggle = boothTab:AddSwitch("Text Update", function(bool)
 end)
 
 textUpdateToggle:Set(getgenv().settings.textUpdateToggle)
-local textUpdateDelay = boothTab:AddSlider("Text Update Delay (S)", function(x)
-	if settingsLock then
+local textUpdateDelay = boothTab:AddTextBox("Text Update Delay (S)", function(text)
+	if settingsLock or not tonumber(text) then
 		return
 	end
-	getgenv().settings.textUpdateDelay = x
-	coroutine.wrap(slider)(getgenv().settings.textUpdateDelay, "textUpdateDelay")
+	getgenv().settings.textUpdateDelay = tonumber(text)
+	saveSettings()
 end,
   {
-	["min"] = 0,
-	["max"] = 120
+	["clear"] = false
 })
-textUpdateDelay:Set((getgenv().settings.textUpdateDelay / 120) * 100)
+
+textUpdateDelay.Text = 'Text Update Delay: ' .. getgenv().settings.textUpdateDelay .. 'S'
 
 boothTab:AddLabel("Text Color:")
 local hexBox = boothTab:AddTextBox("Hex Codes Only", function(text)
@@ -1022,30 +1026,33 @@ local autoBeg = chatTab:AddSwitch("Auto Beg", function(bool)
 	end
 end)
 autoBeg:Set(getgenv().settings.autoBeg)
-local thanksDelay = chatTab:AddSlider("Thanks Delay (S)", function(x)
-	if settingsLock then
+
+local thanksDelay = chatTab:AddTextBox("Thanks Delay (S)", function(text)
+	if settingsLock or not tonumber(text) then
 		return
 	end
-	getgenv().settings.thanksDelay = x
-	coroutine.wrap(slider)(getgenv().settings.thanksDelay, "thanksDelay")
+	getgenv().settings.thanksDelay = tonumber(text)
+	saveSettings()
 end,
   {
-	["min"] = 1,
-	["max"] = 120
+	["clear"] = false
 })
-thanksDelay:Set((getgenv().settings.thanksDelay / 120) * 100)
-local begDelay = chatTab:AddSlider("Begging Delay (S)", function(x)
-	if settingsLock then
+
+thanksDelay.Text = 'Thanks Delay: ' .. getgenv().settings.thanksDelay .. 'S'
+
+local begDelay = chatTab:AddTextBox("Begging Delay (S)", function(text)
+	if settingsLock or not tonumber(text) then
 		return
 	end
-	getgenv().settings.begDelay = x
-	coroutine.wrap(slider)(getgenv().settings.begDelay, "begDelay")
+	getgenv().settings.begDelay = tonumber(text)
+	saveSettings()
 end,
   {
-	["min"] = 1,
-	["max"] = 300
+	["clear"] = false
 })
-begDelay:Set((getgenv().settings.begDelay / 300) * 100)
+
+begDelay.Text = 'Beg Delay: ' .. getgenv().settings.begDelay .. 'S'
+
 local tym = chatTab:AddFolder("Thank You Messages:")
 local thanksMessage = tym:AddConsole({
 	["y"] = 170,
@@ -1261,21 +1268,20 @@ end,
 })
 gSHAmount.Text = 'ServerHop goal: ' .. getgenv().settings.goalServerhopGoal
 
-local serverHopDelay = serverHopTab:AddSlider("Server Hop Delay (M)", function(x)
-	if settingsLock then
+local serverHopDelaySL = serverHopTab:AddTextBox("Serverhop Delay (Minutes)", function(text)
+	if settingsLock or not tonumber(text) then
 		return
 	end
-	getgenv().settings.serverHopDelay = x
-	coroutine.wrap(slider)(getgenv().settings.serverHopDelay, "serverHopDelay")
+	getgenv().settings.serverHopDelay = tonumber(text)
+	hopSet()
 end,
   {
-	["min"] = 1,
-	["max"] = 19
+	["clear"] = false
 })
 
+serverHopDelaySL.Text = 'ServerHop Delay: ' .. getgenv().settings.serverHopDelay .. 'M'
 serverHopTab:AddLabel("Server hop timer resets after donation")
 
-serverHopDelay:Set(getgenv().settings.serverHopDelay)
   --Other tab
 otherTab:AddLabel('Dance:')
 local danceDropdown = otherTab:AddDropdown("[ " .. getgenv().settings.danceChoice .. " ]", function(object)
@@ -1434,51 +1440,46 @@ fpsBoosts:Set(getgenv().settings.fpsBoost)
 
 otherTab:AddLabel("-----------------------")
 
-local jumpsPerRB = otherTab:AddSlider("Jumps per robux", function(x)
-	if settingsLock then
+local jumpsPerRB = otherTab:AddTextBox("Jumps Per Robux", function(text)
+	if settingsLock or not tonumber(text) then
 		return
 	end
-	getgenv().settings.jumpsPerRobux = x
+	getgenv().settings.jumpsPerRobux = tonumber(text)
 	saveSettings()
-	coroutine.wrap(slider)(getgenv().settings.jumpsPerRobux, "jumpsPerRobux")
 end,
   {
-	["min"] = 0,
-	["max"] = 100
+	["clear"] = false
 })
 
-local spinMultiplier = otherTab:AddSlider("Spin speed multiplier", function(x)
-	if settingsLock then
+jumpsPerRB.Text = 'Jumps Per Robux: ' .. getgenv().settings.jumpsPerRobux
+
+local spinMultiplier = otherTab:AddTextBox("Spin Speed Multiplier", function(text)
+	if settingsLock or not tonumber(text) then
 		return
 	end
-	getgenv().settings.spinSpeedMultiplier = x
+	getgenv().settings.spinSpeedMultiplier = tonumber(text)
 	saveSettings()
-	coroutine.wrap(slider)(getgenv().settings.spinSpeedMultiplier, "spinSpeedMultiplier")
 end,
   {
-	["min"] = 1,
-	["max"] = 3
+	["clear"] = false
 })
 
-spinMultiplier:Set(getgenv().settings.spinSpeedMultiplier)
-jumpsPerRB:Set(getgenv().settings.jumpsPerRobux)
+spinMultiplier.Text = 'Spin Speed Multiplier: ' .. getgenv().settings.spinSpeedMultiplier
 spinToggle:Set(getgenv().settings.spinSet)
 
 if setfpscap and type(setfpscap) == "function" then
-	local fpsLimit = otherTab:AddSlider("FPS Limit", function(x)
-		if settingsLock then
-			return
-		end
-		getgenv().settings.fpsLimit = x
-		setfpscap(x)
-		coroutine.wrap(slider)(getgenv().settings.fpsLimit, "fpsLimit")
-	end,
-	  {
-		["min"] = 1,
-		["max"] = 60
-	})
-	fpsLimit:Set((getgenv().settings.fpsLimit / 60) * 100)
-	setfpscap(getgenv().settings.fpsLimit)
+	local fpsLimit = otherTab:AddTextBox("FPS Limit", function(text)
+	if not tonumber(text) or tonumber(text) < 5 then
+		return
+	end
+	getgenv().settings.fpsLimit = tonumber(text)
+	saveSettings()
+        end,
+     {
+	["clear"] = false
+     })
+fpsLimit.Text = 'FPS Limit: ' .. getgenv().settings.fpsLimit
+setfpscap(getgenv().settings.fpsLimit)
 end
 
 --otherTab2
