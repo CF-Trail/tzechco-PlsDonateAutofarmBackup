@@ -1138,7 +1138,7 @@ end)
 webhookTab:AddLabel('Webhook Type: ')
 
 local webhookType = webhookTab:AddDropdown("[ " .. getgenv().settings.webhookType .. " ]", function(t)
-	if t == 'New [BUGGY]' then
+	if t == 'New' then
 		getgenv().settings.webhookType = 'New'
 	else
 		getgenv().settings.webhookType = 'Old'
@@ -1146,8 +1146,8 @@ local webhookType = webhookTab:AddDropdown("[ " .. getgenv().settings.webhookTyp
 	saveSettings()
 end)
   
-webhookType:Add('New [BUGGY]')
-webhookType:Add('Old [RECOMMENDED!]')
+webhookType:Add('New')
+webhookType:Add('Old')
 
 local TB = webhookTab:AddTextBox("Minimum ping dono amount", function(text)
 	local x = text:gsub('Minimum ping dono amount', '')
