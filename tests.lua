@@ -384,8 +384,8 @@ local sValues = {
 	60,
 	false,
 	3,
-	true,
 	false,
+	true,
 	false,
 	false,
 	3,
@@ -693,20 +693,34 @@ function updateBoothText()
 					end
 				end
 				require(game:GetService("ReplicatedStorage").Remotes).Event("SetCustomization"):FireServer({
-						['textFont'] = getgenv().settings.fontFace,
-						['richText'] = true,
-						['buttonTextFont'] = getgenv().settings.fontFace,
-						['text'] = 'your text here',
-						['strokeOpacity'] = 0
+				        ["textFont"] = getgenv().settings.fontFace,
+				        ["richText"] = true,
+				        ["buttonTextFont"] = getgenv().settings.fontFace,
+				        ["strokeColor"] = Color3.new(0,0,0),
+				        ["text"] = "your text here",
+				        ["buttonStrokeColor"] = Color3.new(0,0,0),
+				        ["buttonTextColor"] = Color3.new(1,1,1),
+				        ["buttonColor"] = Color3.new(98, 255, 0),
+				        ["buttonHoverColor"] = Color3.new(98, 255, 0),
+				        ["buttonLayout"] = "",
+				        ["strokeOpacity"] = 0,
+				        ["textColor"] = rgb(getgenv().settings.hexBox)
 				}, "booth")
 				task.wait(3)
 			end
 				require(game:GetService("ReplicatedStorage").Remotes).Event("SetCustomization"):FireServer({
-						['textFont'] = getgenv().settings.fontFace,
-						['richText'] = true,
-						['buttonTextFont'] = getgenv().settings.fontFace,
-						['text'] = boothText,
-						['strokeOpacity'] = 0
+				        ["textFont"] = getgenv().settings.fontFace,
+				        ["richText"] = true,
+				        ["buttonTextFont"] = getgenv().settings.fontFace,
+				        ["strokeColor"] = Color3.new(0,0,0),
+				        ["text"] = "your text here",
+				        ["buttonStrokeColor"] = Color3.new(0,0,0),
+				        ["buttonTextColor"] = Color3.new(1,1,1),
+				        ["buttonColor"] = Color3.new(98, 255, 0),
+				        ["buttonHoverColor"] = Color3.new(98, 255, 0),
+				        ["buttonLayout"] = "",
+				        ["strokeOpacity"] = 0,
+				        ["textColor"] = rgb(getgenv().settings.hexBox)
 				}, "booth")
 			task.wait(3)
 		else
@@ -833,7 +847,7 @@ local function hex(c3)
 	return string.format("#%02X%02X%02X", r, g, b)
 end
 
-local function rgb(hex)
+function rgb(hex)
 	hex = hex:gsub("#", "")
 	local r, g, b = tonumber("0x" .. hex:sub(1, 2)), tonumber("0x" .. hex:sub(3, 4)), tonumber("0x" .. hex:sub(5, 6))
 	return Color3.new(r, g, b)
@@ -855,7 +869,7 @@ if game:GetService('CoreGui'):FindFirstChild('RobloxPromptGui') then
 	end)
 end
 
-local Window = library:AddWindow("@szze | ❄️ Merry Christmas",
+local Window = library:AddWindow("@szze | 🌠 Updating yet again",
   {
 	main_color = Color3.fromRGB(80, 80, 80),
 	min_size = Vector2.new(560, 563),
@@ -1138,7 +1152,7 @@ end)
 webhookTab:AddLabel('Webhook Type: ')
 
 local webhookType = webhookTab:AddDropdown("[ " .. getgenv().settings.webhookType .. " ]", function(t)
-	if t == 'New [BUGGY]' then
+	if t == 'New' then
 		getgenv().settings.webhookType = 'New'
 	else
 		getgenv().settings.webhookType = 'Old'
@@ -1146,8 +1160,8 @@ local webhookType = webhookTab:AddDropdown("[ " .. getgenv().settings.webhookTyp
 	saveSettings()
 end)
   
-webhookType:Add('New [BUGGY]')
-webhookType:Add('Old [RECOMMENDED!]')
+webhookType:Add('New')
+webhookType:Add('Old')
 
 local TB = webhookTab:AddTextBox("Minimum ping dono amount", function(text)
 	local x = text:gsub('Minimum ping dono amount', '')
