@@ -713,7 +713,7 @@ function updateBoothText()
 				        ["richText"] = true,
 				        ["buttonTextFont"] = getgenv().settings.fontFace,
 				        ["strokeColor"] = Color3.new(0,0,0),
-				        ["text"] = "your text here",
+				        ["text"] = getgenv().settings.customBoothText,
 				        ["buttonStrokeColor"] = Color3.new(0,0,0),
 				        ["buttonTextColor"] = Color3.new(1,1,1),
 				        ["buttonColor"] = Color3.new(98, 255, 0),
