@@ -575,10 +575,7 @@ end
 
 
 function waitServerHop()
-	task.wait(getgenv().settings.serverHopDelay and getgenv().settings.serverHopDelay * 60 or function()
-		getgenv().settings.serverHopDelay = 10
-		waitServerHop()
-	end)
+	task.wait(getgenv().settings.serverHopDelay * 60)
 	serverHop()
 end
 
@@ -693,20 +690,34 @@ function updateBoothText()
 					end
 				end
 				require(game:GetService("ReplicatedStorage").Remotes).Event("SetCustomization"):FireServer({
-						['textFont'] = getgenv().settings.fontFace,
-						['richText'] = true,
-						['buttonTextFont'] = getgenv().settings.fontFace,
-						['text'] = 'your text here',
-						['strokeOpacity'] = 0
+				        ["textFont"] = getgenv().settings.fontFace,
+				        ["richText"] = true,
+				        ["buttonTextFont"] = getgenv().settings.fontFace,
+				        ["strokeColor"] = Color3.new(0,0,0),
+				        ["text"] = "your text here",
+				        ["buttonStrokeColor"] = Color3.new(0,0,0),
+				        ["buttonTextColor"] = Color3.new(1,1,1),
+				        ["buttonColor"] = Color3.new(98, 255, 0),
+				        ["buttonHoverColor"] = Color3.new(98, 255, 0),
+				        ["buttonLayout"] = "",
+				        ["strokeOpacity"] = 0,
+				        ["textColor"] = rgb(getgenv().settings.hexBox)
 				}, "booth")
 				task.wait(3)
 			end
 				require(game:GetService("ReplicatedStorage").Remotes).Event("SetCustomization"):FireServer({
-						['textFont'] = getgenv().settings.fontFace,
-						['richText'] = true,
-						['buttonTextFont'] = getgenv().settings.fontFace,
-						['text'] = boothText,
-						['strokeOpacity'] = 0
+				        ["textFont"] = getgenv().settings.fontFace,
+				        ["richText"] = true,
+				        ["buttonTextFont"] = getgenv().settings.fontFace,
+				        ["strokeColor"] = Color3.new(0,0,0),
+				        ["text"] = getgenv().settings.customBoothText,
+				        ["buttonStrokeColor"] = Color3.new(0,0,0),
+				        ["buttonTextColor"] = Color3.new(1,1,1),
+				        ["buttonColor"] = Color3.new(98, 255, 0),
+				        ["buttonHoverColor"] = Color3.new(98, 255, 0),
+				        ["buttonLayout"] = "",
+				        ["strokeOpacity"] = 0,
+				        ["textColor"] = rgb(getgenv().settings.hexBox)
 				}, "booth")
 			task.wait(3)
 		else
@@ -833,7 +844,7 @@ local function hex(c3)
 	return string.format("#%02X%02X%02X", r, g, b)
 end
 
-local function rgb(hex)
+function rgb(hex)
 	hex = hex:gsub("#", "")
 	local r, g, b = tonumber("0x" .. hex:sub(1, 2)), tonumber("0x" .. hex:sub(3, 4)), tonumber("0x" .. hex:sub(5, 6))
 	return Color3.new(r, g, b)
