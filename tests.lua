@@ -575,10 +575,7 @@ end
 
 
 function waitServerHop()
-	task.wait(getgenv().settings.serverHopDelay and getgenv().settings.serverHopDelay * 60 or function()
-		getgenv().settings.serverHopDelay = 10
-		waitServerHop()
-	end)
+	task.wait(getgenv().settings.serverHopDelay * 60)
 	serverHop()
 end
 
