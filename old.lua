@@ -1903,14 +1903,14 @@ Players.PlayerChatted:Connect(function(_____________________, player, message)
 end)
 
 game:GetService('Players').PlayerAdded:Connect(function(player)
-	if player:IsFriendsWith(uid) and getgenv().settings.friendHop then
+	if getgenv().settings.friendHop and player:IsFriendsWith(uid) then
 	        Players.LocalPlayer:Kick('friend joined - rejoining')
 		serverHop()
 	end
 end)
 
 for i,player in next, Players:GetPlayers() do
-	if player:IsFriendsWith(uid) and getgenv().settings.friendHop then
+	if getgenv().settings.friendHop and player:IsFriendsWith(uid) then
 	        Players.LocalPlayer:Kick('friend is in - rejoining')
 		serverHop()
 	end
