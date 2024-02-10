@@ -1,4 +1,5 @@
 local lib = {}
+local plr
 
 local function twn(...)
 	return game:GetService('TweenService'):Create(...)
@@ -82,11 +83,11 @@ local highlightcon
 
 local function _singsong()
 	local httprequest = (syn and syn.request) or http and http.request or http_request or (fluxus and fluxus.request) or request
-	local songName, plr
+	local songName
 	local debounce = false
 	getgenv().stopped = false
-	game:GetService('ReplicatedStorage').DefaultChatSystemChatEvents:WaitForChild('OnMessageDoneFiltering').OnClientEvent:Connect(function(msgdata)
-		if plr ~= nil and (msgdata.FromSpeaker == plr or msgdata.FromSpeaker == game:GetService('Players').LocalPlayer.Name) then
+	game:GetService('Players').PlayerChatted:Connect(function(_, plrChatted, msg)
+		if plr ~= nil and (plr == plrChatted or plrChatted == game:GetService('Players').LocalPlayer.Name) then
 			if string.lower(msgdata.Message) == '>stop' then
 				getgenv().stopped = true
 				debounce = true
@@ -94,17 +95,17 @@ local function _singsong()
 				debounce = false
 			end
 		end
-		if debounce or game:GetService('Players')[msgdata.FromSpeaker]:GetAttribute('Don') or not string.match(msgdata.Message, '>lyrics ') or string.gsub(msgdata.Message, '>lyrics', '') == '' or game:GetService('Players')[msgdata.FromSpeaker] == game:GetService('Players').LocalPlayer then
+		if debounce or not plrChatted:GetAttribute('Don') or not string.match(msgdata.Message, '>lyrics ') or string.gsub(msgdata.Message, '>lyrics', '') == '' or plrChatted == game:GetService('Players').LocalPlayer then
 			return
 		end
 		task.spawn(function()
 			chat("I'm a lyrics bot. Donate me and I can sing your favorite song!")
 		end)
 		debounce = true
-		local speaker = msgdata.FromSpeaker
-		local msg = string.lower(msgdata.Message):gsub('>lyrics ', ''):gsub('"', ''):gsub(' by ', '/')
-		local speakerDisplay = game:GetService('Players')[speaker].DisplayName
-		plr = game:GetService('Players')[speaker].Name
+		local speaker = plrChatted
+		local msg = string.lower(msg):gsub('>lyrics ', ''):gsub('"', ''):gsub(' by ', '/')
+		local speakerDisplay = plrChatted.DisplayName
+		plr = plrChatted.Name
 		songName = string.gsub(msg, " ", ""):lower()
 		local response
 		local suc, er = pcall(function()
@@ -131,7 +132,7 @@ local function _singsong()
 		for line in string.gmatch(lyricsData.lyrics, "[^\n]+") do
 			table.insert(lyricsTable, line)
 		end
-		game:GetService('Players')[msgdata.FromSpeaker]:SetAttribute('Don',false)
+		plrChatted:SetAttribute('Don',false)
 		chat('Fetched lyrics')
 		task.wait(2)
 		chat('Playing song requested by ' .. speakerDisplay .. '. They can stop it by saying ">stop"')
