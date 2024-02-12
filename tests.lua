@@ -348,8 +348,7 @@ local sNames = {
 	'goalServerhopGoal',
 	'highlightSwitch',
 	'helicopterEnabled',
-	'friendHop',
-	'customEmojiId'
+	'friendHop'
 }
 
 local positionX = (game:GetService('Players').LocalPlayer.Character or game:GetService('Players').LocalPlayer.CharacterAdded:Wait()):WaitForChild('HumanoidRootPart').Position
@@ -441,8 +440,7 @@ local sValues = {
 	0,
 	false,
 	false,
-	true,
-	''
+	true
 }
 
   --Load Settings
@@ -598,12 +596,11 @@ local function twn(...)
 	return game:GetService('TweenService'):Create(...)
 end
 
-local function oldWebhook(msg,howMuchDonated)
+local function oldWebhook(msg)
 	if getgenv().settings.webhookBox:gsub(' ', '') == '' then
 		return
 	end
 	pcall(function()
-	   if getgenv().settings.webhookType == 'Old' then
 		httprequest({
 			Url = getgenv().settings.webhookBox:gsub(' ', ''),
 			Body = httpservice:JSONEncode({
@@ -614,18 +611,6 @@ local function oldWebhook(msg,howMuchDonated)
 				["content-type"] = "application/json"
 			}
 		})
-	     elseif getgenv().settings.webhookType == 'Compact' then
-		httprequest({
-			Url = getgenv().settings.webhookBox:gsub(' ', ''),
-			Body = httpservice:JSONEncode({
-				["content"] = (getgenv().settings.customEmojiId ~= '' and '<@' .. getgenv().settings.customEmojiId .. '>' or '') .. howMuchDonated .. ' | ' .. math.round(howMuchDonated * 0.6)
-			}),
-			Method = "POST",
-			Headers = {
-				["content-type"] = "application/json"
-			}
-		})
-	    end
 	end)
 end
 
@@ -1164,17 +1149,32 @@ end)
 webhookTab:AddLabel('Webhook Type: ')
 
 local webhookType = webhookTab:AddDropdown("[ " .. getgenv().settings.webhookType .. " ]", function(t)
-	getgenv().settings.webhookType = t
+	if t == 'New' then
+		getgenv().settings.webhookType = 'New'
+	else
+		getgenv().settings.webhookType = 'Old'
+	end
 	saveSettings()
 end)
   
 webhookType:Add('New')
 webhookType:Add('Old')
-webhookType:Add('Compact')
 
-local TB = webhookTab:AddTextBox("Minimum ping dono amount", function(text)
-	local x = text:gsub('Minimum ping dono amount', '')
-	if tonumber(x) then
+local customEmojiThing = webhookTab:AddTextBox("Custom Emoji ID", function(text)
+	if tonumber(text) then
+		getgenv().settings.customEmojiId = text
+		saveSettings()
+	end
+end,
+	{
+	["clear"] = false
+})
+
+customEmojiThing.Text = 'Custom Emoji ID: ' .. getgenv().settings.customEmojiId
+
+local TB = webhookTab:AddTextBox("Minimum ping donation amount", function(text)
+	local x = text:gsub('Minimum ping dono amount', ''):gsub(' ','')
+	if tonumber(x) and x < 25000 then
 		getgenv().settings.pingAboveDono = tonumber(x);
 		saveSettings()
 	end
@@ -1182,13 +1182,7 @@ end,
 	{
 	["clear"] = false
 })
-TB.Text = 'Minimum ping dono amount: ' .. getgenv().settings.pingAboveDono
-
-pcall(function()
-	if game:GetService("VoiceChatService"):IsVoiceEnabledForUserIdAsync(Players.LocalPlayer.UserId) then
-		vcEnabled = true
-	end
-end)
+TB.Text = 'Minimum ping donation amount: ' .. getgenv().settings.pingAboveDono
 
 local serverHopToggle = serverHopTab:AddSwitch("Auto Server Hop", function(bool)
 	if settingsLock then
@@ -1718,7 +1712,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 					end)
 				else
 					pcall(function()
-						oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. ' | [A/T]: ' .. tostring(math.floor((Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value),Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
+						oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. ' | [A/T]: ' .. tostring(math.floor((Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value))
 					end)
 				end
 			end
