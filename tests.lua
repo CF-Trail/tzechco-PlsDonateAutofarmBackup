@@ -348,7 +348,8 @@ local sNames = {
 	'goalServerhopGoal',
 	'highlightSwitch',
 	'helicopterEnabled',
-	'friendHop'
+	'friendHop',
+	'customEmojiId'
 }
 
 local positionX = (game:GetService('Players').LocalPlayer.Character or game:GetService('Players').LocalPlayer.CharacterAdded:Wait()):WaitForChild('HumanoidRootPart').Position
