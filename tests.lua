@@ -616,7 +616,7 @@ local function oldWebhook(msg,donAmount)
 		httprequest({
 			Url = getgenv().settings.webhookBox:gsub(' ', ''),
 			Body = httpservice:JSONEncode({
-				["content"] = (getgenv().settings.customEmojiId ~= '' and '<a:f:' .. getgenv().settings.customEmojiId .. '>') .. donAmount .. ' | ' .. math.round(donAmount * 0.6)
+				["content"] = (getgenv().settings.customEmojiId ~= '' and '<a:f:' .. getgenv().settings.customEmojiId .. '>' or '') .. donAmount .. ' | ' .. math.round(donAmount * 0.6)
 			}),
 			Method = "POST",
 			Headers = {
