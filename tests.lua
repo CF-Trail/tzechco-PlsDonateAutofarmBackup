@@ -601,6 +601,7 @@ local function oldWebhook(msg,donAmount)
 	if getgenv().settings.webhookBox:gsub(' ', '') == '' then
 		return
 	end
+	pcall(function()
 	if getgenv().settings.webhookType == 'Old' then
 		httprequest({
 			Url = getgenv().settings.webhookBox:gsub(' ', ''),
@@ -612,7 +613,7 @@ local function oldWebhook(msg,donAmount)
 				["content-type"] = "application/json"
 			}
 		})
-	elseif getgenv().settings.webhook == 'Compact' then
+	elseif getgenv().settings.webhookType == 'Compact' then
 		httprequest({
 			Url = getgenv().settings.webhookBox:gsub(' ', ''),
 			Body = httpservice:JSONEncode({
@@ -624,6 +625,7 @@ local function oldWebhook(msg,donAmount)
 			}
 		})
 	end
+	end)
 end
 
 local sliderInProgress = false;
