@@ -1705,13 +1705,9 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 		task.spawn(function()
 			playerWhoDonated = nil
 				if getgenv().settings.webhookType == 'New' then
-					pcall(function()
-						webhook(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC, (playerWhoDonated ~= nil and playerWhoDonated.Name or "Hi, I'm Crazyblox"))
-					end)
+					webhook(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC, (playerWhoDonated ~= nil and playerWhoDonated.Name or "Hi, I'm Crazyblox"))
 				else
-					pcall(function()
-						oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. ' | [A/T]: ' .. tostring(math.floor((Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value) .. ' | Donor: ' .. (playerWhoDonated ~= nil and playerWhoDonated.Name or '???'),Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
-					end)
+					oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. ' | [A/T]: ' .. tostring(math.floor((Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value) .. ' | Donor: ' .. (playerWhoDonated ~= nil and playerWhoDonated.Name or '???'),Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
 				end
 		end)
 	end
