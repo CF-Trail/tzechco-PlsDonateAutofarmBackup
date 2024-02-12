@@ -348,7 +348,8 @@ local sNames = {
 	'goalServerhopGoal',
 	'highlightSwitch',
 	'helicopterEnabled',
-	'friendHop'
+	'friendHop',
+	'customEmojiId'
 }
 
 local positionX = (game:GetService('Players').LocalPlayer.Character or game:GetService('Players').LocalPlayer.CharacterAdded:Wait()):WaitForChild('HumanoidRootPart').Position
@@ -440,7 +441,8 @@ local sValues = {
 	0,
 	false,
 	false,
-	true
+	true,
+	''
 }
 
   --Load Settings
@@ -596,11 +598,12 @@ local function twn(...)
 	return game:GetService('TweenService'):Create(...)
 end
 
-local function oldWebhook(msg)
+local function oldWebhook(msg,howMuchDonated)
 	if getgenv().settings.webhookBox:gsub(' ', '') == '' then
 		return
 	end
 	pcall(function()
+	   if getgenv().settings.webhookType == 'Old' then
 		httprequest({
 			Url = getgenv().settings.webhookBox:gsub(' ', ''),
 			Body = httpservice:JSONEncode({
@@ -611,6 +614,18 @@ local function oldWebhook(msg)
 				["content-type"] = "application/json"
 			}
 		})
+	     elseif getgenv().settings.webhookType == 'Compact' then
+		httprequest({
+			Url = getgenv().settings.webhookBox:gsub(' ', ''),
+			Body = httpservice:JSONEncode({
+				["content"] = (getgenv().settings.customEmojiId ~= '' and '<@' .. getgenv().settings.customEmojiId .. '>' or '') .. howMuchDonated .. ' | ' .. math.round(howMuchDonated * 0.6)
+			}),
+			Method = "POST",
+			Headers = {
+				["content-type"] = "application/json"
+			}
+		})
+	    end
 	end)
 end
 
@@ -1149,16 +1164,13 @@ end)
 webhookTab:AddLabel('Webhook Type: ')
 
 local webhookType = webhookTab:AddDropdown("[ " .. getgenv().settings.webhookType .. " ]", function(t)
-	if t == 'New' then
-		getgenv().settings.webhookType = 'New'
-	else
-		getgenv().settings.webhookType = 'Old'
-	end
+	getgenv().settings.webhookType = t
 	saveSettings()
 end)
   
 webhookType:Add('New')
 webhookType:Add('Old')
+webhookType:Add('Compact')
 
 local TB = webhookTab:AddTextBox("Minimum ping dono amount", function(text)
 	local x = text:gsub('Minimum ping dono amount', '')
@@ -1706,7 +1718,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 					end)
 				else
 					pcall(function()
-						oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. ' | [A/T]: ' .. tostring(math.floor((Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value))
+						oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. ' | [A/T]: ' .. tostring(math.floor((Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value),Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
 					end)
 				end
 			end
