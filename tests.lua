@@ -598,8 +598,22 @@ local function twn(...)
 end
 
 local function oldWebhook(msg,donAmount)
+	print('called oldWebhook')
 	if getgenv().settings.webhookBox:gsub(' ', '') == '' then
 		return
+	end
+	if not donAmount and getgenv().settings.webhookType == 'Compact' then
+		print('called compact but string')
+		httprequest({
+			Url = getgenv().settings.webhookBox:gsub(' ', ''),
+			Body = httpservice:JSONEncode({
+				["content"] = msg
+			}),
+			Method = "POST",
+			Headers = {
+				["content-type"] = "application/json"
+			}})
+	    return
 	end
 	if getgenv().settings.webhookType == 'Old' then
 		httprequest({
@@ -613,6 +627,7 @@ local function oldWebhook(msg,donAmount)
 			}
 		})
 	elseif getgenv().settings.webhookType == 'Compact' then
+		print('called compact')
 		httprequest({
 			Url = getgenv().settings.webhookBox:gsub(' ', ''),
 			Body = httpservice:JSONEncode({
@@ -1161,7 +1176,7 @@ end)
 webhookTab:AddLabel('Webhook Type: ')
 
 local webhookType = webhookTab:AddDropdown("[ " .. getgenv().settings.webhookType .. " ]", function(t)
-	getgenv().settings.webhookType = t
+	getgenv().settings.webhookType = t:gsub(' ','')
 	saveSettings()
 end)
   
@@ -1688,6 +1703,7 @@ local RaisedC = Players.LocalPlayer.leaderstats.Raised.value
 local djset = false
 local helidebounce = false
 Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
+	print('raised change')
 	local playerWhoDonated
 	sgoalR = sgoalR + (Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
 	hopSet()
