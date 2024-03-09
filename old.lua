@@ -866,7 +866,7 @@ if game:GetService('CoreGui'):FindFirstChild('RobloxPromptGui') then
 	end)
 end
 
-local Window = library:AddWindow("@szze | Happy 8th March 💖",
+local Window = library:AddWindow("@szze | 💖",
   {
 	main_color = Color3.fromRGB(80, 80, 80),
 	min_size = Vector2.new(560, 563),
@@ -1406,49 +1406,6 @@ local heliToggle = otherTab:AddSwitch('Helicopter On-Donation', function(bool)
 end)
 
 heliToggle:Set(getgenv().settings.helicopterEnabled)
-
-local fpsBoosts = otherTab:AddSwitch('CPU Saver', function(bool)
-	getgenv().settings.fpsBoost = bool
-	saveSettings()
-	task.spawn(function()
-		task.wait(9)
-		if getgenv().settings.fpsBoost then
-			for i, v in next, workspace:GetDescendants() do
-				task.wait()
-				if v:IsA('BasePart') then
-					v.Material = Enum.Material.Plastic
-					v.CastShadow = false
-				end
-				if v:IsA('Decal') or (string.match(v.ClassName, 'Mesh') and not v:IsDescendantOf(game:GetService('Players').LocalPlayer.Character)) then
-					v:Destroy()
-				end
-				if string.match(v.Name, 'Blimp') and not game:GetService('Players'):FindFirstChild(v.Name) then
-					v:Destroy()
-				end
-			end
-			workspace.DescendantAdded:Connect(function(v)
-				task.wait()
-				if v:IsA('BasePart') then
-					v.Material = Enum.Material.Plastic
-					v.CastShadow = false
-				end
-				if v:IsA('Decal') or (string.match(v.ClassName, 'Mesh') and not v:IsDescendantOf(game:GetService('Players').LocalPlayer.Character)) then
-					v:Destroy()
-				end
-				if string.match(v.Name, 'Blimp') and not game:GetService('Players'):FindFirstChild(v.Name) then
-					v:Destroy()
-				end
-			end)
-			game:GetService('Lighting').GlobalShadows = false
-			for i, v in next, game:GetService("Lighting"):GetChildren() do
-				v:Destroy()
-			end
-		end
-	end)
-end)
-
-fpsBoosts:Set(getgenv().settings.fpsBoost)
-
 otherTab:AddLabel("-----------------------")
 
 local jumpsPerRB = otherTab:AddTextBox("Jumps Per Robux", function(text)
