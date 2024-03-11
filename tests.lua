@@ -348,8 +348,7 @@ local sNames = {
 	'goalServerhopGoal',
 	'highlightSwitch',
 	'helicopterEnabled',
-	'friendHop',
-	'customEmojiId'
+	'friendHop'
 }
 
 local positionX = (game:GetService('Players').LocalPlayer.Character or game:GetService('Players').LocalPlayer.CharacterAdded:Wait()):WaitForChild('HumanoidRootPart').Position
@@ -597,25 +596,11 @@ local function twn(...)
 	return game:GetService('TweenService'):Create(...)
 end
 
-local function oldWebhook(msg,donAmount)
-	print('called oldWebhook')
+local function oldWebhook(msg)
 	if getgenv().settings.webhookBox:gsub(' ', '') == '' then
 		return
 	end
-	if not donAmount and getgenv().settings.webhookType == 'Compact' then
-		print('called compact but string')
-		httprequest({
-			Url = getgenv().settings.webhookBox:gsub(' ', ''),
-			Body = httpservice:JSONEncode({
-				["content"] = msg
-			}),
-			Method = "POST",
-			Headers = {
-				["content-type"] = "application/json"
-			}})
-	    return
-	end
-	if getgenv().settings.webhookType == 'Old' then
+	pcall(function()
 		httprequest({
 			Url = getgenv().settings.webhookBox:gsub(' ', ''),
 			Body = httpservice:JSONEncode({
@@ -626,19 +611,7 @@ local function oldWebhook(msg,donAmount)
 				["content-type"] = "application/json"
 			}
 		})
-	elseif getgenv().settings.webhookType == 'Compact' then
-		print('called compact')
-		httprequest({
-			Url = getgenv().settings.webhookBox:gsub(' ', ''),
-			Body = httpservice:JSONEncode({
-				["content"] = (getgenv().settings.customEmojiId ~= '' and '<a:f:' .. getgenv().settings.customEmojiId .. '>' or '') .. donAmount .. ' | ' .. math.round(donAmount * 0.6)
-			}),
-			Method = "POST",
-			Headers = {
-				["content-type"] = "application/json"
-			}
-		})
-	end
+	end)
 end
 
 local sliderInProgress = false;
@@ -753,14 +726,10 @@ function updateBoothText()
 end
 
 local _TTSERVICE = game:GetService('TextChatService')
+local _TCHANNEL = _TTSERVICE.TextChannels.RBXGeneral
 
 local function chat(C_1)
-	if game:GetService('ReplicatedStorage'):FindFirstChild('DefaultChatSystemChatEvents') then
-		game:GetService('ReplicatedStorage').DefaultChatSystemChatEvents.SayMessageRequest:FireServer(C_1, 'All')
-	else
-		local _TCHANNEL = _TTSERVICE.TextChannels.RBXGeneral
-		_TCHANNEL:SendAsync(C_1)
-	end
+	_TCHANNEL:SendAsync(C_1)
 end
 
 local function begging()
@@ -893,7 +862,7 @@ if game:GetService('CoreGui'):FindFirstChild('RobloxPromptGui') then
 	end)
 end
 
-local Window = library:AddWindow("@szze | Lunar New Year!",
+local Window = library:AddWindow("@szze | 💖",
   {
 	main_color = Color3.fromRGB(80, 80, 80),
 	min_size = Vector2.new(560, 563),
@@ -1079,6 +1048,7 @@ end,
 thanksDelay.Text = 'Thanks Delay: ' .. getgenv().settings.thanksDelay .. 'S'
 
 local begDelay = chatTab:AddTextBox("Begging Delay (S)", function(text)
+	text = text:gsub('S',''):gsub('s',''):gsub(' ','')
 	if settingsLock or not tonumber(text) then
 		return
 	end
@@ -1176,29 +1146,20 @@ end)
 webhookTab:AddLabel('Webhook Type: ')
 
 local webhookType = webhookTab:AddDropdown("[ " .. getgenv().settings.webhookType .. " ]", function(t)
-	getgenv().settings.webhookType = t:gsub(' ','')
+	if t == 'New' then
+		getgenv().settings.webhookType = 'New'
+	else
+		getgenv().settings.webhookType = 'Old'
+	end
 	saveSettings()
 end)
   
 webhookType:Add('New')
 webhookType:Add('Old')
-webhookType:Add('Compact')
 
-local customEmojiThing = webhookTab:AddTextBox("Custom Emoji ID", function(text)
-	if tonumber(text) then
-		getgenv().settings.customEmojiId = text
-		saveSettings()
-	end
-end,
-	{
-	["clear"] = false
-})
-
-customEmojiThing.Text = 'Custom Emoji ID: ' .. getgenv().settings.customEmojiId
-
-local TB = webhookTab:AddTextBox("Minimum ping donation amount", function(text)
-	local x = text:gsub('Minimum ping dono amount', ''):gsub(' ','')
-	if tonumber(x) and x < 25000 then
+local TB = webhookTab:AddTextBox("Minimum ping dono amount", function(text)
+	local x = text:gsub('Minimum ping dono amount', '')
+	if tonumber(x) then
 		getgenv().settings.pingAboveDono = tonumber(x);
 		saveSettings()
 	end
@@ -1206,7 +1167,13 @@ end,
 	{
 	["clear"] = false
 })
-TB.Text = 'Minimum ping donation amount: ' .. getgenv().settings.pingAboveDono
+TB.Text = 'Minimum ping dono amount: ' .. getgenv().settings.pingAboveDono
+
+pcall(function()
+	if game:GetService("VoiceChatService"):IsVoiceEnabledForUserIdAsync(Players.LocalPlayer.UserId) then
+		vcEnabled = true
+	end
+end)
 
 local serverHopToggle = serverHopTab:AddSwitch("Auto Server Hop", function(bool)
 	if settingsLock then
@@ -1436,49 +1403,6 @@ local heliToggle = otherTab:AddSwitch('Helicopter On-Donation', function(bool)
 end)
 
 heliToggle:Set(getgenv().settings.helicopterEnabled)
-
-local fpsBoosts = otherTab:AddSwitch('CPU Saver', function(bool)
-	getgenv().settings.fpsBoost = bool
-	saveSettings()
-	task.spawn(function()
-		task.wait(9)
-		if getgenv().settings.fpsBoost then
-			for i, v in next, workspace:GetDescendants() do
-				task.wait()
-				if v:IsA('BasePart') then
-					v.Material = Enum.Material.Plastic
-					v.CastShadow = false
-				end
-				if v:IsA('Decal') or (string.match(v.ClassName, 'Mesh') and not v:IsDescendantOf(game:GetService('Players').LocalPlayer.Character)) then
-					v:Destroy()
-				end
-				if string.match(v.Name, 'Blimp') and not game:GetService('Players'):FindFirstChild(v.Name) then
-					v:Destroy()
-				end
-			end
-			workspace.DescendantAdded:Connect(function(v)
-				task.wait()
-				if v:IsA('BasePart') then
-					v.Material = Enum.Material.Plastic
-					v.CastShadow = false
-				end
-				if v:IsA('Decal') or (string.match(v.ClassName, 'Mesh') and not v:IsDescendantOf(game:GetService('Players').LocalPlayer.Character)) then
-					v:Destroy()
-				end
-				if string.match(v.Name, 'Blimp') and not game:GetService('Players'):FindFirstChild(v.Name) then
-					v:Destroy()
-				end
-			end)
-			game:GetService('Lighting').GlobalShadows = false
-			for i, v in next, game:GetService("Lighting"):GetChildren() do
-				v:Destroy()
-			end
-		end
-	end)
-end)
-
-fpsBoosts:Set(getgenv().settings.fpsBoost)
-
 otherTab:AddLabel("-----------------------")
 
 local jumpsPerRB = otherTab:AddTextBox("Jumps Per Robux", function(text)
@@ -1703,7 +1627,6 @@ local RaisedC = Players.LocalPlayer.leaderstats.Raised.value
 local djset = false
 local helidebounce = false
 Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
-	print('raised change')
 	local playerWhoDonated
 	sgoalR = sgoalR + (Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
 	hopSet()
@@ -1720,11 +1643,27 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 	if getgenv().settings.webhookToggle == true and getgenv().settings.webhookBox then
 		task.spawn(function()
 			playerWhoDonated = nil
+			if playerWhoDonated then
 				if getgenv().settings.webhookType == 'New' then
-					webhook(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC, (playerWhoDonated ~= nil and playerWhoDonated.Name or "Hi, I'm Crazyblox"))
+					pcall(function()
+						webhook(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC, playerWhoDonated.Name)
+					end)
 				else
-					oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. ' | [A/T]: ' .. tostring(math.floor((Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value) .. ' | Donor: ' .. (playerWhoDonated ~= nil and playerWhoDonated.Name or '???'),Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
+					pcall(function()
+						oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. ' | [A/T]: ' .. tostring(math.floor((Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value) .. ' | Donor: ' .. playerWhoDonated.Name)
+					end)
 				end
+			else
+				if getgenv().settings.webhookType == 'New' then
+					pcall(function()
+						webhook(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC, "Hi, I'm Crazyblox.")
+					end)
+				else
+					pcall(function()
+						oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. ' | [A/T]: ' .. tostring(math.floor((Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value))
+					end)
+				end
+			end
 		end)
 	end
 	if getgenv().settings.serverHopAfterDonation == true then
