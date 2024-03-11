@@ -690,9 +690,9 @@ function updateBoothText()
 					end
 				end
 				require(game:GetService("ReplicatedStorage").Remotes).Event("SetCustomization"):FireServer({
-				        ["textFont"] = getgenv().settings.fontFace,
+				        ["textFont"] = Enum.Font[getgenv().settings.fontFace],
 				        ["richText"] = true,
-				        ["buttonTextFont"] = getgenv().settings.fontFace,
+				        ["textFont"] = Enum.Font[getgenv().settings.fontFace],
 				        ["strokeColor"] = Color3.new(0,0,0),
 				        ["text"] = "your text here",
 				        ["buttonStrokeColor"] = Color3.new(0,0,0),
@@ -706,9 +706,9 @@ function updateBoothText()
 				task.wait(3)
 			end
 				require(game:GetService("ReplicatedStorage").Remotes).Event("SetCustomization"):FireServer({
-				        ["textFont"] = getgenv().settings.fontFace,
+				        ["textFont"] = Enum.Font[getgenv().settings.fontFace],
 				        ["richText"] = true,
-				        ["buttonTextFont"] = getgenv().settings.fontFace,
+				        ["textFont"] = Enum.Font[getgenv().settings.fontFace],
 				        ["strokeColor"] = Color3.new(0,0,0),
 				        ["text"] = getgenv().settings.customBoothText,
 				        ["buttonStrokeColor"] = Color3.new(0,0,0),
