@@ -726,14 +726,10 @@ function updateBoothText()
 end
 
 local _TTSERVICE = game:GetService('TextChatService')
+local _TCHANNEL = _TTSERVICE.TextChannels.RBXGeneral
 
 local function chat(C_1)
-	if game:GetService('ReplicatedStorage'):FindFirstChild('DefaultChatSystemChatEvents') then
-		game:GetService('ReplicatedStorage').DefaultChatSystemChatEvents.SayMessageRequest:FireServer(C_1, 'All')
-	else
-		local _TCHANNEL = _TTSERVICE.TextChannels.RBXGeneral
-		_TCHANNEL:SendAsync(C_1)
-	end
+	_TCHANNEL:SendAsync(C_1)
 end
 
 local function begging()
