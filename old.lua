@@ -1048,7 +1048,7 @@ end,
 thanksDelay.Text = 'Thanks Delay: ' .. getgenv().settings.thanksDelay .. 'S'
 
 local begDelay = chatTab:AddTextBox("Begging Delay (S)", function(text)
-	text = text:gsub('S',''):gsub('s','')
+	text = text:gsub('S',''):gsub('s',''):gsub(' ','')
 	if settingsLock or not tonumber(text) then
 		return
 	end
