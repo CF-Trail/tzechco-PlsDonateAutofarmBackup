@@ -690,36 +690,37 @@ function updateBoothText()
 					end
 				end
 				require(game:GetService("ReplicatedStorage").Remotes).Event("SetCustomization"):FireServer({
-				        ["textFont"] = getgenv().settings.fontFace,
+				        ["textFont"] = Enum.Font[getgenv().settings.fontFace],
 				        ["richText"] = true,
-				        ["buttonTextFont"] = getgenv().settings.fontFace,
-				        ["strokeColor"] = Color3.new(1, 0.1882353127002716, 0.5803921818733215),
+				        ["textFont"] = Enum.Font[getgenv().settings.fontFace],
+				        ["strokeColor"] = Color3.new(0,0,0),
 				        ["text"] = "your text here",
-				        ["buttonStrokeColor"] = Color3.new(0, 0, 0),
-				        ["buttonTextColor"] = Color3.new(0, 0, 0),
+				        ["buttonStrokeColor"] = Color3.new(0,0,0),
+				        ["buttonTextColor"] = Color3.new(1,1,1),
 				        ["buttonColor"] = Color3.new(98, 255, 0),
-				        ["buttonHoverColor"] = Color3.new(0, 1, 0.06666667014360428),
+				        ["buttonHoverColor"] = Color3.new(98, 255, 0),
 				        ["buttonLayout"] = "",
 				        ["strokeOpacity"] = 0,
-					["strokeOpacity"] = 0
+				        ["textColor"] = rgb(getgenv().settings.hexBox)
 				}, "booth")
 				task.wait(3)
 			end
 				require(game:GetService("ReplicatedStorage").Remotes).Event("SetCustomization"):FireServer({
-				        ["textFont"] = getgenv().settings.fontFace,
+				        ["textFont"] = Enum.Font[getgenv().settings.fontFace],
 				        ["richText"] = true,
-				        ["buttonTextFont"] = getgenv().settings.fontFace,
-				        ["strokeColor"] = Color3.new(1, 0.1882353127002716, 0.5803921818733215),
+				        ["textFont"] = Enum.Font[getgenv().settings.fontFace],
+				        ["strokeColor"] = Color3.new(0,0,0),
 				        ["text"] = getgenv().settings.customBoothText,
-				        ["buttonStrokeColor"] = Color3.new(0, 0, 0),
-				        ["buttonTextColor"] = Color3.new(0, 0, 0),
+				        ["buttonStrokeColor"] = Color3.new(0,0,0),
+				        ["buttonTextColor"] = Color3.new(1,1,1),
 				        ["buttonColor"] = Color3.new(98, 255, 0),
-				        ["buttonHoverColor"] = Color3.new(0, 1, 0.06666667014360428),
+				        ["buttonHoverColor"] = Color3.new(98, 255, 0),
 				        ["buttonLayout"] = "",
 				        ["strokeOpacity"] = 0,
-					["strokeOpacity"] = 0
+				        ["textColor"] = rgb(getgenv().settings.hexBox)
 				}, "booth")
 			task.wait(3)
+		else
 		end
 	end
 end
