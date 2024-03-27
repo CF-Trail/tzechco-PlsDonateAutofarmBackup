@@ -710,7 +710,7 @@ function updateBoothText()
 				        ["richText"] = true,
 				        ["textFont"] = Enum.Font[getgenv().settings.fontFace],
 				        ["strokeColor"] = Color3.new(0,0,0),
-				        ["text"] = getgenv().settings.customBoothText,
+				        ["text"] = getgenv().settings.customBoothText:gsub('$C',current):gsub('$G',goal),
 				        ["buttonStrokeColor"] = Color3.new(0,0,0),
 				        ["buttonTextColor"] = Color3.new(1,1,1),
 				        ["buttonColor"] = Color3.new(98, 255, 0),
