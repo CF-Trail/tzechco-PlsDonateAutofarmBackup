@@ -679,7 +679,7 @@ function updateBoothText()
 		text = string.gsub(text, '$D', tostring(getgenv().settings.jumpsPerRobux))
 		boothText = text
 		--Updates the booth text
-		local myBooth = _boothlocation.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[1]))
+		local myBooth = _boothlocation.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[2]))
 		if myBooth.Sign.TextLabel.Text ~= boothText then
 			if string.find(myBooth.Sign.TextLabel.Text, "# #") or string.find(myBooth.Sign.TextLabel.Text, "##") then
 				if getgenv().settings.taggedBoothHop then
@@ -1590,7 +1590,7 @@ getgenv().walkToBooth = function()
 	end
 	local boothPos, mainPosX
 	for i, v in ipairs(game:GetService("Workspace").BoothInteractions:GetChildren()) do
-		if v:GetAttribute("BoothSlot") == unclaimed[1] then
+		if v:GetAttribute("BoothSlot") == unclaimed[2] then
 			print((v.Position - mainCheckPosition).Magnitude)
 			mainPosX = v.CFrame
 			boothPos = v.CFrame * theCframe
