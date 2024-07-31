@@ -1359,10 +1359,10 @@ local spinToggle = otherTab:AddSwitch('Spin [1R$ = +1 speed]', function(bool)
 		Spin.AngularVelocity = Vector3.new(0, 0.25 * settings.spinSpeedMultiplier, 0)
 		task.spawn(function()
                     repeat task.wait() until bclaimed
-		    local pos = root.Position
+		    local sppos = root.CFrame
 		    while task.wait() do
                         if not getgenv().settings.spinSet then break end
-			root.CFrame = CFrame.new(pos + Vector3.new(0,1.5,0))
+			root.CFrame = sppos
 		    end
 		end)
 	elseif not getgenv().settings.spinSet and Players.LocalPlayer.Character.Humanoid.RootPart:FindFirstChild('Spin') then
