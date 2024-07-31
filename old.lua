@@ -1360,7 +1360,7 @@ local spinToggle = otherTab:AddSwitch('Spin [1R$ = +1 speed]', function(bool)
 		task.spawn(function()
                     repeat task.wait() until bclaimed
 		    local sppos = root.CFrame
-		    while task.wait() do
+		    while task.wait(0.2) do
                         if not getgenv().settings.spinSet then break end
 			root.CFrame = sppos
 		    end
