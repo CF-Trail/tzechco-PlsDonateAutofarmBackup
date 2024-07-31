@@ -862,7 +862,7 @@ if game:GetService('CoreGui'):FindFirstChild('RobloxPromptGui') then
 	end)
 end
 
-local Window = library:AddWindow("@szze | 💖",
+local Window = library:AddWindow("@szze | 01.08 updated - check discord",
   {
 	main_color = Color3.fromRGB(80, 80, 80),
 	min_size = Vector2.new(560, 563),
@@ -1346,6 +1346,8 @@ task.spawn(function()
 	end
 end)
 
+local bclaimed = false
+
 local spinToggle = otherTab:AddSwitch('Spin [1R$ = +1 speed]', function(bool)
 	getgenv().settings.spinSet = bool
 	if getgenv().settings.spinSet then
@@ -1355,6 +1357,16 @@ local spinToggle = otherTab:AddSwitch('Spin [1R$ = +1 speed]', function(bool)
 		Spin.Parent = root
 		Spin.MaxTorque = Vector3.new(0, math.huge, 0)
 		Spin.AngularVelocity = Vector3.new(0, 0.25 * settings.spinSpeedMultiplier, 0)
+		task.spawn(function()
+                    repeat task.wait() until bclaimed
+		    local pos = root.Position
+		    while task.wait() do
+                        if not getgenv().settings.spinSet then break end
+			root.CFrame = CFrame.new(pos + Vector3.new(0,1.5,0))
+			root.Velocity = Vector3.zero
+		        root.RotVelocity = Vector3.zero
+		    end
+		end)
 	elseif not getgenv().settings.spinSet and Players.LocalPlayer.Character.Humanoid.RootPart:FindFirstChild('Spin') then
 		Players.LocalPlayer.Character.Humanoid.RootPart.Spin:Destroy()
 	end
@@ -1621,7 +1633,9 @@ getgenv().walkToBooth = function()
 	task.wait(0.6)
 	Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
 	Players:Chat('/e dance' .. getgenv().settings.danceChoice)
+	bclaimed = true
 end
+
 walkToBooth()
 if getgenv().settings.autoBeg then
 	spamming = task.spawn(begging)
