@@ -1363,8 +1363,6 @@ local spinToggle = otherTab:AddSwitch('Spin [1R$ = +1 speed]', function(bool)
 		    while task.wait() do
                         if not getgenv().settings.spinSet then break end
 			root.CFrame = CFrame.new(pos + Vector3.new(0,1.5,0))
-			root.Velocity = Vector3.zero
-		        root.RotVelocity = Vector3.zero
 		    end
 		end)
 	elseif not getgenv().settings.spinSet and Players.LocalPlayer.Character.Humanoid.RootPart:FindFirstChild('Spin') then
