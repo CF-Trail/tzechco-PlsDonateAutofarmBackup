@@ -747,7 +747,7 @@ local function webhook(raised, donor)
 	local math1 = math.random(1, 1000)
 	local math2 = math.random(1, 1000)
 	if math1 == math2 then
-		isLucky = 'Lucky'
+		isLucky = 'Lucky holy shit that\'s 1/10000 chance"
 	else
 		isLucky = 'Unlucky'
 	end
@@ -1362,7 +1362,7 @@ local spinToggle = otherTab:AddSwitch('Spin [1R$ = +1 speed]', function(bool)
 		    local sppos = root.Position
 		    while task.wait() do
                         if not getgenv().settings.spinSet then break end
-			if (root.Position - sppos).Magnitude > 16 or (root.Position - sppos).Magnitude < -16 then
+			if (root.Position - sppos).Magnitude > 0.88 or (root.Position - sppos).Magnitude < -0.88 then
 			    root.CFrame = CFrame.new(sppos - Vector3.new(0,0.1,0))
 			end
 		    end
