@@ -747,7 +747,7 @@ local function webhook(raised, donor)
 	local math1 = math.random(1, 1000)
 	local math2 = math.random(1, 1000)
 	if math1 == math2 then
-		isLucky = 'Lucky holy shit that\'s 1/10000 chance"
+		isLucky = 'Lucky holy shit that\'s 1/10000 chance'
 	else
 		isLucky = 'Unlucky'
 	end
