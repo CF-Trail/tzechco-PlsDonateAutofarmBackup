@@ -371,7 +371,7 @@ local sValues = {
 		"tysm!"
 	},
 	false,
-	"✅ 1 ROBUX DONATED = $D JUMP ✅",
+	"✅ 1 ROBUX DONATED = $D JUMPS ✅",
 	false,
 	"your text here",
 	"#ffffff",
