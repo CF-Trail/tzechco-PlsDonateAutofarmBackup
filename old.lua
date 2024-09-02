@@ -348,7 +348,8 @@ local sNames = {
 	'goalServerhopGoal',
 	'highlightSwitch',
 	'helicopterEnabled',
-	'friendHop'
+	'friendHop',
+	'autoReplyNoRespond'
 }
 
 local positionX = (game:GetService('Players').LocalPlayer.Character or game:GetService('Players').LocalPlayer.CharacterAdded:Wait()):WaitForChild('HumanoidRootPart').Position
@@ -440,7 +441,8 @@ local sValues = {
 	0,
 	false,
 	false,
-	true
+	true,
+	false
 }
 
   --Load Settings
@@ -747,7 +749,7 @@ local function webhook(raised, donor)
 	local math1 = math.random(1, 1000)
 	local math2 = math.random(1, 1000)
 	if math1 == math2 then
-		isLucky = 'Lucky holy shit that\'s 1/10000 chance'
+		isLucky = 'Lucky holy shit that\'s 1/10000 chance (you won!)'
 	else
 		isLucky = 'Unlucky'
 	end
@@ -800,7 +802,7 @@ local function webhook(raised, donor)
 			},
 		},
 		["footer"] = {
-			["text"] = "made by szze#6220 (szze) | https://discord.gg/SuNqfnK",
+			["text"] = "made by szze#6220 (szze)",
 		},
 		["timestamp"] = string.format("%d-%d-%dT%02d:%02d:%02dZ", a.year, a.month, a.day, a.hour, a.min, a.sec)
 	}
@@ -862,7 +864,7 @@ if game:GetService('CoreGui'):FindFirstChild('RobloxPromptGui') then
 	end)
 end
 
-local Window = library:AddWindow("@szze | 01.08 updated - check discord",
+local Window = library:AddWindow("@szze | updated 02.09.24 - check discord",
   {
 	main_color = Color3.fromRGB(80, 80, 80),
 	min_size = Vector2.new(560, 563),
@@ -1135,8 +1137,8 @@ end,
 })
 webhookBox.Text = getgenv().settings.webhookBox
 webhookTab:AddLabel('Press Enter to Save')
-webhookTab:AddButton("Test", function()
-	if getgenv().settings.webhookBox then
+webhookTab:AddButton("Test Webhook", function()
+	if getgenv().settings.webhookBox:gsub(" ","") ~= "" then
 		oldWebhook("Webhook works!")
 	end
 end)
@@ -1329,7 +1331,7 @@ local jumpswitch = otherTab:AddSwitch("Donation Jump", function(bool)
 	saveSettings()
 end)
 jumpswitch:Set(getgenv().settings.donationJump)
-local autoReply = otherTab:AddSwitch("Auto Reply [Experimental]", function(bool)
+local autoReply = otherTab:AddSwitch("Auto Reply [AR]", function(bool)
 	if settingsLock then
 		return
 	end
@@ -1337,6 +1339,16 @@ local autoReply = otherTab:AddSwitch("Auto Reply [Experimental]", function(bool)
 	saveSettings()
 end)
 autoReply:Set(getgenv().settings.autoNearReply)
+
+local noRespond = otherTab:AddSwitch("[AR] Skip Unknown Messages", function(bool)
+	if settingsLock then
+		return
+	end
+	getgenv().settings.autoReplyNoRespond = bool
+	saveSettings()
+end)
+noRespond:Set(getgenv().settings.autoReplyNoRespond)
+
 task.spawn(function()
 	while task.wait(1) do
 		for i, v in next, Players:GetPlayers() do
@@ -1839,6 +1851,22 @@ if getgenv().settings.webhookAfterSH then
 	end
 end
 
+local messagesToResp = {
+	['Greetings'] = {
+		'hi',
+		'hello',
+		'hey',
+		'sup',
+		'yo',
+		'howdy',
+		'sup bro',
+		'sup dude',
+		'hai',
+		'hii',
+		'hey man',
+	},
+}
+
 Players.PlayerChatted:Connect(function(_____________________, player, message)
 	local speaker = tostring(player)
 	local message = string.lower(message)
@@ -1856,7 +1884,7 @@ Players.PlayerChatted:Connect(function(_____________________, player, message)
 		if (plrChatted.Character and plrChatted.Character.Humanoid.RootPart) then
 			local root = chatChar.Humanoid.RootPart
 			if (root.Position - game:GetService('Players').LocalPlayer.Character.Humanoid.RootPart.Position).Magnitude < 11 then
-				if message == 'hello' or message == 'hi' or message == 'sup' or message == 'hey' then
+				if table.find(messagesToResp.Greetings,message) then
 					chat(getgenv().settings.helloResponce[math.random(1, #getgenv().settings.helloResponce)])
 				elseif string.find(message, 'bot') then
 					mchat(getgenv().settings.botResponce[math.random(1, #getgenv().settings.botResponce)])
@@ -1865,11 +1893,13 @@ Players.PlayerChatted:Connect(function(_____________________, player, message)
 				elseif string.find(message, 'scam') then
 					chat(getgenv().settings.scamResponce[math.random(1, #getgenv().settings.scamResponce)])
 				else
-					chat(getgenv().settings.otherResponce[math.random(1, #getgenv().settings.otherResponce)])
+				        if not getgenv().autoReplyNoRespond then
+					       chat(getgenv().settings.otherResponce[math.random(1, #getgenv().settings.otherResponce)])
+					end
 				end
 			end
 		end
-		task.wait(15)
+		task.wait(math.random(12,18))
 		plrChatted:SetAttribute('respcd',false)
 	end)
 end)
