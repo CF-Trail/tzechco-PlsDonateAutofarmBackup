@@ -864,7 +864,7 @@ if game:GetService('CoreGui'):FindFirstChild('RobloxPromptGui') then
 	end)
 end
 
-local Window = library:AddWindow("reaching out for immigration support. please contact in 'supportion' game.",
+local Window = library:AddWindow("@szze | живу в черно-белом миру",
   {
 	main_color = Color3.fromRGB(80, 80, 80),
 	min_size = Vector2.new(560, 563),
