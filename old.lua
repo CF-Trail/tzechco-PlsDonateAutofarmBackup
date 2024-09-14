@@ -371,7 +371,7 @@ local sValues = {
 		"tysm!"
 	},
 	false,
-	"✅ 1 ROBUX DONATED = $D JUMPS ✅",
+	"✅ 1 ROBUX DONATED = $JPR JUMPS ✅",
 	false,
 	"your text here",
 	"#ffffff",
@@ -678,7 +678,7 @@ function updateBoothText()
 	if getgenv().settings.textUpdateToggle and getgenv().settings.customBoothText then
 		text = string.gsub(getgenv().settings.customBoothText, "$C", current)
 		text = string.gsub (text, "$G", goal)
-		text = string.gsub(text, '$D', tostring(getgenv().settings.jumpsPerRobux))
+		text = string.gsub(text, '$JPR', tostring(getgenv().settings.jumpsPerRobux))
 		boothText = text
 		--Updates the booth text
 		local myBooth = _boothlocation.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[2]))
@@ -944,7 +944,7 @@ local customBoothText = boothTab:AddConsole({
 	["source"] = "",
 })
 
-boothTab:AddLabel('$C = current | $G = goal | $D = jumps per robux')
+boothTab:AddLabel('$C = current | $G = goal | $JPR = jumps per robux')
 
 boothTab:AddLabel("Font:")
 local fontDropdown = boothTab:AddDropdown("[ " .. getgenv().settings.fontFace .. " ]", function(t)
@@ -996,7 +996,7 @@ standingPos:Add('Behind')
 
 --highlights
 highlightTab:AddLabel("What are highlights? See in Discord")
-highlightTab:AddLabel('(or join manually if your executor sucks: SaGSHTVmKM)')
+highlightTab:AddLabel('(or join manually if your executor sucks: discord.gg/SaGSHTVmKM)')
 
 highlightTab:AddButton("Copy Invite", function()
 	local _clipfunc = setclipboard or toclipboard
@@ -1217,14 +1217,6 @@ end)
 
 sHopSwitch:Set(getgenv().settings.serverHopAfterDonation)
 
-local staffHopSwitch = serverHopTab:AddSwitch('ServerHop if Staff', function(bool)
-	if settingsLock then
-		return
-	end
-	getgenv().settings.staffHopA = bool
-	saveSettings()
-end)
-
 local friendHopSwitch = serverHopTab:AddSwitch('ServerHop if friend joined',function(bool)
 	if settingsLock then
 		return 
@@ -1234,7 +1226,6 @@ local friendHopSwitch = serverHopTab:AddSwitch('ServerHop if friend joined',func
 end)
 
 friendHopSwitch:Set(getgenv().settings.friendHop)
-staffHopSwitch:Set(getgenv().settings.staffHopA)
 
 local taggedBoothHopSwitch = serverHopTab:AddSwitch('ServerHop if tagged booth', function(bool)
 	if settingsLock then
@@ -1340,7 +1331,7 @@ local autoReply = otherTab:AddSwitch("Auto Reply [AR]", function(bool)
 end)
 autoReply:Set(getgenv().settings.autoNearReply)
 
-local noRespond = otherTab:AddSwitch("[AR] Skip Unknown Messages", function(bool)
+local noRespond = otherTab:AddSwitch("[AR] Skip Unrecognized Messages", function(bool)
 	if settingsLock then
 		return
 	end
@@ -1467,9 +1458,13 @@ if setfpscap and type(setfpscap) == "function" then
      {
 	["clear"] = false
      })
-fpsLimit.Text = 'FPS Limit: ' .. getgenv().settings.fpsLimit
-setfpscap(getgenv().settings.fpsLimit)
+     fpsLimit.Text = 'FPS Limit: ' .. getgenv().settings.fpsLimit
+     setfpscap(getgenv().settings.fpsLimit)
 end
+
+otherTab:AddButton("Test Donation",function()
+	Players.LocalPlayer.leaderstats.Raised.Value += 5
+end)
 
 --otherTab2
 
