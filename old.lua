@@ -741,6 +741,34 @@ local function begging()
 	end
 end
 
+local function fetchNearPlr()
+	local minmagnif,plrfoundf
+	local lplrChar = game:GetService'Players'.LocalPlayer.Character
+	if lplrChar then
+		local humanoidthing = lplrChar:FindFirstChildOfClass('Humanoid')
+		if humanoidthing then
+			local roothum = humanoidthing.RootPart
+			if roothum then
+				minmagnif = 9999999
+				plrfoundf = nil
+				for i,v in next, game:GetService('Players'):GetPlayers() do
+					if v.Character and v.Character:FindFirstChildOfClass('Humanoid') then
+						local randomplrroot = v.Character:FindFirstChildOfClass('Humanoid').RootPart
+						if randomplrroot then
+							local cmagnif = (randomplrroot.Position - roothum.Position).Magnitude
+							if cmagnif < minmagnif
+								minmagnif = cmagnif
+								plrfoundf = v
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+	return plrfoundf
+end
+
 local function webhook(raised, donor)
 	if getgenv().settings.webhookBox:gsub(' ', '') == '' then
 		return
@@ -1667,7 +1695,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 	end
 	if getgenv().settings.webhookToggle == true and getgenv().settings.webhookBox then
 		task.spawn(function()
-			playerWhoDonated = nil
+			playerWhoDonated = fetchNearPlr()
 			if playerWhoDonated then
 				if getgenv().settings.webhookType == 'New' then
 					pcall(function()
@@ -1771,7 +1799,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 	end
 	if getgenv().settings.highlightSwitch then
 		task.spawn(function()
-			_HIGHLIGHTLOADER.HLStart(Players.LocalPlayer.Character, Players.LocalPlayer.leaderstats.Raised.Value - RaisedC, (playerWhoDonated and playerWhoDonated or nil))
+			_HIGHLIGHTLOADER.HLStart(Players.LocalPlayer.Character, Players.LocalPlayer.leaderstats.Raised.Value - RaisedC, (playerWhoDonated and playerWhoDonated or fetchNearPlr() or nil))
 		end)
 	end
 	RaisedC = Players.LocalPlayer.leaderstats.Raised.value
