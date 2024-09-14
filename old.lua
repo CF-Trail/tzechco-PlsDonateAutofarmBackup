@@ -752,6 +752,9 @@ local function fetchNearPlr()
 				minmagnif = 9999999
 				plrfoundf = nil
 				for i,v in next, game:GetService('Players'):GetPlayers() do
+					if v == game:GetService('Players').LocalPlayer then
+						continue
+					end
 					if v.Character and v.Character:FindFirstChildOfClass('Humanoid') then
 						local randomplrroot = v.Character:FindFirstChildOfClass('Humanoid').RootPart
 						if randomplrroot then
