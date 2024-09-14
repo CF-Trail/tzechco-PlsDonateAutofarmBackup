@@ -1498,9 +1498,9 @@ if setfpscap and type(setfpscap) == "function" then
      setfpscap(getgenv().settings.fpsLimit)
 end
 
-otherTab:AddButton("Test Donation",function()
+--[[otherTab:AddButton("Test Donation", function()
 	Players.LocalPlayer.leaderstats.Raised.Value += 5
-end)
+end)]]
 
 --otherTab2
 
