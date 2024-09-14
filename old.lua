@@ -246,7 +246,10 @@ if queueonteleport then
 	queueonteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/CF-Trail/tzechco-PlsDonateAutofarmBackup/main/old.lua'))()")
 end
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/CF-Trail/tzechco-PlsDonateAutofarmBackup/main/UI"))()
-local _HIGHLIGHTLOADER = loadstring(game:HttpGet('https://raw.githubusercontent.com/CF-Trail/tzechco-PlsDonateAutofarmBackup/main/hl.lib.lua'))()
+local _HIGHLIGHTLOADER
+pcall(function()
+     _HIGHLIGHTLOADER = loadstring(game:HttpGet('https://raw.githubusercontent.com/CF-Trail/tzechco-PlsDonateAutofarmBackup/main/hl.lib.lua'))()
+end)
 function forceServerHop()
 	--local isVip = game:GetService('RobloxReplicatedStorage').GetServerType:InvokeServer()
 	--if isVip == "VIPServer" then return end
@@ -1038,11 +1041,13 @@ highlightTab:AddLabel('-------------------------------------')
 
 local _HLTOGGLE = highlightTab:AddSwitch('Sing a song on donation [HIGHLIGHT]', function(bool)
 	getgenv().settings.highlightSwitch = bool
-	if bool then
-		_HIGHLIGHTLOADER.HLSetup(Players.LocalPlayer.Character)
-	else
-		_HIGHLIGHTLOADER.HLUnload(Players.LocalPlayer.Character)
-	end
+	pcall(function()
+	     if bool then
+		     _HIGHLIGHTLOADER.HLSetup(Players.LocalPlayer.Character)
+	     else
+	             _HIGHLIGHTLOADER.HLUnload(Players.LocalPlayer.Character)
+	     end
+	end)
 end)
 
 _HLTOGGLE:Set(getgenv().settings.highlightSwitch)
