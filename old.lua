@@ -762,7 +762,7 @@ local function fetchNearPlr()
 						local randomplrroot = v.Character:FindFirstChildOfClass('Humanoid').RootPart
 						if randomplrroot then
 							local cmagnif = (randomplrroot.Position - roothum.Position).Magnitude
-							if cmagnif < minmagnif
+							if cmagnif < minmagnif then
 								minmagnif = cmagnif
 								plrfoundf = v
 							end
@@ -1498,9 +1498,9 @@ if setfpscap and type(setfpscap) == "function" then
      setfpscap(getgenv().settings.fpsLimit)
 end
 
---[[otherTab:AddButton("Test Donation", function()
+otherTab:AddButton("Test Donation", function()
 	Players.LocalPlayer.leaderstats.Raised.Value += 5
-end)]]
+end)
 
 --otherTab2
 
