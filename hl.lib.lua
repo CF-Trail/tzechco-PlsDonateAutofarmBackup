@@ -99,7 +99,7 @@ local function _singsong()
 			return
 		end
 		task.spawn(function()
-			chat("I'm a lyrics bot. Donate me and I can sing your favorite song!")
+			chat("I'm a lyrics bot. Donate me and I will sing the song of your choice!")
 		end)
 		debounce = true
 		local speaker = plrChatted
@@ -124,7 +124,7 @@ local function _singsong()
 		local lyricsTable = {}
 		if lyricsData.error and lyricsData.error == "Lyrics Not found" then
 			debounce = true
-			chat("Lyrics were not found. Please retry, you don't need to donate again.")
+			chat("Lyrics were not found. Please retry with a different song, you don't need to donate again.")
 			task.wait(3)
 			debounce = false
 			return
@@ -147,7 +147,7 @@ local function _singsong()
 		end
 		task.wait(3)
 		debounce = false
-		chat('Ended. Donate me if you wish I singed a song again.')
+		chat('Ended. You can donate me again and I will sing a different song of your choice.')
 	end)
 end
 
