@@ -27,16 +27,6 @@ for k, v in pairs(getgc(true)) do
 	end
 end
 
-if hookmetamethod and typeof(hookmetamethod) == 'function' then
-	local oldHookS
-	oldHookS = hookmetamethod(game, "__namecall", function(self, ...)
-		if getnamecallmethod() == "IsVoiceEnabledForUserIdAsync" then
-			return true
-		end
-		return oldHookS(self, ...)
-	end)
-end
-
 local xspin = 0
 local nx = 0
 
