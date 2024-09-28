@@ -347,7 +347,8 @@ local sNames = {
 	'highlightSwitch',
 	'helicopterEnabled',
 	'friendHop',
-	'autoReplyNoRespond'
+	'autoReplyNoRespond',
+	'antiBotServers'
 }
 
 local positionX = (Players.LocalPlayer.Character or Players.LocalPlayer.CharacterAdded:Wait()):WaitForChild('HumanoidRootPart').Position
@@ -440,6 +441,7 @@ local sValues = {
 	false,
 	false,
 	true,
+	false,
 	false
 }
 
@@ -554,6 +556,7 @@ end
 
 function serverHop()
 	local gameId
+	saveSettings()
 	gameId = 8737602449
 	if vcEnabled and getgenv().settings.vcServer then
 		gameId = 8943844393
@@ -655,6 +658,10 @@ if _shufflerandom == 1 then
    _boothlocation = Players.LocalPlayer:WaitForChild('PlayerGui'):WaitForChild('MapUIContainer'):WaitForChild('MapUI')
 else
    _boothlocation = _shuffled or workspace:WaitForChild('MapUI')
+end
+
+function checkForBots()
+	for i,v in next, _boothlocation
 end
 
 function updateBoothText()
@@ -1217,15 +1224,18 @@ if vcEnabled then
 	vcToggle:Set(getgenv().settings.vcServer)
 end
 
-local alhop = serverHopTab:AddSwitch("Random between normal/voice", function(bool)
-	if settingsLock then
-		return
-	end
-	getgenv().settings.AlternativeHop = bool
-	saveSettings()
-end)
+if vcEnabled then
+	local alhop = serverHopTab:AddSwitch("Random between normal/voice", function(bool)
+		if settingsLock then
+			return
+		end
+		getgenv().settings.AlternativeHop = bool
+		saveSettings()
+	end)
+	alhop:Set(getgenv().settings.AlternativeHop)
+end
 
-local sHopSwitch = serverHopTab:AddSwitch('ServerHop after donation', function(bool)
+local sHopSwitch = serverHopTab:AddSwitch('Server Hop after donation', function(bool)
 	if settingsLock then
 		return
 	end
@@ -1235,7 +1245,7 @@ end)
 
 sHopSwitch:Set(getgenv().settings.serverHopAfterDonation)
 
-local friendHopSwitch = serverHopTab:AddSwitch('ServerHop if friend joined',function(bool)
+local friendHopSwitch = serverHopTab:AddSwitch('Server Hop if friend joined',function(bool)
 	if settingsLock then
 		return 
 	end
@@ -1245,15 +1255,7 @@ end)
 
 friendHopSwitch:Set(getgenv().settings.friendHop)
 
-local taggedBoothHopSwitch = serverHopTab:AddSwitch('ServerHop if tagged booth', function(bool)
-	if settingsLock then
-		return
-	end
-	getgenv().settings.taggedBoothHop = bool
-	saveSettings()
-end)
-
-local gSHSwitch = serverHopTab:AddSwitch('ServerHop if ServerHop goal reached', function(bool)
+local gSHSwitch = serverHopTab:AddSwitch('Server Hop if Server Hop goal reached', function(bool)
 	if settingsLock then
 		return
 	end
@@ -1262,8 +1264,14 @@ local gSHSwitch = serverHopTab:AddSwitch('ServerHop if ServerHop goal reached', 
 end)
 
 gSHSwitch:Set(getgenv().settings.goalServerhopSwitch)
-alhop:Set(getgenv().settings.AlternativeHop)
-taggedBoothHopSwitch:Set(getgenv().settings.taggedBoothHop)
+
+local antiBotSwitch = serverHopTab:AddSwitch('[BETA] Anti Bot Servers', function(bool)
+	getgenv().settings.antiBotServers = bool
+	saveSettings()
+	checkForBots()
+end)
+
+antiBotSwitch:Set(getgenv().settings.antiBotServers)
 
 serverHopTab:AddButton("Server Hop", function()
 	serverHop()
@@ -1358,14 +1366,14 @@ local noRespond = otherTab:AddSwitch("[AR] Skip Unrecognized Messages", function
 end)
 noRespond:Set(getgenv().settings.autoReplyNoRespond)
 
-task.spawn(function()
+--[[task.spawn(function()
 	while task.wait(1) do
 		for i, v in next, Players:GetPlayers() do
 			playerChecker(v)
 			task.wait()
 		end
 	end
-end)
+end)]] 
 
 local bclaimed = false
 
