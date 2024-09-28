@@ -1877,13 +1877,23 @@ local messagesToResp = {
 		'hai',
 		'hii',
 		'hey man',
+		'hiya',
+		'heyy',
+		'hello man',
+		'hello dude',
+		'hi bro',
+		'hi sup',
+		'hiey',
+		'👋',
+		'hey hello',
+		'sup hi'
 	},
 }
 
 Players.PlayerChatted:Connect(function(_____________________, player, message)
 	local speaker = tostring(player)
 	local message = string.lower(message)
-	task.wait(2.1 + math.random(0.4, 1))
+	task.wait(2.1 + math.random())
 	local plrChatted = Players:FindFirstChild(speaker)
 	if (plrChatted and plrChatted == Players.LocalPlayer) or getgenv().settings.autoNearReply == false or not plrChatted  or string.find(message, 'donates') or string.find(message, "spamming") then
 		return
