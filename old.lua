@@ -888,7 +888,7 @@ if game:GetService('CoreGui'):FindFirstChild('RobloxPromptGui') then
 	end)
 end
 
-local Window = library:AddWindow("@szze | send me jokes in supportion :)",
+local Window = library:AddWindow("@szze | possible solara support added - 28.09.2024",
   {
 	main_color = Color3.fromRGB(80, 80, 80),
 	min_size = Vector2.new(560, 563),
