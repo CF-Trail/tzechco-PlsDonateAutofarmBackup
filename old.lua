@@ -540,6 +540,18 @@ local function TPReturner(placeId)
 	end
 end
 
+local vc = cloneref(game:GetService("VoiceChatService"))
+
+local success, enabled = pcall(function()
+	return vc:IsVoiceEnabledForUserIdAsync(uid)
+end)
+
+if success and enabled then
+	vcEnabled = true
+else
+	vcEnabled = false
+end
+
 function serverHop()
 	local gameId
 	gameId = 8737602449
