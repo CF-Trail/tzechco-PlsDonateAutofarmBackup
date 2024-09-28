@@ -660,10 +660,6 @@ else
    _boothlocation = _shuffled or workspace:WaitForChild('MapUI')
 end
 
-function checkForBots()
-	for i,v in next, _boothlocation
-end
-
 function updateBoothText()
 	local text
 	local current = tonumber(newRaisedFormat.Value)
@@ -1265,13 +1261,13 @@ end)
 
 gSHSwitch:Set(getgenv().settings.goalServerhopSwitch)
 
-local antiBotSwitch = serverHopTab:AddSwitch('[BETA] Anti Bot Servers', function(bool)
+--[[local antiBotSwitch = serverHopTab:AddSwitch('[BETA] Anti Bot Servers', function(bool)
 	getgenv().settings.antiBotServers = bool
 	saveSettings()
 	checkForBots()
 end)
 
-antiBotSwitch:Set(getgenv().settings.antiBotServers)
+antiBotSwitch:Set(getgenv().settings.antiBotServers)]]
 
 serverHopTab:AddButton("Server Hop", function()
 	serverHop()
