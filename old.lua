@@ -13,6 +13,13 @@ if game.PlaceId ~= 8737602449 and game.PlaceId ~= 8943844393 then
 	return
 end
 
+local cloneref = cloneref or function(o) return o end -- infinite yield
+local CoreGui = cloneref(game:GetService("CoreGui"))
+local Players = cloneref(game:GetService("Players"))
+local HttpService = cloneref(game:GetService("HttpService"))
+local TPService = cloneref(game:GetService("TeleportService"))
+local ReplicatedStorage = cloneref(game:GetService("ReplicatedStorage"))
+
 --skidded!!! ty tvk1308
 for k, v in pairs(getgc(true)) do
 	if pcall(function()
@@ -21,7 +28,7 @@ for k, v in pairs(getgc(true)) do
 		v.tvk = {
 			"kick",
 			function()
-				return workspace:WaitForChild(game:GetService('HttpService'):GenerateGUID(true))
+				return workspace:WaitForChild(HttpService:GenerateGUID(true))
 			end
 		}
 	end
@@ -180,24 +187,22 @@ else
 end
 task.wait()
   --Anti-AFK
-local Players = game:GetService("Players")
 local connections = getconnections or get_signal_cons or nil
 task.spawn(function()
 	if connections then
-		for a, b in next, connections(game:GetService('Players').LocalPlayer.Idled) do
+		for a, b in next, connections(Players.LocalPlayer.Idled) do
 			b:Disable()
 		end
 	end
 end)
 
-local Players = game:GetService('Players')
 local unclaimed = {}
 local counter = 0
 local mainCheckPosition = Vector3.new(165.715, 21.3212, 507.079) * Vector3.new(1,0.5,1)
 local donation, boothText, spamming, hopTimer, vcEnabled
 local signPass = false
 local errCount = 0
-local uid = game:GetService('Players').LocalPlayer.UserId
+local uid = Players.LocalPlayer.UserId
 local newRaisedFormat = Players.LocalPlayer:WaitForChild('leaderstats'):WaitForChild('Raised')
 local booths = {
 	["1"] = "72, 3, 36",
@@ -231,7 +236,7 @@ local booths = {
 }
 local queueonteleport = (syn and syn.queue_on_teleport) or queue_on_teleport or (fluxus and fluxus.queue_on_teleport) or nil
 local httprequest = (syn and syn.request) or http and http.request or http_request or (fluxus and fluxus.request) or request
-local httpservice = game:GetService('HttpService')
+local httpservice = HttpService
 if queueonteleport then
 	queueonteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/CF-Trail/tzechco-PlsDonateAutofarmBackup/main/old.lua'))()")
 end
@@ -260,12 +265,12 @@ function forceServerHop()
 	task.spawn(function()
 		while task.wait(0.5) do
 			if #servers > 0 then
-				game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
+				TPService:TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
 			end
 		end
 	end)
-	game:GetService("TeleportService").TeleportInitFailed:Connect(function()
-		game:GetService("TeleportService"):TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
+	TPService.TeleportInitFailed:Connect(function()
+		TPService:TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
 	end)
 end
 local settingsLock
@@ -345,7 +350,7 @@ local sNames = {
 	'autoReplyNoRespond'
 }
 
-local positionX = (game:GetService('Players').LocalPlayer.Character or game:GetService('Players').LocalPlayer.CharacterAdded:Wait()):WaitForChild('HumanoidRootPart').Position
+local positionX = (Players.LocalPlayer.Character or Players.LocalPlayer.CharacterAdded:Wait()):WaitForChild('HumanoidRootPart').Position
 
 local sValues = {
 	true,
@@ -441,19 +446,19 @@ local sValues = {
   --Load Settings
 if isfile("plsdonatesettings.txt") then
 	local sl, er = pcall(function()
-		getgenv().settings = game:GetService('HttpService'):JSONDecode(readfile('plsdonatesettings.txt'))
+		getgenv().settings = HttpService:JSONDecode(readfile('plsdonatesettings.txt'))
 	end)
 	if er ~= nil then
 		task.spawn(function()
 			errMsg = Instance.new("Hint")
-			errMsg.Parent = game:GetService('CoreGui')
+			errMsg.Parent = CoreGui
 			errMsg.Text = tostring("COULDNT LOAD SETTINGS BECAUSE OF DUMBASS JSON ERROR, SERVERHOPPING")
 			task.wait(15)
 			errMsg:Destroy()
 		end)
 		delfile("plsdonatesettings.txt")
 		task.wait(2)
-		getgenv().settings = game:GetService('HttpService'):JSONDecode(readfile('plsdonatesettingsbackup.txt'))
+		getgenv().settings = HttpService:JSONDecode(readfile('plsdonatesettingsbackup.txt'))
 		saveSettings()
 		forceServerHop()
 		return
@@ -475,8 +480,8 @@ local AllIDs = {}
 local foundAnything = ""
 local actualHour = os.date("!*t").hour
 local Deleted = false
-local S_T = game:GetService("TeleportService")
-local S_H = game:GetService("HttpService")
+local S_T = TPService
+local S_H = HttpService
 local RandomName = "PlsDonateServerHop-Temp"
 
 local File = pcall(function()
@@ -527,7 +532,7 @@ local function TPReturner(placeId)
 				pcall(function()
 					writefile(RandomName .. ".json", S_H:JSONEncode(AllIDs))
 					task.wait()
-					S_T:TeleportToPlaceInstance(placeId, ID, game:GetService("Players").LocalPlayer)
+					S_T:TeleportToPlaceInstance(placeId, ID, Players.LocalPlayer)
 				end)
 				task.wait(4)
 			end
@@ -588,7 +593,7 @@ local function playerChecker(player)
 end
 
 local function twn(...)
-	return game:GetService('TweenService'):Create(...)
+	return cloneref(game:GetService('TweenService')):Create(...)
 end
 
 local function oldWebhook(msg)
@@ -635,7 +640,7 @@ if not _shuffled then
 end
 local _boothlocation
 if _shufflerandom == 1 then
-   _boothlocation = game:GetService('Players').LocalPlayer:WaitForChild('PlayerGui'):WaitForChild('MapUIContainer'):WaitForChild('MapUI')
+   _boothlocation = Players.LocalPlayer:WaitForChild('PlayerGui'):WaitForChild('MapUIContainer'):WaitForChild('MapUI')
 else
    _boothlocation = _shuffled or workspace:WaitForChild('MapUI')
 end
@@ -684,7 +689,7 @@ function updateBoothText()
 						nx = 8
 					end
 				end
-				require(game:GetService("ReplicatedStorage").Remotes).Event("SetCustomization"):FireServer({
+				require(ReplicatedStorage.Remotes).Event("SetCustomization"):FireServer({
 				        ["textFont"] = Enum.Font[getgenv().settings.fontFace],
 				        ["richText"] = true,
 				        ["textFont"] = Enum.Font[getgenv().settings.fontFace],
@@ -700,7 +705,7 @@ function updateBoothText()
 				}, "booth")
 				task.wait(3)
 			end
-				require(game:GetService("ReplicatedStorage").Remotes).Event("SetCustomization"):FireServer({
+				require(ReplicatedStorage.Remotes).Event("SetCustomization"):FireServer({
 				        ["textFont"] = Enum.Font[getgenv().settings.fontFace],
 				        ["richText"] = true,
 				        ["textFont"] = Enum.Font[getgenv().settings.fontFace],
@@ -720,7 +725,7 @@ function updateBoothText()
 	end
 end
 
-local _TTSERVICE = game:GetService('TextChatService')
+local _TTSERVICE = cloneref(game:GetService('TextChatService'))
 local _TCHANNEL = _TTSERVICE.TextChannels.RBXGeneral
 
 local function chat(C_1)
@@ -736,7 +741,7 @@ end
 
 local function fetchNearPlr()
 	local minmagnif,plrfoundf
-	local lplrChar = game:GetService'Players'.LocalPlayer.Character
+	local lplrChar = Players.LocalPlayer.Character
 	if lplrChar then
 		local humanoidthing = lplrChar:FindFirstChildOfClass('Humanoid')
 		if humanoidthing then
@@ -744,8 +749,8 @@ local function fetchNearPlr()
 			if roothum then
 				minmagnif = 9999999
 				plrfoundf = nil
-				for i,v in next, game:GetService('Players'):GetPlayers() do
-					if v == game:GetService('Players').LocalPlayer then
+				for i,v in next, Players:GetPlayers() do
+					if v == Players.LocalPlayer then
 						continue
 					end
 					if v.Character and v.Character:FindFirstChildOfClass('Humanoid') then
@@ -779,11 +784,11 @@ local function webhook(raised, donor)
 	end
 	local a = os.time()
 	local a = os.date("!*t", a)
-	local c = game:GetService("MarketplaceService")
+	local c = cloneref(game:GetService("MarketplaceService"))
 	local c = c:GetProductInfo(game.PlaceId, Enum.InfoType.Asset)
 	local a = {
-		["title"] = '**' .. game:GetService('Players').LocalPlayer.Name .. '**',
-		["description"] = "",
+		["title"] = '**' .. Players.LocalPlayer.Name .. '**',
+		["description"] = "has been donated " .. tostring(raised) .. "R$ [A/T: " .. math.floor(raised * 0.6) .. "R$]",
 		["type"] = "rich",
 		["color"] = tonumber(3066993),
 		["thumbnail"] = {
@@ -795,23 +800,8 @@ local function webhook(raised, donor)
 		},
 		["fields"] = {
 			{
-				["name"] = "Donation Amount",
-				["value"] = "`" .. tostring(raised) .. '`',
-				["inline"] = true
-			},
-			{
 				["name"] = "Total",
 				["value"] = '`' .. tostring(tonumber(newRaisedFormat.Value)) .. '`',
-				["inline"] = true
-			},
-			{
-				["name"] = "After Tax [DONATION]",
-				["value"] = '`' .. '' .. math.floor(tostring(raised * 0.6)) .. '`',
-				["inline"] = true
-			},
-			{
-				["name"] = "After Tax [TOTAL]",
-				["value"] = '`' .. math.floor(tostring(tonumber(newRaisedFormat.Value) * 0.6)) .. '`',
 				["inline"] = true
 			},
 			{
@@ -826,38 +816,34 @@ local function webhook(raised, donor)
 			},
 		},
 		["footer"] = {
-			["text"] = "made by szze#6220 (szze)",
+			["text"] = "made by @szze / <https://discord.gg/e5Tg9SFnrq>",
 		},
 		["timestamp"] = string.format("%d-%d-%dT%02d:%02d:%02dZ", a.year, a.month, a.day, a.hour, a.min, a.sec)
 	}
+	httprequest{
+		Url = getgenv().settings.webhookBox:gsub(' ', ''),
+		Method = "POST",
+		Headers = {
+			["Content-Type"] = "application/json"
+		},
+		Body = HttpService:JSONEncode({
+			content = "",
+			embeds = {
+				a
+			}
+		})
+	}
 	if getgenv().settings.pingEveryone and tonumber(raised) >= tonumber(getgenv().settings.pingAboveDono) then
-		httprequest{
-			Url = getgenv().settings.webhookBox:gsub(' ', ''),
-			Method = "POST",
-			Headers = {
-				["Content-Type"] = "application/json"
-			},
-			Body = game:GetService "HttpService":JSONEncode({
-				content = "@everyone",
-				embeds = {
-					a
-				}
-			})
-		}
-	else
-		httprequest{
-			Url = getgenv().settings.webhookBox:gsub(' ', ''),
-			Method = "POST",
-			Headers = {
-				["Content-Type"] = "application/json"
-			},
-			Body = game:GetService "HttpService":JSONEncode({
-				content = "",
-				embeds = {
-					a
-				}
-			})
-		}
+	        httprequest{
+		        Url = getgenv().settings.webhookBox:gsub(' ', ''),
+		        Method = "POST",
+		        Headers = {
+		         	["Content-Type"] = "application/json"
+	         	},
+	         	Body = HttpService:JSONEncode({
+			        content = "@everyone",
+		        })
+	        }
 	end
 end
 
@@ -872,16 +858,16 @@ function rgb(hex)
 	return Color3.new(r, g, b)
 end
 
-if game:GetService('CoreGui'):FindFirstChild('RobloxPromptGui') then
-	for i, v in next, game:GetService("CoreGui").RobloxPromptGui:GetDescendants() do
+if CoreGui:FindFirstChild('RobloxPromptGui') then
+	for i, v in next, CoreGui.RobloxPromptGui:GetDescendants() do
 		if v:IsA('TextLabel') and string.find(string.lower(v.Text), "ban") then
 			oldWebhook('@everyone ||' .. Players.LocalPlayer.Name .. '|| got banned' .. v.Text:gsub("You've been banned", ''):gsub('You were kicked from this experience:', ''):gsub('(Error Code: 267)', ''):gsub('()', ''))
 		end
 	end
 end
 
-if game:GetService('CoreGui'):FindFirstChild('RobloxPromptGui') then
-	game:GetService('CoreGui').RobloxPromptGui.DescendantAdded:Connect(function(v)
+if CoreGui:FindFirstChild('RobloxPromptGui') then
+	CoreGui.RobloxPromptGui.DescendantAdded:Connect(function(v)
 		if v:IsA('TextLabel') and string.find(string.lower(v.Text), "ban") then
 			oldWebhook('@everyone ||' .. Players.LocalPlayer.Name .. '|| got banned' .. v.Text:gsub("You've been banned", ''):gsub('You were kicked from this experience:', ''):gsub('(Error Code: 267)', ''):gsub('()', ''))
 		end
@@ -903,7 +889,7 @@ local serverHopTab = Window:AddTab("Server")
 local otherTab = Window:AddTab("Other")
 local otherTab2 = Window:AddTab("Other 2")
 local supportTab = Window:AddTab("Support")
-local TextService = game:GetService("TextService")
+local TextService = cloneref(game:GetService("TextService"))
 local sgoalR = 0
   
   --Booth Settings
@@ -1197,12 +1183,6 @@ end,
 })
 TB.Text = 'Minimum ping dono amount: ' .. getgenv().settings.pingAboveDono
 
-pcall(function()
-	if game:GetService("VoiceChatService"):IsVoiceEnabledForUserIdAsync(Players.LocalPlayer.UserId) then
-		vcEnabled = true
-	end
-end)
-
 local serverHopToggle = serverHopTab:AddSwitch("Auto Server Hop", function(bool)
 	if settingsLock then
 		return
@@ -1334,9 +1314,9 @@ local render = otherTab:AddSwitch("Disable Rendering", function(bool)
 	getgenv().settings.render = bool
 	saveSettings()
 	if bool then
-		game:GetService("RunService"):Set3dRenderingEnabled(false)
+		cloneref(game:GetService("RunService")):Set3dRenderingEnabled(false)
 	else
-		game:GetService("RunService"):Set3dRenderingEnabled(true)
+		cloneref(game:GetService("RunService")):Set3dRenderingEnabled(true)
 	end
 end)
 render:Set(getgenv().settings.render)
@@ -1578,7 +1558,7 @@ supportTab:AddLabel("Hello. This script is free but I won't resist")
 supportTab:AddLabel("from some robux :3")
 supportTab:AddLabel("If you want to donate me, click here: ")
 supportTab:AddButton('Teleport', function()
-	game:GetService('TeleportService'):Teleport(13461969417)
+	TPService:Teleport(13461969417)
 end)
 supportTab:AddLabel('You can also send me a message there for free!')
 
@@ -1590,7 +1570,7 @@ local function findUnclaimed()
 	for i, v in pairs(_boothlocation:WaitForChild('BoothUI'):GetChildren()) do
 		if (v.Details.Owner.Text == "unclaimed") then
 			local _boothnum = tonumber(string.match(tostring(v), "%d+"))
-			for i, v in ipairs(game:GetService("Workspace").BoothInteractions:GetChildren()) do
+			for i, v in ipairs(workspace.BoothInteractions:GetChildren()) do
 		              if v:GetAttribute("BoothSlot") == _boothnum and (v.Position - mainCheckPosition).Magnitude > 50 then
 				   table.insert(unclaimed,_boothnum)
 			           break
@@ -1609,7 +1589,7 @@ if not unclaimed[2] then
 end
   --Claim booth function
 local function boothclaim()
-	require(game:GetService('ReplicatedStorage').Remotes).Event("ClaimBooth"):InvokeServer(unclaimed[2])
+	require(ReplicatedStorage.Remotes).Event("ClaimBooth"):InvokeServer(unclaimed[2])
 	if not string.find(_boothlocation.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[2])).Details.Owner.Text, Players.LocalPlayer.DisplayName) then
 		task.wait(1)
 		if not string.find(_boothlocation.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[2])).Details.Owner.Text, Players.LocalPlayer.DisplayName) then
@@ -1634,12 +1614,12 @@ getgenv().walkToBooth = function()
 		theCframe = CFrame.new(0, 0, getgenv().settings.boothPosition)
 	end
 	local boothPos, mainPosX
-	for i, v in ipairs(game:GetService("Workspace").BoothInteractions:GetChildren()) do
+	for i, v in ipairs(workspace.BoothInteractions:GetChildren()) do
 		if v:GetAttribute("BoothSlot") == unclaimed[2] then
 			print((v.Position - mainCheckPosition).Magnitude)
 			mainPosX = v.CFrame
 			boothPos = v.CFrame * theCframe
-			game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.CFrame = mainPosX
+			Players.LocalPlayer.Character.HumanoidRootPart.CFrame = mainPosX
 			break
 		end
 	end
@@ -1647,7 +1627,7 @@ getgenv().walkToBooth = function()
 	local Controls = require(Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule")):GetControls()
 	Controls:Disable()
 	local atBooth = false
-	game:GetService("Workspace").Map.Decoration.Benches:Destroy()
+	workspace.Map.Decoration.Benches:Destroy()
 	Players.LocalPlayer.Character.Humanoid:MoveTo(boothPos.Position)
 	Players.LocalPlayer.Character.Humanoid.MoveToFinished:Connect(function(reached)
 		atBooth = true
@@ -1743,7 +1723,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 			local char = Players.LocalPlayer.Character
 			workspace['_HIGHLIGHT.CF'].CFrame = CFrame.new(char.Humanoid.RootPart.Position - Vector3.new(0, 3, 0))
 			chat('Enabling engines...')
-			game:GetService('Players'):Chat('/e dance2')
+			Players:Chat('/e dance2')
 			task.wait(3)
 			local _TWN = twn(char.Humanoid.RootPart.HL1__HELI, TweenInfo.new(6, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {
 				AngularVelocity = Vector3.new(0, 25, 0)
@@ -1771,25 +1751,25 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 			_TWN3:Play()
 			_TWN4:Play()
 			helidebounce = false
-			game:GetService('Players'):Chat('/e wave')
+			Players:Chat('/e wave')
 		end
 	end)
 	if getgenv().settings.donationJump == true and not getgenv().settings.spinSet == true and not getgenv().settings.highlightSwitch then
 		djset = true
 		task.spawn(function()
 			if getgenv().settings.jumpsPerRobux == 1 then
-				for i = 1, game:GetService('Players').LocalPlayer.leaderstats.Raised.Value - RaisedC do
-					game:GetService('Players').LocalPlayer.Character.Humanoid:ChangeState('Jumping')
+				for i = 1, Players.LocalPlayer.leaderstats.Raised.Value - RaisedC do
+					Players.LocalPlayer.Character.Humanoid:ChangeState('Jumping')
 					repeat
 						task.wait()
-					until game:GetService('Players').LocalPlayer.Character.Humanoid:GetState() == Enum.HumanoidStateType.Running
+					until Players.LocalPlayer.Character.Humanoid:GetState() == Enum.HumanoidStateType.Running
 				end
 			else
-				for i = 1, (game:GetService('Players').LocalPlayer.leaderstats.Raised.Value - RaisedC) * getgenv().settings.jumpsPerRobux do
-					game:GetService('Players').LocalPlayer.Character.Humanoid:ChangeState('Jumping')
+				for i = 1, (Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * getgenv().settings.jumpsPerRobux do
+					Players.LocalPlayer.Character.Humanoid:ChangeState('Jumping')
 					repeat
 						task.wait()
-					until game:GetService('Players').LocalPlayer.Character.Humanoid:GetState() == Enum.HumanoidStateType.Running
+					until Players.LocalPlayer.Character.Humanoid:GetState() == Enum.HumanoidStateType.Running
 				end
 			end
 			djset = false
@@ -1892,8 +1872,8 @@ Players.PlayerChatted:Connect(function(_____________________, player, message)
 	local speaker = tostring(player)
 	local message = string.lower(message)
 	task.wait(2.1 + math.random(0.4, 1))
-	local plrChatted = game:GetService('Players'):FindFirstChild(speaker)
-	if (plrChatted and plrChatted == game:GetService('Players').LocalPlayer) or getgenv().settings.autoNearReply == false or not plrChatted  or string.find(message, 'donates') or string.find(message, "spamming") then
+	local plrChatted = Players:FindFirstChild(speaker)
+	if (plrChatted and plrChatted == Players.LocalPlayer) or getgenv().settings.autoNearReply == false or not plrChatted  or string.find(message, 'donates') or string.find(message, "spamming") then
 		return
 	end
 	if plrChatted:GetAttribute('respcd') then
@@ -1904,7 +1884,7 @@ Players.PlayerChatted:Connect(function(_____________________, player, message)
 		local chatChar = plrChatted.Character
 		if (plrChatted.Character and plrChatted.Character.Humanoid.RootPart) then
 			local root = chatChar.Humanoid.RootPart
-			if (root.Position - game:GetService('Players').LocalPlayer.Character.Humanoid.RootPart.Position).Magnitude < 11 then
+			if (root.Position - Players.LocalPlayer.Character.Humanoid.RootPart.Position).Magnitude < 11 then
 				if table.find(messagesToResp.Greetings,message) then
 					chat(getgenv().settings.helloResponce[math.random(1, #getgenv().settings.helloResponce)])
 				elseif string.find(message, 'bot') then
@@ -1925,7 +1905,7 @@ Players.PlayerChatted:Connect(function(_____________________, player, message)
 	end)
 end)
 
-game:GetService('Players').PlayerAdded:Connect(function(player)
+Players.PlayerAdded:Connect(function(player)
 	if getgenv().settings.friendHop and player:IsFriendsWith(uid) then
 	        Players.LocalPlayer:Kick('friend joined - rejoining')
 		serverHop()
