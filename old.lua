@@ -890,6 +890,36 @@ if CoreGui:FindFirstChild('RobloxPromptGui') then
 	end)
 end
 
+local flaggedTexts = {
+	'spin',
+	'jump',
+	'helicopter'
+}
+
+local flaggedTextCount = 0
+
+local function checkForBots()
+	if not getgenv().settings.antiBotServers then
+		return
+	end
+	local boothUiStuff = _boothlocation:WaitForChild("BoothUI", 5)
+	if not boothUiStuff then
+		return
+	end
+	for i,v in next, boothUiStuff:GetDescendants() do
+		if v:IsA('TextLabel') then
+			for _i, text in flaggedTexts do
+				if string.find(v.Text,text) then
+					flaggedTextCount += 1
+				end
+			end
+		end
+	end
+	if flaggedTextCount > 6 then
+		serverHop()
+	end
+end
+
 local Window = library:AddWindow("@szze | possible solara support added - 28.09.2024",
   {
 	main_color = Color3.fromRGB(80, 80, 80),
@@ -1262,13 +1292,15 @@ end)
 
 gSHSwitch:Set(getgenv().settings.goalServerhopSwitch)
 
---[[local antiBotSwitch = serverHopTab:AddSwitch('[BETA] Anti Bot Servers', function(bool)
+local antiBotSwitch = serverHopTab:AddSwitch('[BETA] Anti Bot Servers', function(bool)
 	getgenv().settings.antiBotServers = bool
 	saveSettings()
 	checkForBots()
 end)
 
-antiBotSwitch:Set(getgenv().settings.antiBotServers)]]
+antiBotSwitch:Set(getgenv().settings.antiBotServers)
+
+serverHopTab:AddLabel("*[BETA] > will server hop if there's a lot of bot-like booth texts [over 6]")
 
 serverHopTab:AddButton("Server Hop", function()
 	serverHop()
