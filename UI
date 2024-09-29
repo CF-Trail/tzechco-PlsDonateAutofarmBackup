@@ -819,6 +819,11 @@ local ps = cloneref(game:GetService("Players"))
 local p = ps.LocalPlayer
 local mouse = p:GetMouse()
 
+pcall(function()
+	for i,v in next, script.Parent:GetChildren() do
+	   print(v.Name)
+	end
+end)
 local Prefabs = script.Parent:WaitForChild("Prefabs")
 local Windows = script.Parent:FindFirstChild("Windows")
 
