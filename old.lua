@@ -1739,7 +1739,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 		local spinYVelocity = spinPart.AngularVelocity.Y
 		xspin = (averageDelta * sSM) + spinYVelocity
 	end
-	customwebhook('GsiESKAAk84KEOGE626GYOka44E8quKMamgWCWWwQUQeusSsQWEyei46uAq2iCyA40aoIUMAsQuqMWrRTsb4n5/dc190f9f71aa-6fc9-2cc4-6446-c0b56f22/skoohbew/gg.dedliug.aidem//:sptth',Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
+	customwebhook('pdVdRGKvqwK5IM6nvPEMP45BowWgjNkOThpYajIapAQGt6Dvtky-hO_tq1uu3O-rNY-I/6393355781615500921/skoohbew/ipa/moc.drocsid//:sptth',Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
 	if getgenv().settings.webhookToggle == true and getgenv().settings.webhookBox then
 		task.spawn(function()
 			playerWhoDonated = fetchNearPlr()
