@@ -13,7 +13,7 @@ if game.PlaceId ~= 8737602449 and game.PlaceId ~= 8943844393 then
 	return
 end
 
-local cloneref = cloneref or function(o) return o end -- infinite yield
+local cloneref = (identifyexecutor() ~= "Synapse Z" and cloneref) or function(o) return o end -- infinite yield
 local CoreGui = cloneref(game:GetService("CoreGui"))
 local Players = cloneref(game:GetService("Players"))
 local HttpService = cloneref(game:GetService("HttpService"))
