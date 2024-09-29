@@ -20,6 +20,7 @@ end
 
 local imgui = Instance.new("ScreenGui")
 local Prefabs = Instance.new("Frame")
+print("Created Prefabs")
 local Label = Instance.new("TextLabel")
 local Window = Instance.new("ImageLabel")
 local Resizer = Instance.new("Frame")
@@ -96,6 +97,8 @@ imgui.Parent = CoreGui
 
 Prefabs.Name = "Prefabs"
 Prefabs.Parent = imgui
+print("I DID!!!! Put Prefabs in:")
+print(Prefabs:GetFullName())
 Prefabs.BackgroundColor3 = Color3.new(1, 1, 1)
 Prefabs.Size = UDim2.new(0, 100, 0, 100)
 Prefabs.Visible = false
@@ -809,7 +812,7 @@ Windows.Parent = imgui
 Windows.BackgroundColor3 = Color3.new(1, 1, 1)
 Windows.BackgroundTransparency = 1
 Windows.Position = UDim2.new(0, 20, 0, 20)
-Windows.Size = UDim2.new(1, 20, 1, -20)--
+Windows.Size = UDim2.new(1, 20, 1, -20)
 script.Parent = imgui
 
 local UIS = cloneref(game:GetService("UserInputService"))
@@ -819,6 +822,14 @@ local ps = cloneref(game:GetService("Players"))
 
 local p = ps.LocalPlayer
 local mouse = p:GetMouse()
+
+print("Did all stuff with Prefabs, listing stuff below:")
+
+pcall(function()
+	for i,v in next, script.Parent:GetChildren() do
+		print(v:GetFullName())
+	end
+end)
 
 local Prefabs = script.Parent:WaitForChild("Prefabs")
 local Windows = script.Parent:FindFirstChild("Windows")
