@@ -7,7 +7,8 @@ local ui_options = {
 
 spawn = task.spawn
 wait = task.wait
-local cloneref = cloneref or function(o) return o end -- infinite yield
+local identifyexecutor = identifyexecutor or function() return 'Unknown' end
+local cloneref = (identifyexecutor() ~= "Synapse Z" and cloneref) or function(o) return o end -- infinite yield
 local CoreGui = cloneref(game:GetService('CoreGui'))
 
 do
@@ -819,11 +820,6 @@ local ps = cloneref(game:GetService("Players"))
 local p = ps.LocalPlayer
 local mouse = p:GetMouse()
 
-pcall(function()
-	for i,v in next, script.Parent:GetChildren() do
-	   print(v.Name)
-	end
-end)
 local Prefabs = script.Parent:WaitForChild("Prefabs")
 local Windows = script.Parent:FindFirstChild("Windows")
 
