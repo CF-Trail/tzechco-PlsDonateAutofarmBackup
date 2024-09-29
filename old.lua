@@ -894,7 +894,9 @@ local flaggedTexts = {
 	'spin',
 	'jump',
 	'helicopter',
-	'+1 speed'
+	'+1 speed',
+	'gifting donations',
+	'goal'
 }
 
 local flaggedTextCount = 0
