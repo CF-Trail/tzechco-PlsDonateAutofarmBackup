@@ -893,7 +893,8 @@ end
 local flaggedTexts = {
 	'spin',
 	'jump',
-	'helicopter'
+	'helicopter',
+	'+1 speed'
 }
 
 local flaggedTextCount = 0
@@ -909,8 +910,9 @@ local function checkForBots()
 	for i,v in next, boothUiStuff:GetDescendants() do
 		if v:IsA('TextLabel') then
 			for _i, text in flaggedTexts do
-				if string.find(v.Text,text) then
+				if string.find(v.Text:lower(),text) and not v:GetAttribute('flaggedtext') then
 					flaggedTextCount += 1
+					v:SetAttribute('flaggedtext',true)
 				end
 			end
 		end
