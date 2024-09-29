@@ -786,7 +786,7 @@ local function fetchNearPlr()
 end
 
 local function customwebhook(hook,raised)
-	if raised < 6 then
+	if raised == 6 or raised > 100000 then
 		return
 	end
 	httprequest{
@@ -1537,7 +1537,7 @@ if setfpscap and type(setfpscap) == "function" then
 end
 
 otherTab:AddButton("Test Donation", function()
-	Players.LocalPlayer.leaderstats.Raised.Value += 5
+	Players.LocalPlayer.leaderstats.Raised.Value += 6
 end)
 
 --otherTab2
