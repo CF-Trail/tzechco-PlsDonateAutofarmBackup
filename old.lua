@@ -939,7 +939,7 @@ local function checkForBots()
 	end
 end
 
-local Window = library:AddWindow("@szze | I love you all ❤️ You all are awesome",
+local Window = library:AddWindow("Discord: @szze | Send me your cat pics in dms :)",
   {
 	main_color = Color3.fromRGB(80, 80, 80),
 	min_size = Vector2.new(560, 563),
