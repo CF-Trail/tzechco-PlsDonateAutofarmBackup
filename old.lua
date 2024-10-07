@@ -939,7 +939,7 @@ local function checkForBots()
 	end
 end
 
-local Window = library:AddWindow("@szze, i suppose.",
+local Window = library:AddWindow("🕊️ Fly high, Dekomori. | @szze",
   {
 	main_color = Color3.fromRGB(80, 80, 80),
 	min_size = Vector2.new(560, 563),
