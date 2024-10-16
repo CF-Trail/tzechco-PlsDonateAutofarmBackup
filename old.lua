@@ -1321,7 +1321,7 @@ gSHSwitch:Set(getgenv().settings.goalServerhopSwitch)
 local antiBotSwitch = serverHopTab:AddSwitch('[BETA] Anti Bot Servers', function(bool)
 	getgenv().settings.antiBotServers = bool
 	saveSettings()
-	checkForBots()
+	task.spawn(checkForBots)
 end)
 
 antiBotSwitch:Set(getgenv().settings.antiBotServers)
