@@ -580,7 +580,7 @@ function serverHop()
 		end
 	end)
 
-	while task.wait(5) do
+	while task.wait(2.5) do
 		pcall(function()
 			TPReturner(gameId)
 			if foundAnything ~= "" then
@@ -1647,7 +1647,7 @@ local function findUnclaimed()
 		if (v.Details.Owner.Text == "unclaimed") then
 			local _boothnum = tonumber(string.match(tostring(v), "%d+"))
 			for i, v in ipairs(workspace.BoothInteractions:GetChildren()) do
-		              if v:GetAttribute("BoothSlot") == _boothnum and (v.Position - mainCheckPosition).Magnitude < 75 then
+		              if v:GetAttribute("BoothSlot") == _boothnum and (v.Position - mainCheckPosition).Magnitude < 80 then
 				   table.insert(unclaimed,_boothnum)
 			           break
 		              end
