@@ -199,7 +199,7 @@ end)
 
 local unclaimed = {}
 local counter = 0
-local mainCheckPosition = Vector3.new(165.715, 21.3212, 507.079) * Vector3.new(1,0.5,1)
+local mainCheckPosition = workspace.Map.Decoration.Middle.WaterFountain.FunnelPart.Position * Vector3.new(1,0,1)
 local donation, boothText, spamming, hopTimer, vcEnabled
 local signPass = false
 local errCount = 0
@@ -478,6 +478,7 @@ if #getgenv().settings ~= sNames then
 	end
 	writefile('plsdonatesettings.txt', httpservice:JSONEncode(getgenv().settings))
 end
+
 local settingsLock = true
 local AllIDs = {}
 local foundAnything = ""
@@ -854,7 +855,7 @@ local function webhook(raised, donor)
 			},
 		},
 		["footer"] = {
-			["text"] = "made by @szze / <https://discord.gg/e5Tg9SFnrq>",
+			["text"] = "made by @szze / https://discord.gg/e5Tg9SFnrq",
 		},
 		["timestamp"] = string.format("%d-%d-%dT%02d:%02d:%02dZ", a.year, a.month, a.day, a.hour, a.min, a.sec)
 	}
@@ -946,7 +947,7 @@ local function checkForBots()
 	end
 end
 
-local Window = library:AddWindow("@szze | 💙",
+local Window = library:AddWindow("@szze | updated 17.10.2024 - check discord",
   {
 	main_color = Color3.fromRGB(80, 80, 80),
 	min_size = Vector2.new(560, 563),
@@ -1646,7 +1647,7 @@ local function findUnclaimed()
 		if (v.Details.Owner.Text == "unclaimed") then
 			local _boothnum = tonumber(string.match(tostring(v), "%d+"))
 			for i, v in ipairs(workspace.BoothInteractions:GetChildren()) do
-		              if v:GetAttribute("BoothSlot") == _boothnum and (v.Position - mainCheckPosition).Magnitude > 50 then
+		              if v:GetAttribute("BoothSlot") == _boothnum and (v.Position - mainCheckPosition).Magnitude < 79 then
 				   table.insert(unclaimed,_boothnum)
 			           break
 		              end
@@ -1666,7 +1667,7 @@ end
 local function boothclaim()
 	require(ReplicatedStorage.Remotes).Event("ClaimBooth"):InvokeServer(unclaimed[2])
 	if not string.find(_boothlocation.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[2])).Details.Owner.Text, Players.LocalPlayer.DisplayName) then
-		task.wait(1)
+		task.wait(4)
 		if not string.find(_boothlocation.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[2])).Details.Owner.Text, Players.LocalPlayer.DisplayName) then
 			error()
 		end
