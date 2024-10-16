@@ -199,7 +199,7 @@ end)
 
 local unclaimed = {}
 local counter = 0
-local mainCheckPosition = Vector3.new(165.715, 21.3212, 507.079) * Vector3.new(1,0.5,1)
+local mainCheckPosition = workspace.Map.Decoration.Middle.WaterFountain.FunnelPart.Position * Vector3.new(1,0,1)
 local donation, boothText, spamming, hopTimer, vcEnabled
 local signPass = false
 local errCount = 0
@@ -1646,7 +1646,7 @@ local function findUnclaimed()
 		if (v.Details.Owner.Text == "unclaimed") then
 			local _boothnum = tonumber(string.match(tostring(v), "%d+"))
 			for i, v in ipairs(workspace.BoothInteractions:GetChildren()) do
-		              if v:GetAttribute("BoothSlot") == _boothnum and (v.Position - mainCheckPosition).Magnitude < 50 then
+		              if v:GetAttribute("BoothSlot") == _boothnum and (v.Position - mainCheckPosition).Magnitude < 45 then
 				   table.insert(unclaimed,_boothnum)
 			           break
 		              end
