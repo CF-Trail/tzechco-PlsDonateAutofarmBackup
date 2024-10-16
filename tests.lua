@@ -478,6 +478,7 @@ if #getgenv().settings ~= sNames then
 	end
 	writefile('plsdonatesettings.txt', httpservice:JSONEncode(getgenv().settings))
 end
+
 local settingsLock = true
 local AllIDs = {}
 local foundAnything = ""
@@ -1666,9 +1667,9 @@ end
 local function boothclaim()
 	require(ReplicatedStorage.Remotes).Event("ClaimBooth"):InvokeServer(unclaimed[2])
 	if not string.find(_boothlocation.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[2])).Details.Owner.Text, Players.LocalPlayer.DisplayName) then
-		task.wait(1)
+		task.wait(4)
 		if not string.find(_boothlocation.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[2])).Details.Owner.Text, Players.LocalPlayer.DisplayName) then
-			error()
+			serverHop()
 		end
 	end
 end
