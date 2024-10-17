@@ -1647,7 +1647,7 @@ local function findUnclaimed()
 		if (v.Details.Owner.Text == "unclaimed") then
 			local _boothnum = tonumber(string.match(tostring(v), "%d+"))
 			for i, v in ipairs(workspace.BoothInteractions:GetChildren()) do
-		              if v:GetAttribute("BoothSlot") == _boothnum and (v.Position - mainCheckPosition).Magnitude < 79 then
+		              if v:GetAttribute("BoothSlot") == _boothnum and (v.Position - mainCheckPosition).Magnitude < 90 then
 				   table.insert(unclaimed,_boothnum)
 			           break
 		              end
