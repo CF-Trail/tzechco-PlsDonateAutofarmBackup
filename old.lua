@@ -947,9 +947,9 @@ local function checkForBots()
 	end
 end
 
-local Window = library:AddWindow("@szze | тераблейд )) на моих рогах сидят 2две суки ) )))))",
+local Window = library:AddWindow("@szze | 🎃",
   {
-	main_color = Color3.fromRGB(80, 80, 80),
+	main_color = Color3.fromRGB(255, 149, 80),
 	min_size = Vector2.new(560, 563),
 	toggle_key = Enum.KeyCode.RightShift,
 	can_resize = true,
