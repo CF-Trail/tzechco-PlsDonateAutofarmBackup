@@ -947,7 +947,7 @@ local function checkForBots()
 	end
 end
 
-local Window = library:AddWindow("@szze | twitch.tv/arqiwi",
+local Window = library:AddWindow("@szze | thanks @zxcursed for an amazing concert<3",
   {
 	main_color = Color3.fromRGB(80, 80, 80),
 	min_size = Vector2.new(560, 563),
