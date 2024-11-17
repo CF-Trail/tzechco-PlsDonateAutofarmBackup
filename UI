@@ -740,7 +740,7 @@ Windows.BackgroundColor3 = Color3.new(1, 1, 1)
 Windows.BackgroundTransparency = 1
 Windows.Position = UDim2.new(0, 20, 0, 20)
 Windows.Size = UDim2.new(1, 20, 1, -20)
-local script = CoreGui:WaitForChild('imgui')
+script.Parent = imgui
 
 local UIS = cloneref(game:GetService("UserInputService"))
 local TweenService = cloneref(game:GetService("TweenService"))
@@ -750,8 +750,16 @@ local ps = cloneref(game:GetService("Players"))
 local p = ps.LocalPlayer
 local mouse = p:GetMouse()
 
-local Prefabs = Prefabs
-local Windows = Windows
+print("Did all stuff with Prefabs, listing stuff below:")
+
+pcall(function()
+	for i,v in next, script.Parent:GetChildren() do
+		print(v:GetFullName())
+	end
+end)
+
+local Prefabs = script.Parent:WaitForChild("Prefabs")
+local Windows = script.Parent:FindFirstChild("Windows")
 
 local checks = {
 	["binding"] = false,
