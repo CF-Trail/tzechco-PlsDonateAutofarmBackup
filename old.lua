@@ -498,6 +498,25 @@ if not File then
 	end)
 
 end
+
+local function requirex(scrip)
+	if not scrip:IsA('ModuleScript') then
+		return forceServerHop()
+	end
+	local succeed = false
+	local mscript
+
+	repeat task.wait(0.1)
+		local suc, er = pcall(function()
+			mscript = require(scrip)
+		end)
+		if not suc then
+			print("Couldn't require ModuleScript: " .. tostring(er))
+		end
+	until mscript and suc
+	return mscript
+end
+
 local function TPReturner(placeId)
 	local Site;
 	if foundAnything == "" then
@@ -712,7 +731,7 @@ function updateBoothText()
 						nx = 8
 					end
 				end
-				require(ReplicatedStorage.Remotes).Event("SetCustomization"):FireServer({
+				requirex(ReplicatedStorage.Remotes).Event("SetCustomization"):FireServer({
 				        ["textFont"] = Enum.Font[getgenv().settings.fontFace],
 				        ["richText"] = true,
 				        ["textFont"] = Enum.Font[getgenv().settings.fontFace],
@@ -728,7 +747,7 @@ function updateBoothText()
 				}, "booth")
 				task.wait(3)
 			end
-				require(ReplicatedStorage.Remotes).Event("SetCustomization"):FireServer({
+				requirex(ReplicatedStorage.Remotes).Event("SetCustomization"):FireServer({
 				        ["textFont"] = Enum.Font[getgenv().settings.fontFace],
 				        ["richText"] = true,
 				        ["textFont"] = Enum.Font[getgenv().settings.fontFace],
@@ -1665,7 +1684,7 @@ if not unclaimed[2] then
 end
   --Claim booth function
 local function boothclaim()
-	require(ReplicatedStorage.Remotes).Event("ClaimBooth"):InvokeServer(unclaimed[2])
+	requirex(ReplicatedStorage.Remotes).Event("ClaimBooth"):InvokeServer(unclaimed[2])
 	if not string.find(_boothlocation.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[2])).Details.Owner.Text, Players.LocalPlayer.DisplayName) then
 		task.wait(1)
 		if not string.find(_boothlocation.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[2])).Details.Owner.Text, Players.LocalPlayer.DisplayName) then
@@ -1700,7 +1719,7 @@ getgenv().walkToBooth = function()
 		end
 	end
 	Players.LocalPlayer.Character.Humanoid.WalkSpeed = 32
-	local Controls = require(Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule")):GetControls()
+	local Controls = requirex(Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule")):GetControls()
 	Controls:Disable()
 	local atBooth = false
 	workspace.Map.Decoration.Benches:Destroy()
