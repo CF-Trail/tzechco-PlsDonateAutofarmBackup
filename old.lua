@@ -966,7 +966,7 @@ local function checkForBots()
 	end
 end
 
-local Window = library:AddWindow("@szze | 🇺🇸",
+local Window = library:AddWindow("@szze | lf geoguessr team, dm me",
   {
 	main_color = Color3.fromRGB(80, 80, 80),
 	min_size = Vector2.new(560, 563),
