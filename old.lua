@@ -194,7 +194,7 @@ task.wait()
 
 local connections = getconnections or get_signal_cons or nil
 task.spawn(function()
-	if connections and not identifyexecutor():find('Codes') then
+	if connections and not identifyexecutor():find('Codex') then
 		for a, b in next, connections(Players.LocalPlayer.Idled) do
 			b:Disable()
 		end
