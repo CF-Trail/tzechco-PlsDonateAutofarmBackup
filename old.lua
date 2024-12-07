@@ -191,12 +191,19 @@ else
 end
 task.wait()
   --Anti-AFK
+
 local connections = getconnections or get_signal_cons or nil
 task.spawn(function()
-	if connections then
+	if connections and not identifyexecutor():find('Codes') then
 		for a, b in next, connections(Players.LocalPlayer.Idled) do
 			b:Disable()
 		end
+	else
+		local bb = game:service "VirtualUser"
+		Players.LocalPlayer.Idled:connect(function()
+		        bb:CaptureController()
+		        bb:ClickButton2(Vector2.new())
+		end)
 	end
 end)
 
