@@ -209,7 +209,7 @@ end)
 
 local unclaimed = {}
 local counter = 0
-local mainCheckPosition = workspace.Map.Decoration.Middle.WaterFountain.FunnelPart.Position * Vector3.new(1,0,1)
+local mainCheckPosition = Vector3.new(165.161,0,311.636)
 local donation, boothText, spamming, hopTimer, vcEnabled
 local signPass = false
 local errCount = 0
