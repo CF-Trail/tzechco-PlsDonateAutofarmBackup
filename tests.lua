@@ -899,7 +899,7 @@ local chatTab = Window:AddTab("Chat")
 local webhookTab = Window:AddTab("Webhook")
 local serverHopTab = Window:AddTab("Server")
 local otherTab = Window:AddTab("Other")
-local otherTab2 = Window:AddTab("Other 2")
+local otherTab2 = Window:AddTab("AR")
 local supportTab = Window:AddTab("Support")
 local TextService = cloneref(game:GetService("TextService"))
 local sgoalR = 0
@@ -1438,6 +1438,15 @@ local heliToggle = otherTab:AddSwitch('Helicopter On-Donation', function(bool)
 	saveSettings()
 end)
 
+local lapToggle = otherTab:AddSwitch('1R$ = 1 lap across the map', function(bool)
+    if settingsLock then
+        return
+    end
+    getgenv().settings.robuxLap = bool
+    saveSettings()
+end)
+
+lapToggle:Set(getgenv().settings.robuxLap)
 heliToggle:Set(getgenv().settings.helicopterEnabled)
 otherTab:AddLabel("-----------------------")
 
@@ -1672,6 +1681,7 @@ end
 local RaisedC = Players.LocalPlayer.leaderstats.Raised.value
 local djset = false
 local helidebounce = false
+local lapdebounce = false
 Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 	local playerWhoDonated
 	sgoalR = sgoalR + (Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
@@ -1792,6 +1802,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 		end)
 	end
     if getgenv().settings.robuxLap then
+        lapdebounce = true
         task.spawn(function()
             twn(Players.LocalPlayer.Character.Humanoid.RootPart,TweenInfo.new(5,Enum.EasingStyle.Linear,Enum.EasingDirection.In),{CFrame = CFrame.new(166.584, 3.47699, 371.398)}):Play()
             Players.LocalPlayer.Character.Humanoid.WalkSpeed = 50
@@ -1808,8 +1819,10 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
                     repeat task.wait() until _mtfinish == true
                 end 
             end
+            task.wait(1)
+            walkToBooth()
+            lapdebounce = false
         end)
-        walkToBooth()
     end
 	if getgenv().settings.highlightSwitch then
 		task.spawn(function()
