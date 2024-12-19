@@ -25,7 +25,7 @@ if not workspace then
 end
 
 --skidded!!! ty tvk1308
-for k, v in pairs(getgc(true)) do
+--[[for k, v in pairs(getgc(true)) do
 	if pcall(function()
 		return rawget(v, "indexInstance")
 	end) and type(rawget(v, "indexInstance")) == "table" and  (rawget(v, "indexInstance"))[1] == "kick" then
@@ -36,7 +36,7 @@ for k, v in pairs(getgc(true)) do
 			end
 		}
 	end
-end
+end]]
 
 local xspin = 0
 local nx = 0
@@ -101,7 +101,7 @@ task.wait()
 --Anti-AFK
 local connections = getconnections or get_signal_cons or nil
 task.spawn(function()
-	if connections and not identifyexecutor():find('Codex') then
+	if --[[connections and not identifyexecutor():find('Codex')]] false then
 		for a, b in next, connections(Players.LocalPlayer.Idled) do
 			b:Disable()
 		end
