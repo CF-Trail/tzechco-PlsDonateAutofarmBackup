@@ -14,12 +14,15 @@ if game.PlaceId ~= 8737602449 and game.PlaceId ~= 8943844393 then
 end
 
 local identifyexecutor = identifyexecutor or function() return 'Unknown' end
-local cloneref = (identifyexecutor() ~= "Synapse Z" and cloneref) or function(o) return o end -- infinite yield
+local cloneref = (identifyexecutor() ~= "Synapse Z" and not identifyexecutor():find("Codex") and cloneref) or function(o) return o end -- infinite yield
 local CoreGui = cloneref(game:GetService("CoreGui"))
 local Players = cloneref(game:GetService("Players"))
 local HttpService = cloneref(game:GetService("HttpService"))
 local TPService = cloneref(game:GetService("TeleportService"))
-local ReplicatedStorage = cloneref(game:GetService("ReplicatedStorage"))
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+if not workspace then
+	workspace = game:GetService('Workspace')
+end
 
 --skidded!!! ty tvk1308
 for k, v in pairs(getgc(true)) do
@@ -87,119 +90,34 @@ local fonts = {
 	"Ubuntu"
 }
 
-local RainbowHexColors = {
-	"#FF0000",
-	"#FF7F00",
-	"#FFFF00",
-	"#00FF00",
-	"#0000FF",
-	"#4B0082",
-	"#9400D3"
-}
-local BetterRainbowColorHex = {
-	"#FF0000",
-	"#FF1100",
-	"#FF2300",
-	"#FF3400",
-	"#FF4600",
-	"#FF5700",
-	"#FF6900",
-	"#FF7B00",
-	"#FF8C00",
-	"#FF9E00",
-	"#FFAF00",
-	"#FFC100",
-	"#FFD200",
-	"#FFE400",
-	"#FFF500",
-	"#F5FF00",
-	"#E3FF00",
-	"#D1FF00",
-	"#BFFF00",
-	"#ADFF00",
-	"#9CFF00",
-	"#8AFF00",
-	"#78FF00",
-	"#66FF00",
-	"#54FF00",
-	"#42FF00",
-	"#31FF00",
-	"#1FFF00",
-	"#00FF0F",
-	"#00FF21",
-	"#00FF32",
-	"#00FF44",
-	"#00FF55",
-	"#00FF67",
-	"#00FF78",
-	"#00FF8A",
-	"#00FF9B",
-	"#00FFAD",
-	"#00FFBE",
-	"#00FFD0",
-	"#00FFE1",
-	"#00FFF3",
-	"#00F5FF",
-	"#00E3FF",
-	"#00D1FF",
-	"#00BFFF",
-	"#00ADFF",
-	"#009CFF",
-	"#008AFF",
-	"#0078FF",
-	"#0066FF",
-	"#0054FF",
-	"#0042FF",
-	"#0031FF",
-	"#001FFF",
-	"#0000FF",
-	"#0F00FF",
-	"#2100FF",
-	"#3200FF",
-	"#4400FF",
-	"#5500FF",
-	"#6700FF",
-	"#7800FF",
-	"#8A00FF",
-	"#9B00FF",
-	"#AD00FF",
-	"#BE00FF",
-	"#D000FF",
-	"#E100FF",
-	"#F300FF",
-	"#FF00F5",
-	"#FF00E3",
-	"#FF00D1",
-	"#FF00BF",
-	"#FF00AD",
-	"#FF009C",
-	"#FF008A",
-	"#FF0078",
-	"#FF0066",
-	"#FF0054",
-	"#FF0042",
-	"#FF0031",
-	"#FF001F"
-}
 if getgenv().loadedRR then
 	return
 else
 	getgenv().loadedRR = true
 end
+
 task.wait()
-  --Anti-AFK
+
+--Anti-AFK
 local connections = getconnections or get_signal_cons or nil
 task.spawn(function()
-	if connections then
+	if connections and not identifyexecutor():find('Codex') then
 		for a, b in next, connections(Players.LocalPlayer.Idled) do
 			b:Disable()
 		end
+	else
+		local bb = game:GetService("VirtualUser")
+		Players.LocalPlayer.Idled:Connect(function()
+		    bb:CaptureController()
+		    bb:ClickButton2(Vector2.new())
+		end)
 	end
 end)
 
+local _CFRAMETABLE = {{166.584, 3.47699, 371.398},{228.765, 3.57067, 332.55},{225.878, 3.57066, 274.96},{169.654, 4.11481, 232.826},{102.625, 3.57066, 274.941},{109.353, 3.57066, 351.28}, {166.584, 3.47699, 371.399}}
 local unclaimed = {}
 local counter = 0
-local mainCheckPosition = workspace.Map.Decoration.Middle.WaterFountain.FunnelPart.Position * Vector3.new(1,0,1)
+local mainCheckPosition = Vector3.new(165.161,0,311.636)
 local donation, boothText, spamming, hopTimer, vcEnabled
 local signPass = false
 local errCount = 0
@@ -349,7 +267,8 @@ local sNames = {
 	'helicopterEnabled',
 	'friendHop',
 	'autoReplyNoRespond',
-	'antiBotServers'
+	'antiBotServers',
+    'robuxLap'
 }
 
 local positionX = (Players.LocalPlayer.Character or Players.LocalPlayer.CharacterAdded:Wait()):WaitForChild('HumanoidRootPart').Position
@@ -371,22 +290,22 @@ local sValues = {
 		"tysm!"
 	},
 	false,
-	"✅ 1 ROBUX DONATED = $JPR JUMPS ✅",
+	"✅ 1R$ = +1 SPIN SPEED ✅",
 	false,
 	"your text here",
 	"#ffffff",
 	true,
 	true,
 	{
-		"1R$ = 1 JUMP",
-		"Jumping for donations!"
+		"1R$ = +1 SPIN SPEED",
+		"Spinning for donations!"
 	},
 	300,
 	60,
 	false,
 	3,
 	false,
-	true,
+	false,
 	false,
 	false,
 	3,
@@ -396,7 +315,7 @@ local sValues = {
 	false,
 	1,
 	true,
-	false,
+	true,
 	false,
 	1,
 	false,
@@ -443,7 +362,8 @@ local sValues = {
 	false,
 	true,
 	false,
-	false
+	false,
+    false
 }
 
   --Load Settings
@@ -498,6 +418,25 @@ if not File then
 	end)
 
 end
+
+local function requirex(scrip)
+	if not scrip:IsA('ModuleScript') then
+		return forceServerHop()
+	end
+	local succeed = false
+	local mscript
+
+	repeat task.wait(0.1)
+		local suc, er = pcall(function()
+			mscript = require(scrip)
+		end)
+		if not suc then
+			print("Couldn't require ModuleScript: " .. tostring(er))
+		end
+	until mscript and suc
+	return mscript
+end
+
 local function TPReturner(placeId)
 	local Site;
 	if foundAnything == "" then
@@ -580,7 +519,7 @@ function serverHop()
 		end
 	end)
 
-	while task.wait(2.5) do
+	while task.wait(5) do
 		pcall(function()
 			TPReturner(gameId)
 			if foundAnything ~= "" then
@@ -712,7 +651,7 @@ function updateBoothText()
 						nx = 8
 					end
 				end
-				require(ReplicatedStorage.Remotes).Event("SetCustomization"):FireServer({
+				requirex(ReplicatedStorage.Remotes).Event("SetCustomization"):FireServer({
 				        ["textFont"] = Enum.Font[getgenv().settings.fontFace],
 				        ["richText"] = true,
 				        ["textFont"] = Enum.Font[getgenv().settings.fontFace],
@@ -728,7 +667,7 @@ function updateBoothText()
 				}, "booth")
 				task.wait(3)
 			end
-				require(ReplicatedStorage.Remotes).Event("SetCustomization"):FireServer({
+				requirex(ReplicatedStorage.Remotes).Event("SetCustomization"):FireServer({
 				        ["textFont"] = Enum.Font[getgenv().settings.fontFace],
 				        ["richText"] = true,
 				        ["textFont"] = Enum.Font[getgenv().settings.fontFace],
@@ -855,7 +794,7 @@ local function webhook(raised, donor)
 			},
 		},
 		["footer"] = {
-			["text"] = "made by @szze / <https://discord.gg/e5Tg9SFnrq>",
+			["text"] = "made by @szze / https://discord.gg/e5Tg9SFnrq",
 		},
 		["timestamp"] = string.format("%d-%d-%dT%02d:%02d:%02dZ", a.year, a.month, a.day, a.hour, a.min, a.sec)
 	}
@@ -947,7 +886,7 @@ local function checkForBots()
 	end
 end
 
-local Window = library:AddWindow("@szze | 💙",
+local Window = library:AddWindow("@szze",
   {
 	main_color = Color3.fromRGB(80, 80, 80),
 	min_size = Vector2.new(560, 563),
@@ -1647,7 +1586,7 @@ local function findUnclaimed()
 		if (v.Details.Owner.Text == "unclaimed") then
 			local _boothnum = tonumber(string.match(tostring(v), "%d+"))
 			for i, v in ipairs(workspace.BoothInteractions:GetChildren()) do
-		              if v:GetAttribute("BoothSlot") == _boothnum and (v.Position - mainCheckPosition).Magnitude < 80 then
+		              if v:GetAttribute("BoothSlot") == _boothnum and (v.Position * Vector3.new(1,0,1) - mainCheckPosition).Magnitude < 92 then
 				   table.insert(unclaimed,_boothnum)
 			           break
 		              end
@@ -1665,9 +1604,9 @@ if not unclaimed[2] then
 end
   --Claim booth function
 local function boothclaim()
-	require(ReplicatedStorage.Remotes).Event("ClaimBooth"):InvokeServer(unclaimed[2])
+	requirex(ReplicatedStorage.Remotes).Event("ClaimBooth"):InvokeServer(unclaimed[2])
 	if not string.find(_boothlocation.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[2])).Details.Owner.Text, Players.LocalPlayer.DisplayName) then
-		task.wait(4)
+		task.wait(1)
 		if not string.find(_boothlocation.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[2])).Details.Owner.Text, Players.LocalPlayer.DisplayName) then
 			error()
 		end
@@ -1700,7 +1639,7 @@ getgenv().walkToBooth = function()
 		end
 	end
 	Players.LocalPlayer.Character.Humanoid.WalkSpeed = 32
-	local Controls = require(Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule")):GetControls()
+	local Controls = requirex(Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule")):GetControls()
 	Controls:Disable()
 	local atBooth = false
 	workspace.Map.Decoration.Benches:Destroy()
@@ -1736,13 +1675,14 @@ local helidebounce = false
 Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 	local playerWhoDonated
 	sgoalR = sgoalR + (Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
+    local raisedValue = Players.LocalPlayer.leaderstats.Raised.Value
+    local raised = raisedValue - RaisedC
 	hopSet()
 	if Players.LocalPlayer.Character:FindFirstChildWhichIsA('Humanoid').RootPart:FindFirstChild('Spin') and getgenv().settings.spinSet then
-		local raisedValue = Players.LocalPlayer.leaderstats.Raised.Value
 		local humanoid = Players.LocalPlayer.Character:FindFirstChildWhichIsA('Humanoid')
 		local spinPart = humanoid.RootPart:FindFirstChild('Spin')
 		local sSM = getgenv().settings.spinSpeedMultiplier
-		local deltaRaised = raisedValue - RaisedC
+		local deltaRaised = raised
 		local averageDelta = deltaRaised / 3
 		local spinYVelocity = spinPart.AngularVelocity.Y
 		xspin = (averageDelta * sSM) + spinYVelocity
@@ -1753,21 +1693,21 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 			if playerWhoDonated then
 				if getgenv().settings.webhookType == 'New' then
 					pcall(function()
-						webhook(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC, playerWhoDonated.Name)
+						webhook(raised, playerWhoDonated.Name)
 					end)
 				else
 					pcall(function()
-						oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. ' | [A/T]: ' .. tostring(math.floor((Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value) .. ' | Donor: ' .. playerWhoDonated.Name)
+						oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(raised) .. ' | [A/T]: ' .. tostring(math.floor((raised) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value) .. ' | Donor: ' .. playerWhoDonated.Name)
 					end)
 				end
 			else
 				if getgenv().settings.webhookType == 'New' then
 					pcall(function()
-						webhook(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC, "Hi, I'm Crazyblox.")
+						webhook(raised, "Hi, I'm Crazyblox.")
 					end)
 				else
 					pcall(function()
-						oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. ' | [A/T]: ' .. tostring(math.floor((Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value))
+						oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(raised) .. ' | [A/T]: ' .. tostring(math.floor((raised) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value))
 					end)
 				end
 			end
@@ -1782,12 +1722,12 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 	end
 	if getgenv().settings.jumpBoost and not getgenv().settings.highlightSwitch then
 		pcall(function()
-			Players.LocalPlayer.Character.Humanoid.JumpPower = Players.LocalPlayer.Character.Humanoid.JumpPower + (Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
+			Players.LocalPlayer.Character.Humanoid.JumpPower = Players.LocalPlayer.Character.Humanoid.JumpPower + (raised)
 		end)		
 	end
 	pcall(function()
 		if getgenv().settings.gravitySwitch and not getgenv().settings.highlightSwitch then
-			workspace.Gravity = workspace.Gravity - (Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
+			workspace.Gravity = workspace.Gravity - (raised)
 		end
 	end)
 	task.spawn(function()
@@ -1834,7 +1774,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 		djset = true
 		task.spawn(function()
 			if getgenv().settings.jumpsPerRobux == 1 then
-				for i = 1, Players.LocalPlayer.leaderstats.Raised.Value - RaisedC do
+				for i = 1, raised do
 					Players.LocalPlayer.Character.Humanoid:ChangeState('Jumping')
 					repeat
 						task.wait()
@@ -1851,6 +1791,26 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 			djset = false
 		end)
 	end
+    if getgenv().settings.robuxLap then
+        task.spawn(function()
+            twn(Players.LocalPlayer.Character.Humanoid.RootPart,TweenInfo.new(5,Enum.EasingStyle.Linear,Enum.EasingDirection.In),{CFrame = CFrame.new(166.584, 3.47699, 371.398)}):Play()
+            Players.LocalPlayer.Character.Humanoid.WalkSpeed = 50
+            task.wait(6)
+            for _i = 1, raised do
+                for i,v in next, _CFRAMETABLE do
+                    local con
+                    local _mtfinish
+                    char.Humanoid:MoveTo(Vector3.new(unpack(v)))
+                    con = char.Humanoid.MoveToFinished:Connect(function()
+                        _mtfinish = true
+                        con:Disconnect()
+                    end)
+                    repeat task.wait() until _mtfinish == true
+                end 
+            end
+        end)
+        walkToBooth()
+    end
 	if getgenv().settings.highlightSwitch then
 		task.spawn(function()
 			_HIGHLIGHTLOADER.HLStart(Players.LocalPlayer.Character, Players.LocalPlayer.leaderstats.Raised.Value - RaisedC, (playerWhoDonated and playerWhoDonated or fetchNearPlr() or nil))
