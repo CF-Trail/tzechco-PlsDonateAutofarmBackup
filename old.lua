@@ -25,7 +25,7 @@ if not workspace then
 end
 
 --skidded!!! ty tvk1308
-for k, v in pairs(getgc(true)) do
+--[[for k, v in pairs(getgc(true)) do
 	if pcall(function()
 		return rawget(v, "indexInstance")
 	end) and type(rawget(v, "indexInstance")) == "table" and  (rawget(v, "indexInstance"))[1] == "kick" then
@@ -36,7 +36,7 @@ for k, v in pairs(getgc(true)) do
 			end
 		}
 	end
-end
+end]]
 
 local xspin = 0
 local nx = 0
@@ -90,123 +90,31 @@ local fonts = {
 	"Ubuntu"
 }
 
-local RainbowHexColors = {
-	"#FF0000",
-	"#FF7F00",
-	"#FFFF00",
-	"#00FF00",
-	"#0000FF",
-	"#4B0082",
-	"#9400D3"
-}
-local BetterRainbowColorHex = {
-	"#FF0000",
-	"#FF1100",
-	"#FF2300",
-	"#FF3400",
-	"#FF4600",
-	"#FF5700",
-	"#FF6900",
-	"#FF7B00",
-	"#FF8C00",
-	"#FF9E00",
-	"#FFAF00",
-	"#FFC100",
-	"#FFD200",
-	"#FFE400",
-	"#FFF500",
-	"#F5FF00",
-	"#E3FF00",
-	"#D1FF00",
-	"#BFFF00",
-	"#ADFF00",
-	"#9CFF00",
-	"#8AFF00",
-	"#78FF00",
-	"#66FF00",
-	"#54FF00",
-	"#42FF00",
-	"#31FF00",
-	"#1FFF00",
-	"#00FF0F",
-	"#00FF21",
-	"#00FF32",
-	"#00FF44",
-	"#00FF55",
-	"#00FF67",
-	"#00FF78",
-	"#00FF8A",
-	"#00FF9B",
-	"#00FFAD",
-	"#00FFBE",
-	"#00FFD0",
-	"#00FFE1",
-	"#00FFF3",
-	"#00F5FF",
-	"#00E3FF",
-	"#00D1FF",
-	"#00BFFF",
-	"#00ADFF",
-	"#009CFF",
-	"#008AFF",
-	"#0078FF",
-	"#0066FF",
-	"#0054FF",
-	"#0042FF",
-	"#0031FF",
-	"#001FFF",
-	"#0000FF",
-	"#0F00FF",
-	"#2100FF",
-	"#3200FF",
-	"#4400FF",
-	"#5500FF",
-	"#6700FF",
-	"#7800FF",
-	"#8A00FF",
-	"#9B00FF",
-	"#AD00FF",
-	"#BE00FF",
-	"#D000FF",
-	"#E100FF",
-	"#F300FF",
-	"#FF00F5",
-	"#FF00E3",
-	"#FF00D1",
-	"#FF00BF",
-	"#FF00AD",
-	"#FF009C",
-	"#FF008A",
-	"#FF0078",
-	"#FF0066",
-	"#FF0054",
-	"#FF0042",
-	"#FF0031",
-	"#FF001F"
-}
 if getgenv().loadedRR then
 	return
 else
 	getgenv().loadedRR = true
 end
-task.wait()
-  --Anti-AFK
 
+task.wait()
+
+--Anti-AFK
 local connections = getconnections or get_signal_cons or nil
 task.spawn(function()
-	if connections and not identifyexecutor():find('Codex') then
+	if --[[connections and not identifyexecutor():find('Codex')]] false then
 		for a, b in next, connections(Players.LocalPlayer.Idled) do
 			b:Disable()
 		end
 	else
-		local bb = game:service "VirtualUser"
-		Players.LocalPlayer.Idled:connect(function()
-		        bb:CaptureController()
-		        bb:ClickButton2(Vector2.new())
+		local bb = game:GetService("VirtualUser")
+		Players.LocalPlayer.Idled:Connect(function()
+		    bb:CaptureController()
+		    bb:ClickButton2(Vector2.new())
 		end)
 	end
 end)
 
+local _CFRAMETABLE = {{166.584, 3.47699, 371.398},{228.765, 3.57067, 332.55},{225.878, 3.57066, 274.96},{169.654, 4.11481, 232.826},{102.625, 3.57066, 274.941},{109.353, 3.57066, 351.28}, {166.584, 3.47699, 371.399}}
 local unclaimed = {}
 local counter = 0
 local mainCheckPosition = Vector3.new(165.161,0,311.636)
@@ -359,7 +267,8 @@ local sNames = {
 	'helicopterEnabled',
 	'friendHop',
 	'autoReplyNoRespond',
-	'antiBotServers'
+	'antiBotServers',
+    'robuxLap'
 }
 
 local positionX = (Players.LocalPlayer.Character or Players.LocalPlayer.CharacterAdded:Wait()):WaitForChild('HumanoidRootPart').Position
@@ -381,22 +290,22 @@ local sValues = {
 		"tysm!"
 	},
 	false,
-	"✅ 1 ROBUX DONATED = $JPR JUMPS ✅",
+	"✅ 1R$ = +1 SPIN SPEED ✅",
 	false,
 	"your text here",
 	"#ffffff",
 	true,
 	true,
 	{
-		"1R$ = 1 JUMP",
-		"Jumping for donations!"
+		"1R$ = +1 SPIN SPEED",
+		"Spinning for donations!"
 	},
 	300,
 	60,
 	false,
 	3,
 	false,
-	true,
+	false,
 	false,
 	false,
 	3,
@@ -406,7 +315,7 @@ local sValues = {
 	false,
 	1,
 	true,
-	false,
+	true,
 	false,
 	1,
 	false,
@@ -453,7 +362,8 @@ local sValues = {
 	false,
 	true,
 	false,
-	false
+	false,
+    false
 }
 
   --Load Settings
@@ -989,7 +899,7 @@ local chatTab = Window:AddTab("Chat")
 local webhookTab = Window:AddTab("Webhook")
 local serverHopTab = Window:AddTab("Server")
 local otherTab = Window:AddTab("Other")
-local otherTab2 = Window:AddTab("Other 2")
+local otherTab2 = Window:AddTab("AR")
 local supportTab = Window:AddTab("Support")
 local TextService = cloneref(game:GetService("TextService"))
 local sgoalR = 0
@@ -1528,6 +1438,15 @@ local heliToggle = otherTab:AddSwitch('Helicopter On-Donation', function(bool)
 	saveSettings()
 end)
 
+local lapToggle = otherTab:AddSwitch('1R$ = 1 lap across the map', function(bool)
+    if settingsLock then
+        return
+    end
+    getgenv().settings.robuxLap = bool
+    saveSettings()
+end)
+
+lapToggle:Set(getgenv().settings.robuxLap)
 heliToggle:Set(getgenv().settings.helicopterEnabled)
 otherTab:AddLabel("-----------------------")
 
@@ -1762,16 +1681,18 @@ end
 local RaisedC = Players.LocalPlayer.leaderstats.Raised.value
 local djset = false
 local helidebounce = false
+local lapdebounce = false
 Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 	local playerWhoDonated
 	sgoalR = sgoalR + (Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
+    local raisedValue = Players.LocalPlayer.leaderstats.Raised.Value
+    local raised = raisedValue - RaisedC
 	hopSet()
 	if Players.LocalPlayer.Character:FindFirstChildWhichIsA('Humanoid').RootPart:FindFirstChild('Spin') and getgenv().settings.spinSet then
-		local raisedValue = Players.LocalPlayer.leaderstats.Raised.Value
 		local humanoid = Players.LocalPlayer.Character:FindFirstChildWhichIsA('Humanoid')
 		local spinPart = humanoid.RootPart:FindFirstChild('Spin')
 		local sSM = getgenv().settings.spinSpeedMultiplier
-		local deltaRaised = raisedValue - RaisedC
+		local deltaRaised = raised
 		local averageDelta = deltaRaised / 3
 		local spinYVelocity = spinPart.AngularVelocity.Y
 		xspin = (averageDelta * sSM) + spinYVelocity
@@ -1782,21 +1703,21 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 			if playerWhoDonated then
 				if getgenv().settings.webhookType == 'New' then
 					pcall(function()
-						webhook(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC, playerWhoDonated.Name)
+						webhook(raised, playerWhoDonated.Name)
 					end)
 				else
 					pcall(function()
-						oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. ' | [A/T]: ' .. tostring(math.floor((Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value) .. ' | Donor: ' .. playerWhoDonated.Name)
+						oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(raised) .. ' | [A/T]: ' .. tostring(math.floor((raised) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value) .. ' | Donor: ' .. playerWhoDonated.Name)
 					end)
 				end
 			else
 				if getgenv().settings.webhookType == 'New' then
 					pcall(function()
-						webhook(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC, "Hi, I'm Crazyblox.")
+						webhook(raised, "Hi, I'm Crazyblox.")
 					end)
 				else
 					pcall(function()
-						oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) .. ' | [A/T]: ' .. tostring(math.floor((Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value))
+						oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(raised) .. ' | [A/T]: ' .. tostring(math.floor((raised) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value))
 					end)
 				end
 			end
@@ -1811,12 +1732,12 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 	end
 	if getgenv().settings.jumpBoost and not getgenv().settings.highlightSwitch then
 		pcall(function()
-			Players.LocalPlayer.Character.Humanoid.JumpPower = Players.LocalPlayer.Character.Humanoid.JumpPower + (Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
+			Players.LocalPlayer.Character.Humanoid.JumpPower = Players.LocalPlayer.Character.Humanoid.JumpPower + (raised)
 		end)		
 	end
 	pcall(function()
 		if getgenv().settings.gravitySwitch and not getgenv().settings.highlightSwitch then
-			workspace.Gravity = workspace.Gravity - (Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
+			workspace.Gravity = workspace.Gravity - (raised)
 		end
 	end)
 	task.spawn(function()
@@ -1863,7 +1784,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 		djset = true
 		task.spawn(function()
 			if getgenv().settings.jumpsPerRobux == 1 then
-				for i = 1, Players.LocalPlayer.leaderstats.Raised.Value - RaisedC do
+				for i = 1, raised do
 					Players.LocalPlayer.Character.Humanoid:ChangeState('Jumping')
 					repeat
 						task.wait()
@@ -1880,6 +1801,29 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 			djset = false
 		end)
 	end
+    if getgenv().settings.robuxLap then
+        lapdebounce = true
+        task.spawn(function()
+            twn(Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid').RootPart,TweenInfo.new(5,Enum.EasingStyle.Linear,Enum.EasingDirection.In),{CFrame = CFrame.new(166.584, 3.47699, 371.398)}):Play()
+            Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid').WalkSpeed = 50
+            task.wait(6)
+            for _i = 1, raised do
+                for i,v in next, _CFRAMETABLE do
+                    local con
+                    local _mtfinish
+                    Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid'):MoveTo(Vector3.new(unpack(v)))
+                    con = Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid').MoveToFinished:Connect(function()
+                        _mtfinish = true
+                        con:Disconnect()
+                    end)
+                    repeat task.wait() until _mtfinish == true
+                end 
+            end
+            task.wait(1)
+            getgenv().walkToBooth()
+            lapdebounce = false
+        end)
+    end
 	if getgenv().settings.highlightSwitch then
 		task.spawn(function()
 			_HIGHLIGHTLOADER.HLStart(Players.LocalPlayer.Character, Players.LocalPlayer.leaderstats.Raised.Value - RaisedC, (playerWhoDonated and playerWhoDonated or fetchNearPlr() or nil))
