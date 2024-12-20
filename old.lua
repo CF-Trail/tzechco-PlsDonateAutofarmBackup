@@ -1318,14 +1318,14 @@ local anonymousMode = mainTab:AddSwitch("Anonymous Mode", function(bool)
 	end
 	getgenv().settings.AnonymousMode = bool
 	saveSettings()
-	require(game:GetService('ReplicatedStorage').Remotes).Event('SetAnonymousLive'):FireServer(not bool)
+	require(game:GetService('ReplicatedStorage').Remotes).Event('SetAnonymousLive'):FireServer(bool)
 end)
 
 anonymousMode:Set(getgenv().settings.AnonymousMode)
 
 if getgenv().settings.AnonymousMode then
 	task.delay(5,function()
-		require(game:GetService('ReplicatedStorage').Remotes).Event('SetAnonymousLive'):FireServer(false)
+		require(game:GetService('ReplicatedStorage').Remotes).Event('SetAnonymousLive'):FireServer(true)
 	end)
 end
 
