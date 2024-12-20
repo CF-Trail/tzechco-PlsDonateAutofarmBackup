@@ -893,6 +893,7 @@ local Window = library:AddWindow("@szze .gg/e5Tg9SFnrq | if you (can) use solara
 	toggle_key = Enum.KeyCode.RightShift,
 	can_resize = true,
 })
+
 local boothTab = Window:AddTab("Booth")
 local mainTab = Window:AddTab("Main")
 local chatTab = Window:AddTab("Chat")
@@ -902,8 +903,8 @@ local otherTab2 = Window:AddTab("AR")
 local supportTab = Window:AddTab("Support")
 local TextService = cloneref(game:GetService("TextService"))
 local sgoalR = 0
-  
-  --Booth Settings
+
+--Booth Settings
 local textUpdateToggle = boothTab:AddSwitch("Text Update", function(bool)
 	if settingsLock then
 		return
@@ -1312,12 +1313,19 @@ end)
 render:Set(getgenv().settings.render)
 
 local anonymousMode = mainTab:AddSwitch("Anonymous Mode", function(bool)
+	if settingsLock then
+		return
+	end
 	getgenv().settings.AnonymousMode = bool
 	saveSettings()
 	require(game:GetService('ReplicatedStorage').Remotes).Event('SetAnonymousLive'):FireServer(not bool)
 end)
 
 anonymousMode:Set(getgenv().settings.AnonymousMode)
+
+if getgenv().settings.AnonymousMode then
+	require(game:GetService('ReplicatedStorage').Remotes).Event('SetAnonymousLive'):FireServer(false)
+end
 
 local jumpswitch = mainTab:AddSwitch("Donation Jump", function(bool)
 	if settingsLock then
