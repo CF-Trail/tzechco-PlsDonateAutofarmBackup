@@ -1339,9 +1339,9 @@ local _HLTOGGLE = mainTab:AddSwitch('Sing a donator\'s choice song on donation',
 	end)
 end)
 
-mainTab:Set(getgenv().settings.highlightSwitch)
+_HLTOGGLE:Set(getgenv().settings.highlightSwitch)
 
-local autoReply = mainTab2:AddSwitch("Auto Reply [AR]", function(bool)
+local autoReply = otherTab2:AddSwitch("Auto Reply [AR]", function(bool)
 	if settingsLock then
 		return
 	end
@@ -1350,7 +1350,7 @@ local autoReply = mainTab2:AddSwitch("Auto Reply [AR]", function(bool)
 end)
 autoReply:Set(getgenv().settings.autoNearReply)
 
-local noRespond = mainTab2:AddSwitch("[AR] Skip Unrecognized Messages", function(bool)
+local noRespond = otherTab2:AddSwitch("[AR] Skip Unrecognized Messages", function(bool)
 	if settingsLock then
 		return
 	end
