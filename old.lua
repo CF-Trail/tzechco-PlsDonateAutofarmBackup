@@ -1324,7 +1324,9 @@ end)
 anonymousMode:Set(getgenv().settings.AnonymousMode)
 
 if getgenv().settings.AnonymousMode then
-	require(game:GetService('ReplicatedStorage').Remotes).Event('SetAnonymousLive'):FireServer(false)
+	task.delay(5,function()
+		require(game:GetService('ReplicatedStorage').Remotes).Event('SetAnonymousLive'):FireServer(false)
+	end)
 end
 
 local jumpswitch = mainTab:AddSwitch("Donation Jump", function(bool)
