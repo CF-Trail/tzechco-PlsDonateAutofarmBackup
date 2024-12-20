@@ -940,7 +940,7 @@ local hexBox = boothTab:AddTextBox("Hex Codes Only", function(text)
 	if success and string.find(text, "#") then
 		getgenv().settings.hexBox = text
 		saveSettings()
-		update()
+		updateBoothText()
 	end
 end,
   {
@@ -1332,9 +1332,9 @@ local _HLTOGGLE = mainTab:AddSwitch('Sing a donator\'s choice song on donation',
 	getgenv().settings.highlightSwitch = bool
 	pcall(function()
 	     if bool then
-		     _HIGHLIGHTLOADER.HLSetup(Players.LocalPlayer.Character)
+		    _HIGHLIGHTLOADER.HLSetup(Players.LocalPlayer.Character)
 	     else
-	             _HIGHLIGHTLOADER.HLUnload(Players.LocalPlayer.Character)
+	        _HIGHLIGHTLOADER.HLUnload(Players.LocalPlayer.Character)
 	     end
 	end)
 end)
@@ -1357,6 +1357,7 @@ local noRespond = otherTab2:AddSwitch("[AR] Skip Unrecognized Messages", functio
 	getgenv().settings.autoReplyNoRespond = bool
 	saveSettings()
 end)
+
 noRespond:Set(getgenv().settings.autoReplyNoRespond)
 
 --[[task.spawn(function()
