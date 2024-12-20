@@ -886,7 +886,7 @@ local function checkForBots()
 	end
 end
 
-local Window = library:AddWindow("@szze | if you (can) use solara/xeno, please msg me",
+local Window = library:AddWindow("@szze .gg/e5Tg9SFnrq | if you (can) use solara/xeno, please msg me",
   {
 	main_color = Color3.fromRGB(80, 80, 80),
 	min_size = Vector2.new(560, 563),
@@ -894,11 +894,10 @@ local Window = library:AddWindow("@szze | if you (can) use solara/xeno, please m
 	can_resize = true,
 })
 local boothTab = Window:AddTab("Booth")
-local highlightTab = Window:AddTab("Highlights")
+local mainTab = Window:AddTab("Main")
 local chatTab = Window:AddTab("Chat")
 local webhookTab = Window:AddTab("Webhook")
 local serverHopTab = Window:AddTab("Server")
-local otherTab = Window:AddTab("Other")
 local otherTab2 = Window:AddTab("AR")
 local supportTab = Window:AddTab("Support")
 local TextService = cloneref(game:GetService("TextService"))
@@ -930,11 +929,11 @@ end,
 
 textUpdateDelay.Text = 'Text Update Delay: ' .. getgenv().settings.textUpdateDelay .. 'S'
 
-boothTab:AddLabel("Text Color:")
 local hexBox = boothTab:AddTextBox("Hex Codes Only", function(text)
 	if settingsLock then
 		return
 	end
+	text = text:gsub('Text Color Hex: ','')
 	local success = pcall(function()
 		return Color3.fromHex(text)
 	end)
@@ -947,10 +946,10 @@ end,
   {
 	["clear"] = false
 })
-hexBox.Text = getgenv().settings.hexBox
+hexBox.Text = 'Text Color Hex: ' .. getgenv().settings.hexBox
 
-boothTab:AddLabel("Goal Increase:")
 local goalBox = boothTab:AddTextBox("Numbers Only", function(text)
+	text = text:gsub('Robux Goal: ','')
 	if tonumber(text) then
 		getgenv().settings.goalBox = tonumber(text)
 		saveSettings()
@@ -959,7 +958,7 @@ end,
   {
 	["clear"] = false
 })
-goalBox.Text = getgenv().settings.goalBox
+goalBox.Text = 'Robux Goal: ' .. getgenv().settings.goalBox
 boothTab:AddLabel("Custom Booth Text:")
 local customBoothText = boothTab:AddConsole({
 	["y"] = 50,
@@ -968,8 +967,10 @@ local customBoothText = boothTab:AddConsole({
 
 boothTab:AddLabel('$C = current | $G = goal | $JPR = jumps per robux')
 
-boothTab:AddLabel("Font:")
-local fontDropdown = boothTab:AddDropdown("[ " .. getgenv().settings.fontFace .. " ]", function(t)
+local fontDropdown = boothTab:AddDropdown("Font: [ " .. getgenv().settings.fontFace .. " ]", function(t)
+	if settingsLock then
+	     return
+	end
 	getgenv().settings.fontFace = t
 	saveSettings()
 	updateBoothText()
@@ -996,8 +997,7 @@ boothTab:AddButton("Update", function()
 	end
 end)
 
-boothTab:AddLabel("Standing Position:")
-local standingPos = boothTab:AddDropdown("[ " .. getgenv().settings.standingPosition .. " ]", function(t)
+local standingPos = boothTab:AddDropdown("Standing Position: [ " .. getgenv().settings.standingPosition .. " ]", function(t)
 	getgenv().settings.standingPosition = t
 	saveSettings()
 	if t == "Front" then
@@ -1015,30 +1015,6 @@ standingPos:Add('Front')
 standingPos:Add('Left')
 standingPos:Add('Right')
 standingPos:Add('Behind')
-
---highlights
-highlightTab:AddLabel("What are highlights? See in Discord")
-highlightTab:AddLabel('(or join manually if your executor sucks: discord.gg/SaGSHTVmKM)')
-
-highlightTab:AddButton("Copy Invite", function()
-	local _clipfunc = setclipboard or toclipboard
-	_clipfunc('https://discord.gg/SaGSHTVmKM')
-end)
-
-highlightTab:AddLabel('-------------------------------------')
-
-local _HLTOGGLE = highlightTab:AddSwitch('Sing a song on donation [HIGHLIGHT]', function(bool)
-	getgenv().settings.highlightSwitch = bool
-	pcall(function()
-	     if bool then
-		     _HIGHLIGHTLOADER.HLSetup(Players.LocalPlayer.Character)
-	     else
-	             _HIGHLIGHTLOADER.HLUnload(Players.LocalPlayer.Character)
-	     end
-	end)
-end)
-
-_HLTOGGLE:Set(getgenv().settings.highlightSwitch)
 
 --Chat Settings
 local autoThanks = chatTab:AddSwitch("Auto Thank You", function(bool)
@@ -1161,6 +1137,20 @@ end,
 })
 webhookBox.Text = getgenv().settings.webhookBox
 webhookTab:AddLabel('Press Enter to Save')
+
+
+local TB = webhookTab:AddTextBox("Minimum ping dono amount", function(text)
+	local x = text:gsub('Minimum ping dono amount: ', '')
+	if tonumber(x) then
+		getgenv().settings.pingAboveDono = tonumber(x);
+		saveSettings()
+	end
+end,
+	{
+	["clear"] = false
+})
+TB.Text = 'Minimum ping dono amount: ' .. getgenv().settings.pingAboveDono
+
 webhookTab:AddButton("Test Webhook", function()
 	if getgenv().settings.webhookBox:gsub(" ","") ~= "" then
 		oldWebhook("Webhook works!")
@@ -1169,9 +1159,7 @@ end)
 
  -- looks better
 
-webhookTab:AddLabel('Webhook Type: ')
-
-local webhookType = webhookTab:AddDropdown("[ " .. getgenv().settings.webhookType .. " ]", function(t)
+local webhookType = webhookTab:AddDropdown("Webhook Type: [ " .. getgenv().settings.webhookType .. " ]", function(t)
 	if t == 'New' then
 		getgenv().settings.webhookType = 'New'
 	else
@@ -1182,18 +1170,6 @@ end)
   
 webhookType:Add('New')
 webhookType:Add('Old')
-
-local TB = webhookTab:AddTextBox("Minimum ping dono amount", function(text)
-	local x = text:gsub('Minimum ping dono amount', '')
-	if tonumber(x) then
-		getgenv().settings.pingAboveDono = tonumber(x);
-		saveSettings()
-	end
-end,
-	{
-	["clear"] = false
-})
-TB.Text = 'Minimum ping dono amount: ' .. getgenv().settings.pingAboveDono
 
 local serverHopToggle = serverHopTab:AddSwitch("Auto Server Hop", function(bool)
 	if settingsLock then
@@ -1305,8 +1281,7 @@ serverHopDelaySL.Text = 'ServerHop Delay: ' .. getgenv().settings.serverHopDelay
 serverHopTab:AddLabel("Server hop timer resets after donation")
 
   --Other tab
-otherTab:AddLabel('Dance:')
-local danceDropdown = otherTab:AddDropdown("[ " .. getgenv().settings.danceChoice .. " ]", function(object)
+local danceDropdown = mainTab:AddDropdown("Dance: [ " .. getgenv().settings.danceChoice .. " ]", function(object)
 	if settingsLock then
 		return
 	end
@@ -1325,7 +1300,7 @@ danceDropdown:Add("Disabled")
 danceDropdown:Add("1")
 danceDropdown:Add("2")
 danceDropdown:Add("3")
-local render = otherTab:AddSwitch("Disable Rendering", function(bool)
+local render = mainTab:AddSwitch("Disable Rendering", function(bool)
 	getgenv().settings.render = bool
 	saveSettings()
 	if bool then
@@ -1335,7 +1310,16 @@ local render = otherTab:AddSwitch("Disable Rendering", function(bool)
 	end
 end)
 render:Set(getgenv().settings.render)
-local jumpswitch = otherTab:AddSwitch("Donation Jump", function(bool)
+
+local anonymousMode = mainTab:AddSwitch("Anonymous Mode", function(bool)
+	getgenv().settings.AnonymousMode = bool
+	saveSettings()
+	require(game:GetService('ReplicatedStorage').Remotes).Event('SetAnonymousLive'):FireServer(not bool)
+end)
+
+anonymousMode:Set(getgenv().settings.AnonymousMode)
+
+local jumpswitch = mainTab:AddSwitch("Donation Jump", function(bool)
 	if settingsLock then
 		return
 	end
@@ -1343,7 +1327,21 @@ local jumpswitch = otherTab:AddSwitch("Donation Jump", function(bool)
 	saveSettings()
 end)
 jumpswitch:Set(getgenv().settings.donationJump)
-local autoReply = otherTab:AddSwitch("Auto Reply [AR]", function(bool)
+
+local _HLTOGGLE = mainTab:AddSwitch('Sing a donator\'s choice song on donation', function(bool)
+	getgenv().settings.highlightSwitch = bool
+	pcall(function()
+	     if bool then
+		     _HIGHLIGHTLOADER.HLSetup(Players.LocalPlayer.Character)
+	     else
+	             _HIGHLIGHTLOADER.HLUnload(Players.LocalPlayer.Character)
+	     end
+	end)
+end)
+
+mainTab:Set(getgenv().settings.highlightSwitch)
+
+local autoReply = mainTab2:AddSwitch("Auto Reply [AR]", function(bool)
 	if settingsLock then
 		return
 	end
@@ -1352,7 +1350,7 @@ local autoReply = otherTab:AddSwitch("Auto Reply [AR]", function(bool)
 end)
 autoReply:Set(getgenv().settings.autoNearReply)
 
-local noRespond = otherTab:AddSwitch("[AR] Skip Unrecognized Messages", function(bool)
+local noRespond = mainTab2:AddSwitch("[AR] Skip Unrecognized Messages", function(bool)
 	if settingsLock then
 		return
 	end
@@ -1372,7 +1370,7 @@ end)]]
 
 local bclaimed = false
 
-local spinToggle = otherTab:AddSwitch('Spin [1R$ = +1 speed]', function(bool)
+local spinToggle = mainTab:AddSwitch('Spin [1R$ = +1 speed]', function(bool)
 	getgenv().settings.spinSet = bool
 	if getgenv().settings.spinSet then
 		local root = Players.LocalPlayer.Character.Humanoid.RootPart
@@ -1397,7 +1395,7 @@ local spinToggle = otherTab:AddSwitch('Spin [1R$ = +1 speed]', function(bool)
 	saveSettings()
 end)
 	
-local jumpSwitcher = otherTab:AddSwitch('1R$ = +1 jump power', function(bool)
+local jumpSwitcher = mainTab:AddSwitch('1R$ = +1 jump power', function(bool)
 	if settingsLock then
 		return
 	end
@@ -1407,7 +1405,7 @@ end)
 
 jumpSwitcher:Set(getgenv().settings.jumpBoost)
 	
-local gravityToggle = otherTab:AddSwitch('Gravity [1R$ = -1 gravity]', function(bool)
+local gravityToggle = mainTab:AddSwitch('Gravity [1R$ = -1 gravity]', function(bool)
 	if settingsLock then
 		return
 	end
@@ -1417,7 +1415,7 @@ end)
 
 gravityToggle:Set(getgenv().settings.gravitySwitch)
 
-local heliToggle = otherTab:AddSwitch('Helicopter On-Donation', function(bool)
+local heliToggle = mainTab:AddSwitch('Helicopter On-Donation', function(bool)
 	getgenv().settings.helicopterEnabled = bool
 	local character = Players.LocalPlayer.Character
 	local root = character:FindFirstChildOfClass('Humanoid').RootPart
@@ -1438,7 +1436,7 @@ local heliToggle = otherTab:AddSwitch('Helicopter On-Donation', function(bool)
 	saveSettings()
 end)
 
-local lapToggle = otherTab:AddSwitch('1R$ = 1 lap across the map', function(bool)
+local lapToggle = mainTab:AddSwitch('1R$ = 1 lap across the map', function(bool)
     if settingsLock then
         return
     end
@@ -1448,9 +1446,9 @@ end)
 
 lapToggle:Set(getgenv().settings.robuxLap)
 heliToggle:Set(getgenv().settings.helicopterEnabled)
-otherTab:AddLabel("-----------------------")
+mainTab:AddLabel("-----------------------")
 
-local jumpsPerRB = otherTab:AddTextBox("Jumps Per Robux", function(text)
+local jumpsPerRB = mainTab:AddTextBox("Jumps Per Robux", function(text)
 	if settingsLock or not tonumber(text) then
 		return
 	end
@@ -1463,7 +1461,7 @@ end,
 
 jumpsPerRB.Text = 'Jumps Per Robux: ' .. getgenv().settings.jumpsPerRobux
 
-local spinMultiplier = otherTab:AddTextBox("Spin Speed Multiplier", function(text)
+local spinMultiplier = mainTab:AddTextBox("Spin Speed Multiplier", function(text)
 	if settingsLock or not tonumber(text) then
 		return
 	end
@@ -1478,7 +1476,7 @@ spinMultiplier.Text = 'Spin Speed Multiplier: ' .. getgenv().settings.spinSpeedM
 spinToggle:Set(getgenv().settings.spinSet)
 
 if setfpscap and type(setfpscap) == "function" then
-	local fpsLimit = otherTab:AddTextBox("FPS Limit", function(text)
+	local fpsLimit = mainTab:AddTextBox("FPS Limit", function(text)
 	if not tonumber(text) or tonumber(text) < 5 then
 		return
 	end
@@ -1492,7 +1490,7 @@ if setfpscap and type(setfpscap) == "function" then
      setfpscap(getgenv().settings.fpsLimit)
 end
 
-otherTab:AddButton("Test Donation", function()
+mainTab:AddButton("Test Donation", function()
 	Players.LocalPlayer.leaderstats.Raised.Value += 6
 end)
 
@@ -1651,7 +1649,9 @@ getgenv().walkToBooth = function()
 	local Controls = requirex(Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule")):GetControls()
 	Controls:Disable()
 	local atBooth = false
-	workspace.Map.Decoration.Benches:Destroy()
+	if workspace.Map.Decoration:FindFirstChild('Benches') then
+		workspace.Map.Decoration.Benches:Destroy()		
+	end
 	Players.LocalPlayer.Character.Humanoid:MoveTo(boothPos.Position)
 	Players.LocalPlayer.Character.Humanoid.MoveToFinished:Connect(function(reached)
 		atBooth = true
@@ -1802,6 +1802,9 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 		end)
 	end
     if getgenv().settings.robuxLap then
+		if lapdebounce then
+			return
+		end
         lapdebounce = true
         task.spawn(function()
             twn(Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid').RootPart,TweenInfo.new(5,Enum.EasingStyle.Linear,Enum.EasingDirection.In),{CFrame = CFrame.new(166.584, 3.47699, 371.398)}):Play()
