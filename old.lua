@@ -886,7 +886,7 @@ local function checkForBots()
 	end
 end
 
-local Window = library:AddWindow("@szze .gg/e5Tg9SFnrq | if you (can) use solara/xeno, please msg me",
+local Window = library:AddWindow("@szze .gg/e5Tg9SFnrq | Merry christmas! 🎄 Spend time with your family!",
   {
 	main_color = Color3.fromRGB(80, 80, 80),
 	min_size = Vector2.new(560, 563),
