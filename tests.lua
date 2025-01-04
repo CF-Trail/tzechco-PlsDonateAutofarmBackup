@@ -8,6 +8,8 @@ repeat
 	task.wait()
 until game:IsLoaded()
 
+task.wait(3) -- for remotes
+
   --Stops script if on a different game
 if game.PlaceId ~= 8737602449 and game.PlaceId ~= 8943844393 then
 	return
@@ -36,6 +38,13 @@ end
 if not Remotes then
 	return Players.LocalPlayer:Kick("Did not find 'Remotes' ModuleScript")
 end
+
+local remoteHolder = Remotes:GetChildren()
+local remoteTable = {
+    ['ClaimBooth'] = remoteHolder[53],
+    ['SetCustomization'] = remoteHolder[66],
+    ['SetAnonymousLive'] = remoteHolder[70]
+}
 
 --skidded!!! ty tvk1308
 --[[for k, v in pairs(getgc(true)) do
@@ -664,7 +673,7 @@ function updateBoothText()
 						nx = 8
 					end
 				end
-				Remotes.Event("SetCustomization"):FireServer({
+				remoteTable['SetCustomization']:FireServer({
 				        ["textFont"] = Enum.Font[getgenv().settings.fontFace],
 				        ["richText"] = true,
 				        ["textFont"] = Enum.Font[getgenv().settings.fontFace],
@@ -680,7 +689,7 @@ function updateBoothText()
 				}, "booth")
 				task.wait(3)
 			end
-				Remotes.Event("SetCustomization"):FireServer({
+			    remoteTable['SetCustomization']:FireServer({
 				        ["textFont"] = Enum.Font[getgenv().settings.fontFace],
 				        ["richText"] = true,
 				        ["textFont"] = Enum.Font[getgenv().settings.fontFace],
@@ -899,7 +908,7 @@ local function checkForBots()
 	end
 end
 
-local Window = library:AddWindow("@szze .gg/e5Tg9SFnrq | if you (can) use solara/xeno, please msg me",
+local Window = library:AddWindow("@szze .gg/e5Tg9SFnrq | ччрчрччччрипитами... бiч",
   {
 	main_color = Color3.fromRGB(80, 80, 80),
 	min_size = Vector2.new(560, 563),
@@ -1331,14 +1340,14 @@ local anonymousMode = mainTab:AddSwitch("Anonymous Mode", function(bool)
 	end
 	getgenv().settings.AnonymousMode = bool
 	saveSettings()
-	Remotes.Event('SetAnonymousLive'):FireServer(bool)
+	Remotes['SetAnonymousLive']:FireServer(bool)
 end)
 
 anonymousMode:Set(getgenv().settings.AnonymousMode)
 
 if getgenv().settings.AnonymousMode then
 	task.delay(5,function()
-		Remotes.Event('SetAnonymousLive'):FireServer(true)
+		Remotes['SetAnonymousLive']:FireServer(true)
 	end)
 end
 
@@ -1635,7 +1644,7 @@ if not unclaimed[2] then
 end
   --Claim booth function
 local function boothclaim()
-	Remotes.Event("ClaimBooth"):InvokeServer(unclaimed[2])
+	remoteTable['ClaimBooth']:InvokeServer(unclaimed[2])
 	if not string.find(_boothlocation.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[2])).Details.Owner.Text, Players.LocalPlayer.DisplayName) then
 		task.wait(1)
 		if not string.find(_boothlocation.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[2])).Details.Owner.Text, Players.LocalPlayer.DisplayName) then
