@@ -31,7 +31,7 @@ repeat task.wait() until ReplicatedStorage:FindFirstChild('Remotes')
 
 for i,v in next, ReplicatedStorage:GetChildren() do
 	if v:IsA('ModuleScript') and v.Name == 'Remotes' then
-		Remotes = require(v)
+		Remotes = v
 	end
 end
 
@@ -1340,14 +1340,14 @@ local anonymousMode = mainTab:AddSwitch("Anonymous Mode", function(bool)
 	end
 	getgenv().settings.AnonymousMode = bool
 	saveSettings()
-	Remotes['SetAnonymousLive']:FireServer(bool)
+	remoteTable['SetAnonymousLive']:FireServer(bool)
 end)
 
 anonymousMode:Set(getgenv().settings.AnonymousMode)
 
 if getgenv().settings.AnonymousMode then
 	task.delay(5,function()
-		Remotes['SetAnonymousLive']:FireServer(true)
+		remoteTable['SetAnonymousLive']:FireServer(true)
 	end)
 end
 
