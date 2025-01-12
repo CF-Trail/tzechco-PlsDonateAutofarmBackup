@@ -1775,7 +1775,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 			task.wait(1)
 			local C_OLDPOS = workspace['_HIGHLIGHT.CF'].Position
 			local _TWN2 = twn(workspace['_HIGHLIGHT.CF'], TweenInfo.new(10, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
-				CFrame = CFrame.new(C_OLDPOS + Vector3.new(0, 70, 0))
+				CFrame = CFrame.new(C_OLDPOS + Vector3.new(0, raised * 5, 0))
 			})
 			local _TWN3 = twn(workspace['_HIGHLIGHT.CF'], TweenInfo.new(10, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
 				CFrame = CFrame.new(C_OLDPOS)
