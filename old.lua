@@ -886,7 +886,7 @@ local function checkForBots()
 	end
 end
 
-local Window = library:AddWindow(".gg/e5Tg9SFnrq no longer </3",
+local Window = library:AddWindow("@szze // legit (!) rivals players pls dm",
   {
 	main_color = Color3.fromRGB(80, 80, 80),
 	min_size = Vector2.new(560, 563),
