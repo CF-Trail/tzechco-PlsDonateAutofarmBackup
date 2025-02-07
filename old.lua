@@ -794,7 +794,7 @@ local function webhook(raised, donor)
 			},
 		},
 		["footer"] = {
-			["text"] = "made by @szze / https://discord.gg/e5Tg9SFnrq",
+			["text"] = "made by @szze / https://discord.gg/yrQbdfhuqd",
 		},
 		["timestamp"] = string.format("%d-%d-%dT%02d:%02d:%02dZ", a.year, a.month, a.day, a.hour, a.min, a.sec)
 	}
