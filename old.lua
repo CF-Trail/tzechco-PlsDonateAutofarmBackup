@@ -1441,6 +1441,7 @@ local heliToggle = mainTab:AddSwitch('Helicopter On-Donation', function(bool)
 		Spin.AngularVelocity = Vector3.new(0, 1, 0)
 		local __PART = Instance.new('Part', workspace)
 		__PART.Name = '_HIGHLIGHT.CF'
+		__PART.Size = Vector3.new(20,2,20)
 		__PART.Anchored = true
 		__PART.CFrame = CFrame.new(root.Position - Vector3.new(0, 3, 0))
 	end
