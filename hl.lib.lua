@@ -87,6 +87,8 @@ local function _singsong()
 	local debounce = false
 	getgenv().stopped = false
 	game:GetService('Players').PlayerChatted:Connect(function(_, plrChatted, msg)
+				local msgdata = {}
+	                        msgdata.Message = msg
 		if plr ~= nil and (plr == plrChatted or plrChatted == game:GetService('Players').LocalPlayer.Name) then
 			if string.lower(msgdata.Message) == '>stop' then
 				getgenv().stopped = true
