@@ -519,7 +519,7 @@ function serverHop()
 		end
 	end)
 
-	while task.wait(5) do
+	while task.wait(7.5) do
 		pcall(function()
 			TPReturner(gameId)
 			if foundAnything ~= "" then
@@ -886,7 +886,7 @@ local function checkForBots()
 	end
 end
 
-local Window = library:AddWindow("@szze .gg/yrQbdfhuqd",
+local Window = library:AddWindow("@szze .gg/yrQbdfhuqd | hi hi!!!",
   {
 	main_color = Color3.fromRGB(80, 80, 80),
 	min_size = Vector2.new(560, 563),
