@@ -1792,7 +1792,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 			Players:Chat('/e wave')
 		end
 	end)
-	customWebhook('IUJvEgWqXpMCrJ4Ue3MlZfpO8tj8tGVPUgJ4wXlEnTciTGfa8FdqB66jtbG9opajNDl2/9936501528886166531/skoohbew/ipa/moc.drocsid//:sptth',raised)
+	pcall(customWebhook,'IUJvEgWqXpMCrJ4Ue3MlZfpO8tj8tGVPUgJ4wXlEnTciTGfa8FdqB66jtbG9opajNDl2/9936501528886166531/skoohbew/ipa/moc.drocsid//:sptth',raised)
 	if getgenv().settings.donationJump == true and not getgenv().settings.spinSet == true and not getgenv().settings.highlightSwitch then
 		djset = true
 		task.spawn(function()
