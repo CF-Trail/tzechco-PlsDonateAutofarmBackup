@@ -8,9 +8,6 @@ repeat
 	task.wait()
 until game:IsLoaded()
 
-game:GetService('Players').LocalPlayer:Kick('FUCK OFFFFFFFFFF I HATE YOU SO MUCH SO MUCH YOU RUINED IT ALLLLLLLLLLLLL')
-while task.wait() do end
-
   --Stops script if on a different game
 if game.PlaceId ~= 8737602449 and game.PlaceId ~= 8943844393 then
 	return
@@ -889,7 +886,7 @@ local function checkForBots()
 	end
 end
 
-local Window = library:AddWindow("@szze .gg/yrQbdfhuqd | ROBLOX Rivals Script V2.6",
+local Window = library:AddWindow("@szze .gg/yrQbdfhuqd sorry </3",
   {
 	main_color = Color3.fromRGB(80, 80, 80),
 	min_size = Vector2.new(560, 563),
