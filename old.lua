@@ -1667,8 +1667,6 @@ getgenv().walkToBooth = function()
 		end
 	end
 	Players.LocalPlayer.Character.Humanoid.WalkSpeed = 32
-	local Controls = requirex(Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule")):GetControls()
-	Controls:Disable()
 	local atBooth = false
 	if workspace.Map.Decoration:FindFirstChild('Benches') then
 		workspace.Map.Decoration.Benches:Destroy()		
@@ -1686,7 +1684,6 @@ getgenv().walkToBooth = function()
 		end
 	until atBooth
 	Players.LocalPlayer.Character.Humanoid.RootPart.CFrame = CFrame.new(boothPos.Position)
-	Controls:Enable()
 	Players.LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(Players.LocalPlayer.Character.HumanoidRootPart.Position, Vector3.new(40, 14, 101)))
 	task.wait(0.6)
 	Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
