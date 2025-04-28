@@ -1066,6 +1066,11 @@ local begDelay = chatTab:AddTextBox("Begging Delay (S)", function(text)
 	end
 	getgenv().settings.begDelay = tonumber(text)
 	saveSettings()
+        if getgenv().settings.autoBeg then
+               pcall(task.cancel, spamming)
+               spamming = nil
+               spamming = task.spawn(begging)
+        end
 end,
   {
 	["clear"] = false
