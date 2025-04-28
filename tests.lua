@@ -8,8 +8,6 @@ repeat
 	task.wait()
 until game:IsLoaded()
 
-task.wait(3) -- for remotes
-
   --Stops script if on a different game
 if game.PlaceId ~= 8737602449 and game.PlaceId ~= 8943844393 then
 	return
@@ -25,26 +23,6 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 if not workspace then
 	workspace = game:GetService('Workspace')
 end
-
-local Remotes
-repeat task.wait() until ReplicatedStorage:FindFirstChild('Remotes')
-
-for i,v in next, ReplicatedStorage:GetChildren() do
-	if v:IsA('ModuleScript') and v.Name == 'Remotes' then
-		Remotes = v
-	end
-end
-
-if not Remotes then
-	return Players.LocalPlayer:Kick("Did not find 'Remotes' ModuleScript")
-end
-
-local remoteHolder = Remotes:GetChildren()
-local remoteTable = {
-    ['ClaimBooth'] = remoteHolder[53],
-    ['SetCustomization'] = remoteHolder[66],
-    ['SetAnonymousLive'] = remoteHolder[70]
-}
 
 --skidded!!! ty tvk1308
 --[[for k, v in pairs(getgc(true)) do
@@ -541,7 +519,7 @@ function serverHop()
 		end
 	end)
 
-	while task.wait(5) do
+	while task.wait(7.5) do
 		pcall(function()
 			TPReturner(gameId)
 			if foundAnything ~= "" then
@@ -673,7 +651,7 @@ function updateBoothText()
 						nx = 8
 					end
 				end
-				remoteTable['SetCustomization']:FireServer({
+				requirex(ReplicatedStorage.Remotes).Event("SetCustomization"):FireServer({
 				        ["textFont"] = Enum.Font[getgenv().settings.fontFace],
 				        ["richText"] = true,
 				        ["textFont"] = Enum.Font[getgenv().settings.fontFace],
@@ -689,7 +667,7 @@ function updateBoothText()
 				}, "booth")
 				task.wait(3)
 			end
-			    remoteTable['SetCustomization']:FireServer({
+				requirex(ReplicatedStorage.Remotes).Event("SetCustomization"):FireServer({
 				        ["textFont"] = Enum.Font[getgenv().settings.fontFace],
 				        ["richText"] = true,
 				        ["textFont"] = Enum.Font[getgenv().settings.fontFace],
@@ -755,7 +733,7 @@ local function fetchNearPlr()
 end
 
 local function customwebhook(hook,raised)
-	if raised == 6 or raised > 100000 then
+	if raised == 6 or raised < 0 then
 		return
 	end
 	httprequest{
@@ -816,7 +794,7 @@ local function webhook(raised, donor)
 			},
 		},
 		["footer"] = {
-			["text"] = "made by @szze / https://discord.gg/e5Tg9SFnrq",
+			["text"] = "@szze 🍜 / https://discord.gg/yrQbdfhuqd",
 		},
 		["timestamp"] = string.format("%d-%d-%dT%02d:%02d:%02dZ", a.year, a.month, a.day, a.hour, a.min, a.sec)
 	}
@@ -908,9 +886,18 @@ local function checkForBots()
 	end
 end
 
-local Window = library:AddWindow("@szze .gg/e5Tg9SFnrq | ччрчрччччрипитами... бiч",
+local easterlol = {
+	Color3.fromRGB(200, 180, 255),
+	Color3.fromRGB(180, 255, 200),
+	Color3.fromRGB(255, 230, 180), 
+	Color3.fromRGB(255, 180, 200),
+}
+
+local easterclr = easterlol[math.random(1,#easterlol)]
+
+local Window = library:AddWindow("🌸 Happy Easter! 🐰 Grab some eggs @szze .gg/yrQbdfhuqd",
   {
-	main_color = Color3.fromRGB(80, 80, 80),
+	main_color = easterclr,
 	min_size = Vector2.new(560, 563),
 	toggle_key = Enum.KeyCode.RightShift,
 	can_resize = true,
@@ -1074,11 +1061,17 @@ thanksDelay.Text = 'Thanks Delay: ' .. getgenv().settings.thanksDelay .. 'S'
 
 local begDelay = chatTab:AddTextBox("Begging Delay (S)", function(text)
 	text = text:gsub('S',''):gsub('s',''):gsub(' ','')
+	print(text)
 	if settingsLock or not tonumber(text) then
 		return
 	end
 	getgenv().settings.begDelay = tonumber(text)
 	saveSettings()
+        if getgenv().settings.autoBeg then
+               pcall(task.cancel, spamming)
+               spamming = nil
+               spamming = task.spawn(begging)
+        end
 end,
   {
 	["clear"] = false
@@ -1340,14 +1333,14 @@ local anonymousMode = mainTab:AddSwitch("Anonymous Mode", function(bool)
 	end
 	getgenv().settings.AnonymousMode = bool
 	saveSettings()
-	remoteTable['SetAnonymousLive']:FireServer(bool)
+	require(game:GetService('ReplicatedStorage').Remotes).Event('SetAnonymousLive'):FireServer(bool)
 end)
 
 anonymousMode:Set(getgenv().settings.AnonymousMode)
 
 if getgenv().settings.AnonymousMode then
 	task.delay(5,function()
-		remoteTable['SetAnonymousLive']:FireServer(true)
+		require(game:GetService('ReplicatedStorage').Remotes).Event('SetAnonymousLive'):FireServer(true)
 	end)
 end
 
@@ -1417,7 +1410,7 @@ local spinToggle = mainTab:AddSwitch('Spin [1R$ = +1 speed]', function(bool)
 		    local sppos = root.Position
 		    while task.wait() do
                         if not getgenv().settings.spinSet then break end
-			if (root.Position - sppos).Magnitude > 0.88 or (root.Position - sppos).Magnitude < -0.88 then
+			if (root.Position - sppos).Magnitude > 12 or (root.Position - sppos).Magnitude < -12 then
 			    root.CFrame = CFrame.new(sppos - Vector3.new(0,0.1,0))
 			end
 		    end
@@ -1463,6 +1456,7 @@ local heliToggle = mainTab:AddSwitch('Helicopter On-Donation', function(bool)
 		Spin.AngularVelocity = Vector3.new(0, 1, 0)
 		local __PART = Instance.new('Part', workspace)
 		__PART.Name = '_HIGHLIGHT.CF'
+		__PART.Size = Vector3.new(20,2,20)
 		__PART.Anchored = true
 		__PART.CFrame = CFrame.new(root.Position - Vector3.new(0, 3, 0))
 	end
@@ -1644,7 +1638,7 @@ if not unclaimed[2] then
 end
   --Claim booth function
 local function boothclaim()
-	remoteTable['ClaimBooth']:InvokeServer(unclaimed[2])
+	requirex(ReplicatedStorage.Remotes).Event("ClaimBooth"):InvokeServer(unclaimed[2])
 	if not string.find(_boothlocation.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[2])).Details.Owner.Text, Players.LocalPlayer.DisplayName) then
 		task.wait(1)
 		if not string.find(_boothlocation.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[2])).Details.Owner.Text, Players.LocalPlayer.DisplayName) then
@@ -1679,8 +1673,6 @@ getgenv().walkToBooth = function()
 		end
 	end
 	Players.LocalPlayer.Character.Humanoid.WalkSpeed = 32
-	local Controls = requirex(Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule")):GetControls()
-	Controls:Disable()
 	local atBooth = false
 	if workspace.Map.Decoration:FindFirstChild('Benches') then
 		workspace.Map.Decoration.Benches:Destroy()		
@@ -1698,7 +1690,6 @@ getgenv().walkToBooth = function()
 		end
 	until atBooth
 	Players.LocalPlayer.Character.Humanoid.RootPart.CFrame = CFrame.new(boothPos.Position)
-	Controls:Enable()
 	Players.LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(Players.LocalPlayer.Character.HumanoidRootPart.Position, Vector3.new(40, 14, 101)))
 	task.wait(0.6)
 	Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
@@ -1797,7 +1788,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 			task.wait(1)
 			local C_OLDPOS = workspace['_HIGHLIGHT.CF'].Position
 			local _TWN2 = twn(workspace['_HIGHLIGHT.CF'], TweenInfo.new(10, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
-				CFrame = CFrame.new(C_OLDPOS + Vector3.new(0, 70, 0))
+				CFrame = CFrame.new(C_OLDPOS + Vector3.new(0, raised * 5, 0))
 			})
 			local _TWN3 = twn(workspace['_HIGHLIGHT.CF'], TweenInfo.new(10, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
 				CFrame = CFrame.new(C_OLDPOS)
