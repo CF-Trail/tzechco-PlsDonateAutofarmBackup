@@ -722,13 +722,12 @@ end
 local easterlol = {
 	Color3.fromRGB(200, 180, 255),
 	Color3.fromRGB(180, 255, 200),
-	Color3.fromRGB(255, 230, 180), 
 	Color3.fromRGB(255, 180, 200),
 }
 
 local easterclr = easterlol[math.random(1,#easterlol)]
 
-local Window = library:AddWindow("🌸 Happy Easter! 🐰 Grab some eggs @szze .gg/yrQbdfhuqd",
+local Window = library:AddWindow("🌸 Updated 03.05.2025 @szze .gg/yrQbdfhuqd",
   {
 	main_color = easterclr,
 	min_size = Vector2.new(560, 563),
