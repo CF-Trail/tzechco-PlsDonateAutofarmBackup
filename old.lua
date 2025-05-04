@@ -400,13 +400,12 @@ else
 end
 
 local function choosePlaceId()
-    local settings = getgenv().settings
     if vcEnabled and settings.vcServer then
-        return VC_PLACE_ID
+        return 8943844393
     elseif settings.AlternativeHop then
-        return (math.random() < 0.5) and VC_PLACE_ID or DEFAULT_PLACE_ID
+        return (math.random() < 0.5) and 8943844393 or 8737602449
     else
-        return DEFAULT_PLACE_ID
+        return 8737602449
     end
 end
 
@@ -632,7 +631,7 @@ local function webhook(raised, donor)
             raised,
             donor,
             math.floor(raised * 0.6),
-            tonumber(newRaisedFormat.Value)
+            tonumber(Players.LocalPlayer.leaderstats.Raised.Value)
         ),
         color       = 0x2ECC71,
         thumbnail   = {
