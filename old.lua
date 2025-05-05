@@ -419,13 +419,17 @@ local function serverHop()
         local url = ("https://games.roblox.com/v1/games/%d/servers/Public?sortOrder=Asc&limit=100%s")
             :format(placeId, cursor and "&cursor="..cursor or "")
 
-        local success, body = pcall(HttpService.GetAsync, HttpService, url)
-        if not success then
-            warn("Failed to fetch server list:", body)
+        local response = httprequest({
+            Url = url,
+            Method = "GET"
+        })
+
+        if not response or response.StatusCode ~= 200 then
+            warn("Failed to fetch server list:", response and response.StatusMessage or "No response")
             return
         end
 
-        local data = HttpService:JSONDecode(body)
+        local data = game:GetService("HttpService"):JSONDecode(response.Body)
         cursor = data.nextPageCursor 
 
         for _, server in ipairs(data.data) do
@@ -439,6 +443,7 @@ local function serverHop()
 
     warn("No available servers found.")
 end
+
 
 function waitServerHop()
 	task.wait(getgenv().settings.serverHopDelay * 60)
