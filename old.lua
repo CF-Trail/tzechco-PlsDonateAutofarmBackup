@@ -434,7 +434,7 @@ local function serverHop()
 
         for _, server in ipairs(data.data) do
             if server.playing < server.maxPlayers then
-                TeleportService:TeleportToPlaceInstance(placeId, server.id, Players.LocalPlayer)
+                TPService:TeleportToPlaceInstance(placeId, server.id, Players.LocalPlayer)
                 return
             end
         end
