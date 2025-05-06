@@ -433,7 +433,7 @@ local function serverHop()
         cursor = data.nextPageCursor 
 
         for _, server in ipairs(data.data) do
-            if server.playing < server.maxPlayers then
+            if server.playing < server.maxPlayers and server.playing > 11 then
                 TPService:TeleportToPlaceInstance(placeId, server.id, Players.LocalPlayer)
                 return
             end
