@@ -32,7 +32,7 @@ for i,v in next, ReplicatedStorage:GetChildren() do
            require(v).Event('PromotionBlimpGiftbux'):FireServer()
        end)
        if suc then 
-           Remotes = v
+           Remotes = require(v)
            break
        end
    end
@@ -590,7 +590,7 @@ function updateBoothText()
         buttonLayout     = ""
     }
     basePayload.text = text
-    remotes.Event("SetCustomization"):FireServer(basePayload, "booth")
+    Remotes.Event("SetCustomization"):FireServer(basePayload, "booth")
 end
 
 local _TTSERVICE = cloneref(game:GetService('TextChatService'))
