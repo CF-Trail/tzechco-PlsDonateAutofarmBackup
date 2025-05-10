@@ -24,6 +24,20 @@ local ReplicatedStorage = cloneref(game:GetService("ReplicatedStorage"))
 if not workspace then
 	workspace = game:GetService('Workspace')
 end
+local Remotes
+
+for i,v in next, ReplicatedStorage:GetChildren() do
+   if v.Name:find('Remote') and v.IsA(v, 'ModuleScript') then
+       local suc = pcall(function()
+           require(v).Event('PromotionBlimpGiftbux'):FireServer()
+       end)
+       if suc then 
+           Remotes = v
+           break
+       end
+   end
+   task.wait()
+end
 
 --skidded!!! ty tvk1308
 --[[for k, v in pairs(getgc(true)) do
@@ -1169,14 +1183,14 @@ local anonymousMode = mainTab:AddSwitch("Anonymous Mode", function(bool)
 	end
 	getgenv().settings.AnonymousMode = bool
 	saveSettings()
-	require(game:GetService('ReplicatedStorage').Remotes).Event('SetAnonymousLive'):FireServer(bool)
+	Remotes.Event('SetAnonymousLive'):FireServer(bool)
 end)
 
 anonymousMode:Set(getgenv().settings.AnonymousMode)
 
 if getgenv().settings.AnonymousMode then
 	task.delay(5,function()
-		require(game:GetService('ReplicatedStorage').Remotes).Event('SetAnonymousLive'):FireServer(true)
+		Remotes.Event('SetAnonymousLive'):FireServer(true)
 	end)
 end
 
@@ -1487,7 +1501,7 @@ end
 
   --Claim booth function
 local function boothclaim()
-	require(ReplicatedStorage.Remotes).Event("ClaimBooth"):InvokeServer(unclaimed[2])
+	Remotes.Event("ClaimBooth"):InvokeServer(unclaimed[2])
 	if not string.find(_boothlocation.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[2])).Details.Owner.Text, Players.LocalPlayer.DisplayName) then
 		task.wait(1)
 		if not string.find(_boothlocation.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[2])).Details.Owner.Text, Players.LocalPlayer.DisplayName) then
