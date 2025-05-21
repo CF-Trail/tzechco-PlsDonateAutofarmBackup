@@ -448,6 +448,7 @@ local function serverHop()
         cursor = data.nextPageCursor 
 
         for _, server in ipairs(data.data) do
+            if #serverst > 15 then break end
             if server.playing < server.maxPlayers and server.playing > 11 then
                 table.insert(serverst, server.id)
                 return
