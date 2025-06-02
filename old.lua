@@ -424,41 +424,31 @@ local function choosePlaceId()
 end
 
 local function serverHop()
-    saveSettings()
-
-    local serverst = {}
-    local placeId = choosePlaceId()
-    local cursor = nil
-
-    repeat
-        local url = ("https://games.roblox.com/v1/games/%d/servers/Public?sortOrder=Asc&limit=100%s")
-            :format(placeId, cursor and "&cursor="..cursor or "")
-
-        local response = httprequest({
-            Url = url,
-            Method = "GET"
-        })
-
-        if not response or response.StatusCode ~= 200 then
-            warn("Failed to fetch server list:", response and response.StatusMessage or "No response")
-            return
-        end
-
-        local data = game:GetService("HttpService"):JSONDecode(response.Body)
-        cursor = data.nextPageCursor 
-
-        for _, server in ipairs(data.data) do
-            if #serverst > 15 then break end
-            if server.playing < server.maxPlayers and server.playing > 11 then
-                table.insert(serverst, server.id)
-                return
-            end
-        end
-	TPService:TeleportToPlaceInstance(placeId, serverst[math.random(1,#serverst)], Players.LocalPlayer)
-    	task.wait(1)
-    until not true
-
-    warn("No available servers found.")
+	saveSettings()
+	local gameId
+	gameId = choosePlaceId()
+	local servers = {}
+	local req = httprequest({
+		Url = "https://games.roblox.com/v1/games/" .. gameId .. "/servers/Public?sortOrder=Desc&limit=100"
+	})
+	local body = httpservice:JSONDecode(req.Body)
+	if body and body.data then
+		for i, v in next, body.data do
+			if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing > 19 then
+				table.insert(servers, 1, v.id)
+			end
+		end
+	end
+	task.spawn(function()
+		while task.wait(0.5) do
+			if #servers > 0 then
+				TPService:TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
+			end
+		end
+	end)
+	TPService.TeleportInitFailed:Connect(function()
+		TPService:TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
+	end)
 end
 
 
