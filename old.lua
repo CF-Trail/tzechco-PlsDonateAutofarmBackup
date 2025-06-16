@@ -440,11 +440,9 @@ local function serverHop()
 		end
 	end
 	task.spawn(function()
-		while task.wait(0.5) do
 			if #servers > 0 then
 				TPService:TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
 			end
-		end
 	end)
 	TPService.TeleportInitFailed:Connect(function()
 		TPService:TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
