@@ -736,7 +736,7 @@ local easterlol = {
 
 local easterclr = easterlol[math.random(1,#easterlol)]
 
-local Window = library:AddWindow("birthday 🎂🎂🎂 @szze .gg/yrQbdfhuqd",
+local Window = library:AddWindow("🐈meeeowww @szze .gg/yrQbdfhuqd",
   {
 	main_color = easterclr,
 	min_size = Vector2.new(560, 563),
