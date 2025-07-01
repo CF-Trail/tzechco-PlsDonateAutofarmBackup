@@ -467,7 +467,7 @@ local function serverHop()
 
                     local pingValue = selectedServer.ping or 0
                     local fps = selectedServer.fps or "N/A"
-                    TeleportService:TeleportToPlaceInstance(PlaceId, selectedServer.id, LocalPlayer)
+                    pcall(function() TeleportService:TeleportToPlaceInstance(PlaceId, selectedServer.id, LocalPlayer) end)
                 end
             end
         end 
