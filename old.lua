@@ -424,30 +424,56 @@ local function choosePlaceId()
 end
 
 local function serverHop()
-	saveSettings()
-	local gameId
-	gameId = choosePlaceId()
-	local servers = {}
-	local req = httprequest({
-		Url = "https://games.roblox.com/v1/games/" .. gameId .. "/servers/Public?sortOrder=Desc&limit=100"
-	})
-	local body = httpservice:JSONDecode(req.Body)
-	if body and body.data then
-		for i, v in next, body.data do
-			if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing > 19 then
-				table.insert(servers, 1, v.id)
-			end
-		end
-	end
-	task.spawn(function()
-			if #servers > 0 then
-				TPService:TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
-			end
-	end)
-	TPService.TeleportInitFailed:Connect(function()
-		TPService:TeleportToPlaceInstance(gameId, servers[math.random(1, #servers)], Players.LocalPlayer)
-	end)
+    while task.wait(3) do
+        if httprequest then            
+            local HttpService = game:GetService("HttpService")
+            local PlaceId = choosePlaceId()
+            local JobId = game.JobId
+            local TeleportService = game:GetService("TeleportService")
+            local LocalPlayer = game:GetService("Players").LocalPlayer
+            
+            local req = httprequest({
+                Url = string.format("https://games.roblox.com/v1/games/%d/servers/Public?sortOrder=Desc&limit=100&excludeFullGames=true", PlaceId)
+            })
+            
+            local success, body = pcall(function()
+                return HttpService:JSONDecode(req.Body)
+            end)
+            
+            if success and body and body.data then
+                local servers = {}
+                
+                for _, server in pairs(body.data) do
+                    if server.playing < server.maxPlayers and server.id ~= JobId then
+                        table.insert(servers, server)
+                    end
+                end
+                
+                if #servers > 0 then
+                    local selectedServer = servers[math.random(1, #servers)]
+                    
+                    local playingValue = selectedServer.playing or 0
+                    local maxPlayersValue = selectedServer.maxPlayers or 0
+                    local capacityPercentage = 0
+                    
+                    if maxPlayersValue > 0 then
+                        capacityPercentage = math.floor((playingValue / maxPlayersValue) * 100)
+                    end
+
+                    local shortServerId = "Unknown"
+                    if selectedServer.id then
+                        shortServerId = string.sub(selectedServer.id, -6)
+                    end
+
+                    local pingValue = selectedServer.ping or 0
+                    local fps = selectedServer.fps or "N/A"
+                    TeleportService:TeleportToPlaceInstance(PlaceId, selectedServer.id, LocalPlayer)
+                end
+            end
+        end 
+    end
 end
+
 
 
 function waitServerHop()
