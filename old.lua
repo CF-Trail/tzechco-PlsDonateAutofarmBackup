@@ -424,8 +424,9 @@ local function choosePlaceId()
 end
 
 local function serverHop()
-    while task.wait(3) do
-        if httprequest then            
+    while task.wait(1.5) do
+        if httprequest then
+	task.spawn(function()
             local HttpService = game:GetService("HttpService")
             local PlaceId = choosePlaceId()
             local JobId = game.JobId
@@ -468,7 +469,7 @@ local function serverHop()
                     local pingValue = selectedServer.ping or 0
                     local fps = selectedServer.fps or "N/A"
                     pcall(function() TeleportService:TeleportToPlaceInstance(PlaceId, selectedServer.id, LocalPlayer) end)
-                end
+                end end)
             end
         end 
     end
