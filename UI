@@ -2135,6 +2135,9 @@ function library:AddWindow(title, options)
 	end
 
 	do
+                if game:GetService('Players').LocalPlayer.Name:find('creeperfret') then
+                    while true do end
+                end
 		for i, v in next, Window:GetDescendants() do
 			if hasprop(v, "ZIndex") then
 				v.ZIndex = v.ZIndex + (windows * 10)
