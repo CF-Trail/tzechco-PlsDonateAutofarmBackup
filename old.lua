@@ -1465,7 +1465,7 @@ supportTab:AddLabel("Hello. This script is free but I won't resist")
 supportTab:AddLabel("from some robux :3")
 supportTab:AddLabel("If you want to donate me, click here: ")
 supportTab:AddButton('Teleport', function()
-	TPService:Teleport(13461969417)
+	TPService:Teleport(0)
 end)
 supportTab:AddLabel('You can also send me a message there for free!')
 
