@@ -449,7 +449,7 @@ local function serverHop()
                     local servers = {}
 
                     for _, server in pairs(body.data) do
-                        if server.playing < server.maxPlayers and server.id ~= JobId then
+                        if server.playing < 25 and server.id ~= JobId and server.playing > 12 then
                             table.insert(servers, server)
                         end
                     end
