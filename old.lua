@@ -8,7 +8,7 @@ repeat
 	task.wait()
 until game:IsLoaded()
 
-  --Stops script if on a different game
+--Stops script if on a different game
 if game.PlaceId ~= 8737602449 and game.PlaceId ~= 8943844393 then
 	return
 end
@@ -349,7 +349,34 @@ local sValues = {
     false
 }
 
-  --Load Settings
+
+
+--Load Settings
+if isfile("nameblocklist.txt") then
+	local ok, v = pcall(readfile, "nameblocklist.txt")
+	if ok and type(v) == 'string' then
+		local blocked = {}
+		for line in v:gmatch("[^\r\n]+") do
+			local s = line:match("^%s*(.-)%s*$")
+			if s and s ~= "" then
+				blocked[#blocked + 1] = s:lower()
+			end
+		end
+		if #blocked > 0 then
+			for _, pl in next, Players:GetPlayers() do
+				local pname = (pl.Name or ""):lower()
+				local dname = (pl.DisplayName or ""):lower()
+				for _, b in ipairs(blocked) do
+					if b == pname or b == dname then
+                        forceServerHop()
+						return
+					end
+				end
+			end
+		end
+	end
+end
+
 if isfile("plsdonatesettings.txt") then
 	local sl, er = pcall(function()
 		getgenv().settings = HttpService:JSONDecode(readfile('plsdonatesettings.txt'))
@@ -398,7 +425,6 @@ if not File then
 	pcall(function()
 		writefile(RandomName .. ".json", S_H:JSONEncode(AllIDs))
 	end)
-
 end
 
 local vc = cloneref(game:GetService("VoiceChatService"))
