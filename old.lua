@@ -364,11 +364,13 @@ if isfile("nameblocklist.txt") then
 		end
 		if #blocked > 0 then
 			for _, pl in next, Players:GetPlayers() do
-				local pname = (pl.Name or ""):lower()
-				for _, b in ipairs(blocked) do
-					if b == pname and pl ~= Players.LocalPlayer then
-                        forceServerHop()
-						return
+				if pl and pl.UserId and pl.UserId ~= Players.LocalPlayer.UserId then
+					local pname = (pl.Name or ""):lower()
+					for _, b in next, blocked do
+						if b == pname then
+							forceServerHop()
+							return
+						end
 					end
 				end
 			end
