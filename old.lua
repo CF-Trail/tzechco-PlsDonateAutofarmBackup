@@ -780,7 +780,7 @@ local easterlol = {
 
 local easterclr = easterlol[math.random(1,#easterlol)]
 
-local Window = library:AddWindow("smile on your face is cute @szze",
+local Window = library:AddWindow("happy new year! 🎄🎁 @szze",
   {
 	main_color = easterclr,
 	min_size = Vector2.new(560, 563),
