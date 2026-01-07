@@ -21,6 +21,19 @@ local HttpService = cloneref(game:GetService("HttpService"))
 local TPService = cloneref(game:GetService("TeleportService"))
 local PathfindingService = cloneref(game:GetService("PathfindingService"))
 local ReplicatedStorage = cloneref(game:GetService("ReplicatedStorage"))
+
+if identifyexecutor and (identifyexecutor():find('Xeno') or identifyexecutor():find('Solara')) then
+	task.spawn(function()
+		for i = 0, 2 do
+			game:GetService("StarterGui"):SetCore("SendNotification",{
+				Title = "Solara/Xeno are unsupported",
+				Text = "Please change your executor. Look for them at voxlis.net",
+			})
+			task.wait(1)
+		end
+	end)
+end
+
 if not workspace then
 	workspace = game:GetService('Workspace')
 end
