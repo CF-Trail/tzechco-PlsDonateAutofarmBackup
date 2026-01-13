@@ -454,9 +454,9 @@ else
 end
 
 local function choosePlaceId()
-    if vcEnabled and settings.vcServer then
+    if vcEnabled and getgenv().settings.vcServer then
         return 8943844393
-    elseif settings.AlternativeHop then
+    elseif getgenv().settings.AlternativeHop then
         return (math.random() < 0.5) and 8943844393 or 8737602449
     else
         return 8737602449
@@ -598,7 +598,7 @@ local function formatNumber(n)
 end
 
 function updateBoothText()
-    if not (settings.textUpdateToggle and settings.customBoothText) then
+    if not (settings.textUpdateToggle and getgenv().settings.customBoothText) then
         return
     end
 
@@ -608,7 +608,7 @@ function updateBoothText()
     local currentStr = formatNumber(currentRaw)
     local goalStr    = formatNumber(goalRaw)
 
-    local text = settings.customBoothText
+    local text = getgenv().settings.customBoothText
         :gsub("%$C", currentStr)
         :gsub("%$G", goalStr)
         :gsub("%$JPR", tostring(settings.jumpsPerRobux))
@@ -621,7 +621,7 @@ function updateBoothText()
         return
     end
 
-    if signLabel.Text:find("##") and settings.taggedBoothHop and nx >= 1 then
+    if signLabel.Text:find("##") and getgenv().settings.taggedBoothHop and nx >= 1 then
         return serverHop()
     end
 
@@ -793,7 +793,7 @@ local easterlol = {
 
 local easterclr = easterlol[math.random(1,#easterlol)]
 
-local Window = library:AddWindow("happy new year! 🎄🎁 @szze",
+local Window = library:AddWindow("✨🎁 @szze",
   {
 	main_color = easterclr,
 	min_size = Vector2.new(560, 563),
@@ -1302,7 +1302,7 @@ local spinToggle = mainTab:AddSwitch('Spin [1R$ = +1 speed]', function(bool)
 		Spin.Name = "Spin"
 		Spin.Parent = root
 		Spin.MaxTorque = Vector3.new(0, math.huge, 0)
-		Spin.AngularVelocity = Vector3.new(0, 0.25 * settings.spinSpeedMultiplier, 0)
+		Spin.AngularVelocity = Vector3.new(0, 0.25 * getgenv().settings.spinSpeedMultiplier, 0)
 		task.spawn(function()
                     repeat task.wait() until bclaimed
 		    local sppos = root.Position
