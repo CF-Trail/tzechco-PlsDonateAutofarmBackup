@@ -598,12 +598,12 @@ local function formatNumber(n)
 end
 
 function updateBoothText()
-    if not (settings.textUpdateToggle and getgenv().settings.customBoothText) then
+    if not (getgenv().settings.textUpdateToggle and getgenv().settings.customBoothText) then
         return
     end
 
     local currentRaw = tonumber(newRaisedFormat.Value)
-    local goalRaw    = currentRaw + tonumber(settings.goalBox)
+    local goalRaw    = currentRaw + tonumber(getgenv().settings.goalBox)
 
     local currentStr = formatNumber(currentRaw)
     local goalStr    = formatNumber(goalRaw)
@@ -611,7 +611,7 @@ function updateBoothText()
     local text = getgenv().settings.customBoothText
         :gsub("%$C", currentStr)
         :gsub("%$G", goalStr)
-        :gsub("%$JPR", tostring(settings.jumpsPerRobux))
+        :gsub("%$JPR", tostring(getgenv().settings.jumpsPerRobux))
 
     local boothUI = _boothlocation.BoothUI:FindFirstChild("BoothUI" .. unclaimed[2])
     if not boothUI then return end
@@ -626,11 +626,11 @@ function updateBoothText()
     end
 
     local basePayload = {
-        textFont         = Enum.Font[settings.fontFace],
+        textFont         = Enum.Font[getgenv().settings.fontFace],
         richText         = true,
         strokeColor      = Color3.new(0, 0, 0),
         strokeOpacity    = 0,
-        textColor        = rgb(settings.hexBox),
+        textColor        = rgb(getgenv().settings.hexBox),
         buttonStrokeColor= Color3.new(0, 0, 0),
         buttonTextColor  = Color3.new(1, 1, 1),
         buttonColor      = Color3.new(98, 255, 0),
