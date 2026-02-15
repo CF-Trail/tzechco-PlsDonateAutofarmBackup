@@ -786,14 +786,14 @@ local function checkForBots()
 end
 
 local easterlol = {
-	Color3.fromRGB(200, 180, 255),
-	Color3.fromRGB(180, 255, 200),
-	Color3.fromRGB(255, 180, 200),
+	Color3.fromRGB(199, 137, 193),
+	Color3.fromRGB(199, 137, 193),
+	Color3.fromRGB(199, 137, 193),
 }
 
 local easterclr = easterlol[math.random(1,#easterlol)]
 
-local Window = library:AddWindow("✨🎁 @szze https://discord.gg/YTpK5wWBHj",
+local Window = library:AddWindow("💘 @szze https://discord.gg/YTpK5wWBHj",
   {
 	main_color = easterclr,
 	min_size = Vector2.new(560, 563),
