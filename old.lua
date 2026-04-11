@@ -1621,11 +1621,20 @@ local RaisedC = newRaisedFormat.Value
 local djset = false
 local helidebounce = false
 local lapdebounce = false
-newRaisedFormat.Changed:Connect(function()
+ReplicatedStorage.VFXObjects.CreateVfx.OnClientEvent:Connect(function(...)
+	local args = { ... }
+	local donation = args[4]
+	local user = args[3]
+	if user ~= Players.LocalPlayer.Character then
+			return
+	end
+	if not donation or typeof(donation) ~= 'number' then
+			donation = 1
+	end
 	local playerWhoDonated
 	sgoalR = sgoalR + (newRaisedFormat.Value - RaisedC)
     local raisedValue = newRaisedFormat.Value
-    local raised = raisedValue - RaisedC
+    local raised = donation
 	hopSet()
 	if Players.LocalPlayer.Character:FindFirstChildWhichIsA('Humanoid').RootPart:FindFirstChild('Spin') and getgenv().settings.spinSet then
 		local humanoid = Players.LocalPlayer.Character:FindFirstChildWhichIsA('Humanoid')
@@ -1730,7 +1739,7 @@ newRaisedFormat.Changed:Connect(function()
 					until Players.LocalPlayer.Character.Humanoid:GetState() == Enum.HumanoidStateType.Running
 				end
 			else
-				for i = 1, (newRaisedFormat.Value - RaisedC) * getgenv().settings.jumpsPerRobux do
+				for i = 1, raised * getgenv().settings.jumpsPerRobux do
 					Players.LocalPlayer.Character.Humanoid:ChangeState('Jumping')
 					repeat
 						task.wait()
@@ -1768,10 +1777,10 @@ newRaisedFormat.Changed:Connect(function()
     end
 	if getgenv().settings.highlightSwitch then
 		task.spawn(function()
-			_HIGHLIGHTLOADER.HLStart(Players.LocalPlayer.Character, .Value - RaisedC, (playerWhoDonated and playerWhoDonated or fetchNearPlr() or nil))
+			_HIGHLIGHTLOADER.HLStart(Players.LocalPlayer.Character, raised, (playerWhoDonated and playerWhoDonated or fetchNearPlr() or nil))
 		end)
 	end
-	RaisedC = .value
+	RaisedC = newRaisedFormat.Value
 	if getgenv().settings.autoThanks == true then
 		task.spawn(function()
 			task.wait(getgenv().settings.thanksDelay)
