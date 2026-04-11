@@ -150,8 +150,8 @@ local errCount = 0
 local uid = Players.LocalPlayer.UserId
 local newRaisedFormat = Players.LocalPlayer:WaitForChild('leaderstats'):WaitForChild('Raised', 5)
 if not newRaisedFormat then
-	game:GetService('Players').LocalPlayer:Kick('im fixing the script hold on (04.11.2026)')
-	return
+	newRaisedFormat = Instance.new('IntValue', Players.LocalPlayer.leaderstats)
+	newRaisedFormat.Name = 'Raised'
 end
 local queueonteleport = (syn and syn.queue_on_teleport) or queue_on_teleport or (fluxus and fluxus.queue_on_teleport) or nil
 local httprequest = (syn and syn.request) or http and http.request or http_request or (fluxus and fluxus.request) or request
@@ -702,7 +702,7 @@ local function webhook(raised, donor)
             raised,
             donor,
             math.floor(raised * 0.6),
-            tonumber(Players.LocalPlayer.leaderstats.Raised.Value)
+            tonumber(newRaisedFormat.Value)
         ),
         color       = 0x2ECC71,
         thumbnail   = {
@@ -1420,7 +1420,7 @@ if setfpscap and type(setfpscap) == "function" then
 end
 
 mainTab:AddButton("Test Donation", function()
-	Players.LocalPlayer.leaderstats.Raised.Value += 6
+	newRaisedFormat.Value += 6
 end)
 
 --otherTab2
@@ -1617,14 +1617,14 @@ if getgenv().settings.autoBeg then
 	spamming = task.spawn(begging)
 end
 
-local RaisedC = Players.LocalPlayer.leaderstats.Raised.value
+local RaisedC = newRaisedFormat.Value
 local djset = false
 local helidebounce = false
 local lapdebounce = false
-Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
+newRaisedFormat.Changed:Connect(function()
 	local playerWhoDonated
-	sgoalR = sgoalR + (Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
-    local raisedValue = Players.LocalPlayer.leaderstats.Raised.Value
+	sgoalR = sgoalR + (newRaisedFormat.Value - RaisedC)
+    local raisedValue = newRaisedFormat.Value
     local raised = raisedValue - RaisedC
 	hopSet()
 	if Players.LocalPlayer.Character:FindFirstChildWhichIsA('Humanoid').RootPart:FindFirstChild('Spin') and getgenv().settings.spinSet then
@@ -1646,7 +1646,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 					end)
 				else
 					pcall(function()
-						oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(raised) .. ' | [A/T]: ' .. tostring(math.floor((raised) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value) .. ' | Donor: ' .. playerWhoDonated.Name)
+						oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(raised) .. ' | [A/T]: ' .. tostring(math.floor((raised) * 0.6)) .. ' | Total: ' .. tostring(newRaisedFormat.Value) .. ' | Donor: ' .. playerWhoDonated.Name)
 					end)
 				end
 			else
@@ -1656,7 +1656,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 					end)
 				else
 					pcall(function()
-						oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(raised) .. ' | [A/T]: ' .. tostring(math.floor((raised) * 0.6)) .. ' | Total: ' .. tostring(Players.LocalPlayer.leaderstats.Raised.Value))
+						oldWebhook(Players.LocalPlayer.Name .. ' | Donation amount: ' .. tostring(raised) .. ' | [A/T]: ' .. tostring(math.floor((raised) * 0.6)) .. ' | Total: ' .. tostring(newRaisedFormat.Value))
 					end)
 				end
 			end
@@ -1730,7 +1730,7 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 					until Players.LocalPlayer.Character.Humanoid:GetState() == Enum.HumanoidStateType.Running
 				end
 			else
-				for i = 1, (Players.LocalPlayer.leaderstats.Raised.Value - RaisedC) * getgenv().settings.jumpsPerRobux do
+				for i = 1, (newRaisedFormat.Value - RaisedC) * getgenv().settings.jumpsPerRobux do
 					Players.LocalPlayer.Character.Humanoid:ChangeState('Jumping')
 					repeat
 						task.wait()
@@ -1768,10 +1768,10 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
     end
 	if getgenv().settings.highlightSwitch then
 		task.spawn(function()
-			_HIGHLIGHTLOADER.HLStart(Players.LocalPlayer.Character, Players.LocalPlayer.leaderstats.Raised.Value - RaisedC, (playerWhoDonated and playerWhoDonated or fetchNearPlr() or nil))
+			_HIGHLIGHTLOADER.HLStart(Players.LocalPlayer.Character, .Value - RaisedC, (playerWhoDonated and playerWhoDonated or fetchNearPlr() or nil))
 		end)
 	end
-	RaisedC = Players.LocalPlayer.leaderstats.Raised.value
+	RaisedC = .value
 	if getgenv().settings.autoThanks == true then
 		task.spawn(function()
 			task.wait(getgenv().settings.thanksDelay)
