@@ -8,7 +8,7 @@ repeat
 	task.wait()
 until game:IsLoaded()
 
-  --Stops script if on a different game
+--Stops script if on a different game
 if game.PlaceId ~= 8737602449 and game.PlaceId ~= 8943844393 then
 	return
 end
@@ -19,9 +19,37 @@ local CoreGui = cloneref(game:GetService("CoreGui"))
 local Players = cloneref(game:GetService("Players"))
 local HttpService = cloneref(game:GetService("HttpService"))
 local TPService = cloneref(game:GetService("TeleportService"))
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local PathfindingService = cloneref(game:GetService("PathfindingService"))
+local ReplicatedStorage = cloneref(game:GetService("ReplicatedStorage"))
+
+if identifyexecutor and (identifyexecutor():find('Xeno') or identifyexecutor():find('Solara')) then
+	task.spawn(function()
+		for i = 0, 2 do
+			game:GetService("StarterGui"):SetCore("SendNotification",{
+				Title = "Solara/Xeno are unsupported",
+				Text = "Please change your executor. Look for them at voxlis.net",
+			})
+			task.wait(1)
+		end
+	end)
+end
+
 if not workspace then
 	workspace = game:GetService('Workspace')
+end
+local Remotes
+
+for i,v in next, ReplicatedStorage:GetChildren() do
+   if v.Name:find('Remote') and v.IsA(v, 'ModuleScript') then
+       local suc = pcall(function()
+           require(v).Event('PromotionBlimpGiftbux'):FireServer()
+       end)
+       if suc then 
+           Remotes = require(v)
+           break
+       end
+   end
+   task.wait()
 end
 
 --skidded!!! ty tvk1308
@@ -116,43 +144,11 @@ end)
 
 local _CFRAMETABLE = {{166.584, 3.47699, 371.398},{228.765, 3.57067, 332.55},{225.878, 3.57066, 274.96},{169.654, 4.11481, 232.826},{102.625, 3.57066, 274.941},{109.353, 3.57066, 351.28}, {166.584, 3.47699, 371.399}}
 local unclaimed = {}
-local counter = 0
 local mainCheckPosition = Vector3.new(165.161,0,311.636)
 local donation, boothText, spamming, hopTimer, vcEnabled
-local signPass = false
 local errCount = 0
 local uid = Players.LocalPlayer.UserId
 local newRaisedFormat = Players.LocalPlayer:WaitForChild('leaderstats'):WaitForChild('Raised')
-local booths = {
-	["1"] = "72, 3, 36",
-	["2"] = "83, 3, 161",
-	["3"] = "11, 3, 36",
-	["4"] = "100, 3, 59",
-	["5"] = "72, 3, 166",
-	["6"] = "2, 3, 42",
-	["7"] = "-9, 3, 52",
-	["8"] = "10, 3, 166",
-	["9"] = "-17, 3, 60",
-	["10"] = "35, 3, 173",
-	["11"] = "24, 3, 170",
-	["12"] = "48, 3, 29",
-	["13"] = "24, 3, 33",
-	["14"] = "101, 3, 142",
-	["15"] = "-18, 3, 142",
-	["16"] = "60, 3, 33",
-	["17"] = "35, 3, 29",
-	["18"] = "0, 3, 160",
-	["19"] = "48, 3, 173",
-	["20"] = "61, 3, 170",
-	["21"] = "91, 3, 151",
-	["22"] = "-24, 3, 72",
-	["23"] = "-28, 3, 88",
-	["24"] = "92, 3, 51",
-	["25"] = "-28, 3, 112",
-	["26"] = "-24, 3, 129",
-	["27"] = "83, 3, 42",
-	["28"] = "-8, 3, 151"
-}
 local queueonteleport = (syn and syn.queue_on_teleport) or queue_on_teleport or (fluxus and fluxus.queue_on_teleport) or nil
 local httprequest = (syn and syn.request) or http and http.request or http_request or (fluxus and fluxus.request) or request
 local httpservice = HttpService
@@ -366,7 +362,35 @@ local sValues = {
     false
 }
 
-  --Load Settings
+
+
+--Load Settings
+if isfile("nameblocklist.txt") then
+	local ok, v = pcall(readfile, "nameblocklist.txt")
+	if ok and type(v) == 'string' then
+		local blocked = {}
+		for line in v:gmatch("[^\r\n]+") do
+			local s = line:match("^%s*(.-)%s*$")
+			if s and s ~= "" then
+				blocked[#blocked + 1] = s:lower()
+			end
+		end
+		if #blocked > 0 then
+			for _, pl in next, Players:GetPlayers() do
+				if pl and pl.UserId and pl.UserId ~= Players.LocalPlayer.UserId then
+					local pname = (pl.Name or ""):lower()
+					for _, b in next, blocked do
+						if b == pname then
+							forceServerHop()
+							return
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
 if isfile("plsdonatesettings.txt") then
 	local sl, er = pcall(function()
 		getgenv().settings = HttpService:JSONDecode(readfile('plsdonatesettings.txt'))
@@ -403,7 +427,6 @@ local settingsLock = true
 local AllIDs = {}
 local foundAnything = ""
 local actualHour = os.date("!*t").hour
-local Deleted = false
 local S_T = TPService
 local S_H = HttpService
 local RandomName = "PlsDonateServerHop-Temp"
@@ -416,71 +439,6 @@ if not File then
 	pcall(function()
 		writefile(RandomName .. ".json", S_H:JSONEncode(AllIDs))
 	end)
-
-end
-
-local function requirex(scrip)
-	if not scrip:IsA('ModuleScript') then
-		return forceServerHop()
-	end
-	local succeed = false
-	local mscript
-
-	repeat task.wait(0.1)
-		local suc, er = pcall(function()
-			mscript = require(scrip)
-		end)
-		if not suc then
-			print("Couldn't require ModuleScript: " .. tostring(er))
-		end
-	until mscript and suc
-	return mscript
-end
-
-local function TPReturner(placeId)
-	local Site;
-	if foundAnything == "" then
-		Site = S_H:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. placeId .. '/servers/Public?sortOrder=Asc&limit=100'))
-	else
-		Site = S_H:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. placeId .. '/servers/Public?sortOrder=Asc&limit=100&cursor=' .. foundAnything))
-	end
-	local ID = ""
-	if Site.nextPageCursor and Site.nextPageCursor ~= "null" and Site.nextPageCursor ~= nil then
-		foundAnything = Site.nextPageCursor
-	end
-	local num = 0;
-	for i, v in pairs(Site.data) do
-		local Possible = true
-		ID = tostring(v.id)
-		if tonumber(v.maxPlayers) > tonumber(v.playing) and tonumber(v.playing) >= 19  then
-			for _, Existing in pairs(AllIDs) do
-				if num ~= 0 then
-					if ID == tostring(Existing) then
-						Possible = false
-					end
-				else
-					if tonumber(actualHour) ~= tonumber(Existing) then
-						local delFile = pcall(function()
-							delfile(RandomName .. ".json")
-							AllIDs = {}
-							table.insert(AllIDs, actualHour)
-						end)
-					end
-				end
-				num = num + 1
-			end
-			if Possible == true then
-				table.insert(AllIDs, ID)
-				task.wait()
-				pcall(function()
-					writefile(RandomName .. ".json", S_H:JSONEncode(AllIDs))
-					task.wait()
-					S_T:TeleportToPlaceInstance(placeId, ID, Players.LocalPlayer)
-				end)
-				task.wait(4)
-			end
-		end
-	end
 end
 
 local vc = cloneref(game:GetService("VoiceChatService"))
@@ -495,39 +453,59 @@ else
 	vcEnabled = false
 end
 
-function serverHop()
-	local gameId
-	saveSettings()
-	gameId = 8737602449
-	if vcEnabled and getgenv().settings.vcServer then
-		gameId = 8943844393
-	end
-	if getgenv().settings.AlternativeHop then
-		math.randomseed(tick())
-		local random = math.random(0, 1)
-		if random == 1 then
-			gameId = 8943844393
-		else
-			gameId = 8737602449
-		end
-	end
-
-	pcall(function()
-		TPReturner(gameId)
-		if foundAnything ~= "" then
-			TPReturner(gameId)
-		end
-	end)
-
-	while task.wait(7.5) do
-		pcall(function()
-			TPReturner(gameId)
-			if foundAnything ~= "" then
-				TPReturner(gameId)
-			end
-		end)
-	end
+local function choosePlaceId()
+    if vcEnabled and getgenv().settings.vcServer then
+        return 8943844393
+    elseif getgenv().settings.AlternativeHop then
+        return (math.random() < 0.5) and 8943844393 or 8737602449
+    else
+        return 8737602449
+    end
 end
+
+local function serverHop()
+    while task.wait(1.5) do
+        if httprequest then
+            task.spawn(function()
+                local HttpService = game:GetService("HttpService")
+                local TeleportService = game:GetService("TeleportService")
+                local Players = game:GetService("Players")
+                local LocalPlayer = Players.LocalPlayer
+                local PlaceId = choosePlaceId()
+                local JobId = game.JobId
+
+                local req = httprequest({
+                    Url = string.format(
+                        "https://games.roblox.com/v1/games/%d/servers/Public?sortOrder=Desc&limit=100&excludeFullGames=true", 
+                        PlaceId
+                    )
+                })
+
+                local success, body = pcall(function()
+                    return HttpService:JSONDecode(req.Body)
+                end)
+
+                if success and body and body.data then
+                    local servers = {}
+
+                    for _, server in pairs(body.data) do
+                        if server.playing < 25 and server.id ~= JobId and server.playing > 12 then
+                            table.insert(servers, server)
+                        end
+                    end
+
+                    if #servers > 0 then
+                        local selectedServer = servers[math.random(1, #servers)]
+                        pcall(function()
+                            TeleportService:TeleportToPlaceInstance(PlaceId, selectedServer.id, LocalPlayer)
+                        end)
+                    end
+                end
+            end)
+        end
+    end
+end
+
 
 function waitServerHop()
 	task.wait(getgenv().settings.serverHopDelay * 60)
@@ -603,88 +581,64 @@ else
 end
 
 if not _boothlocation then
-	serverHop()
-	return
+	return serverHop()
+end
+
+local function formatNumber(n)
+    if n == 420 or n == 425 then
+        n = n + 10
+    end
+    if n >= 10000 then
+        return string.format("%.1fk", n / 1000)
+    elseif n >= 1000 then
+        return string.format("%.2fk", n / 1000)
+    else
+        return tostring(n)
+    end
 end
 
 function updateBoothText()
-	local text
-	local current = tonumber(newRaisedFormat.Value)
-	local goal = current + tonumber(getgenv().settings.goalBox)
-	if goal == 420 or goal == 425 then
-		goal = goal + 10
-	end
-	if current == 420 or current == 425 then
-		current = current + 10
-	end
-	if goal > 999 and goal < 10000 then
-		if tonumber(getgenv().settings.goalBox) < 10 then
-			goal = string.format("%.2fk", (current + 10) / 10 ^ 3)
-		else
-			goal = string.format("%.2fk", (goal) / 10 ^ 3)
-		end
-	elseif goal > 9999 then
-		if tonumber(getgenv().settings.goalBox) < 10 then
-			goal = string.format("%.1fk", (current + 10) / 10 ^ 3)
-		else
-			goal = string.format("%.1fk", (goal) / 10 ^ 3)
-		end
-	end
-	if current > 999 and current < 10000 then
-		current = string.format("%.2fk", current / 10 ^ 3)
-	elseif current > 9999 then
-		current = string.format("%.1fk", current / 10 ^ 3)
-	end
-	if getgenv().settings.textUpdateToggle and getgenv().settings.customBoothText then
-		text = string.gsub(getgenv().settings.customBoothText, "$C", current)
-		text = string.gsub (text, "$G", goal)
-		text = string.gsub(text, '$JPR', tostring(getgenv().settings.jumpsPerRobux))
-		boothText = text
-		--Updates the booth text
-		local myBooth = _boothlocation.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[2]))
-		if myBooth.Sign.TextLabel.Text ~= boothText then
-			if string.find(myBooth.Sign.TextLabel.Text, "# #") or string.find(myBooth.Sign.TextLabel.Text, "##") then
-				if getgenv().settings.taggedBoothHop then
-					if nx >= 1 then
-						serverHop()
-					else
-						nx = 8
-					end
-				end
-				requirex(ReplicatedStorage.Remotes).Event("SetCustomization"):FireServer({
-				        ["textFont"] = Enum.Font[getgenv().settings.fontFace],
-				        ["richText"] = true,
-				        ["textFont"] = Enum.Font[getgenv().settings.fontFace],
-				        ["strokeColor"] = Color3.new(0,0,0),
-				        ["text"] = "your text here",
-				        ["buttonStrokeColor"] = Color3.new(0,0,0),
-				        ["buttonTextColor"] = Color3.new(1,1,1),
-				        ["buttonColor"] = Color3.new(98, 255, 0),
-				        ["buttonHoverColor"] = Color3.new(98, 255, 0),
-				        ["buttonLayout"] = "",
-				        ["strokeOpacity"] = 0,
-				        ["textColor"] = rgb(getgenv().settings.hexBox)
-				}, "booth")
-				task.wait(3)
-			end
-				requirex(ReplicatedStorage.Remotes).Event("SetCustomization"):FireServer({
-				        ["textFont"] = Enum.Font[getgenv().settings.fontFace],
-				        ["richText"] = true,
-				        ["textFont"] = Enum.Font[getgenv().settings.fontFace],
-				        ["strokeColor"] = Color3.new(0,0,0),
-				        ["text"] = getgenv().settings.customBoothText:gsub('$C',current):gsub('$G',goal),
-				        ["buttonStrokeColor"] = Color3.new(0,0,0),
-				        ["buttonTextColor"] = Color3.new(1,1,1),
-				        ["buttonColor"] = Color3.new(98, 255, 0),
-				        ["buttonHoverColor"] = Color3.new(98, 255, 0),
-				        ["buttonLayout"] = "",
-				        ["strokeOpacity"] = 0,
-				        ["textColor"] = rgb(getgenv().settings.hexBox)
-				}, "booth")
-			task.wait(3)
-		else
-		end
-	end
+    if not (getgenv().settings.textUpdateToggle and getgenv().settings.customBoothText) then
+        return
+    end
+
+    local currentRaw = tonumber(newRaisedFormat.Value)
+    local goalRaw    = currentRaw + tonumber(getgenv().settings.goalBox)
+
+    local currentStr = formatNumber(currentRaw)
+    local goalStr    = formatNumber(goalRaw)
+
+    local text = getgenv().settings.customBoothText
+        :gsub("%$C", currentStr)
+        :gsub("%$G", goalStr)
+        :gsub("%$JPR", tostring(getgenv().settings.jumpsPerRobux))
+
+    local boothUI = _boothlocation.BoothUI:FindFirstChild("BoothUI" .. unclaimed[2])
+    if not boothUI then return end
+    local signLabel = boothUI.Sign.TextLabel
+
+    if signLabel.Text == text then
+        return
+    end
+
+    if signLabel.Text:find("##") and getgenv().settings.taggedBoothHop and nx >= 1 then
+        return serverHop()
+    end
+
+    local basePayload = {
+        textFont         = Enum.Font[getgenv().settings.fontFace],
+        richText         = true,
+        strokeColor      = Color3.new(0, 0, 0),
+        strokeOpacity    = 0,
+        textColor        = rgb(getgenv().settings.hexBox),
+        buttonStrokeColor= Color3.new(0, 0, 0),
+        buttonTextColor  = Color3.new(1, 1, 1),
+        buttonColor      = Color3.new(98, 255, 0),
+        buttonHoverColor = Color3.new(98, 255, 0),
+        buttonLayout     = ""
+    }
+    basePayload.text = text
+    Remotes.Event("SetCustomization"):FireServer(basePayload, "booth")
 end
 
 local _TTSERVICE = cloneref(game:GetService('TextChatService'))
@@ -732,97 +686,42 @@ local function fetchNearPlr()
 	return plrfoundf
 end
 
-local function customwebhook(hook,raised)
-	if raised == 6 or raised < 0 then
-		return
-	end
-	httprequest{
-		Url = hook:reverse(),
-		Method = "POST",
-		Headers = {
-			["Content-Type"] = "application/json"
-		},
-		Body = HttpService:JSONEncode({
-			content = tostring(raised)
-		})
-	}
-end
-
 local function webhook(raised, donor)
-	if getgenv().settings.webhookBox:gsub(' ', '') == '' then
-		return
-	end
-	local isLucky
-	local math1 = math.random(1, 1000)
-	local math2 = math.random(1, 1000)
-	if math1 == math2 then
-		isLucky = 'Lucky holy shit that\'s 1/10000 chance (you won!)'
-	else
-		isLucky = 'Unlucky'
-	end
-	local a = os.time()
-	local a = os.date("!*t", a)
-	local c = cloneref(game:GetService("MarketplaceService"))
-	local c = c:GetProductInfo(game.PlaceId, Enum.InfoType.Asset)
-	local a = {
-		["title"] = '**' .. Players.LocalPlayer.Name .. '**',
-		["description"] = "has been donated " .. tostring(raised) .. "R$ [A/T: " .. math.floor(raised * 0.6) .. "R$]",
-		["type"] = "rich",
-		["color"] = tonumber(3066993),
-		["thumbnail"] = {
-			["url"] = "https://www.roblox.com/headshot-thumbnail/image?userId=" ..
-               Players.LocalPlayer.UserId .. "&width=420&height=420&format=png"
-		},
-		["image"] = {
-			["url"] = "http://www.roblox.com/Thumbs/Asset.ashx?Width=768&Height=432&AssetID=" .. game.PlaceId
-		},
-		["fields"] = {
-			{
-				["name"] = "Total",
-				["value"] = '`' .. tostring(tonumber(newRaisedFormat.Value)) .. '`',
-				["inline"] = true
-			},
-			{
-				["name"] = "Donor",
-				["value"] = '`' .. donor .. '`',
-				["inline"] = true
-			},
-			{
-				["name"] = "RNG lucky game:",
-				["value"] = '`' .. tostring(isLucky) .. '`',
-				["inline"] = true
-			},
-		},
-		["footer"] = {
-			["text"] = "@szze 🍜 / https://discord.gg/yrQbdfhuqd",
-		},
-		["timestamp"] = string.format("%d-%d-%dT%02d:%02d:%02dZ", a.year, a.month, a.day, a.hour, a.min, a.sec)
-	}
-	httprequest{
-		Url = getgenv().settings.webhookBox:gsub(' ', ''),
-		Method = "POST",
-		Headers = {
-			["Content-Type"] = "application/json"
-		},
-		Body = HttpService:JSONEncode({
-			content = "",
-			embeds = {
-				a
-			}
-		})
-	}
-	if getgenv().settings.pingEveryone and tonumber(raised) >= tonumber(getgenv().settings.pingAboveDono) then
-	        httprequest{
-		        Url = getgenv().settings.webhookBox:gsub(' ', ''),
-		        Method = "POST",
-		        Headers = {
-		         	["Content-Type"] = "application/json"
-	         	},
-	         	Body = HttpService:JSONEncode({
-			        content = "@everyone",
-		        })
-	        }
-	end
+    local url = getgenv().settings.webhookBox:match("%S+")
+    if not url or url == "" then
+        return
+    end
+    local embed = {
+        title       = Players.LocalPlayer.Name .. " 💸 just got donated!",
+        description = string.format(
+            "**%d R$** by **%s**\n• A/T: %d R$\n• Total: %d R$",
+            raised,
+            donor,
+            math.floor(raised * 0.6),
+            tonumber(Players.LocalPlayer.leaderstats.Raised.Value)
+        ),
+        color       = 0x2ECC71,
+        thumbnail   = {
+            url = ("https://www.roblox.com/headshot-thumbnail/image?userId=%d&width=256&height=256&format=png")
+                  :format(Players.LocalPlayer.UserId)
+        },
+        timestamp   = os.date("!%Y-%m-%dT%H:%M:%SZ")
+    }
+    local payload = HttpService:JSONEncode({ embeds = { embed } })
+    httprequest({
+        Url     = url,
+        Method  = "POST",
+        Headers = { ["Content-Type"] = "application/json" },
+        Body    = payload
+    })
+    if getgenv().settings.pingEveryone and raised >= tonumber(getgenv().settings.pingAboveDono) then
+        httprequest({
+            Url     = url,
+            Method  = "POST",
+            Headers = { ["Content-Type"] = "application/json" },
+            Body    = HttpService:JSONEncode({ content = "@everyone" })
+        })
+    end
 end
 
 local function hex(c3)
@@ -887,15 +786,14 @@ local function checkForBots()
 end
 
 local easterlol = {
-	Color3.fromRGB(200, 180, 255),
-	Color3.fromRGB(180, 255, 200),
-	Color3.fromRGB(255, 230, 180), 
-	Color3.fromRGB(255, 180, 200),
+	Color3.fromRGB(199, 137, 193),
+	Color3.fromRGB(199, 137, 193),
+	Color3.fromRGB(199, 137, 193),
 }
 
 local easterclr = easterlol[math.random(1,#easterlol)]
 
-local Window = library:AddWindow("🌸 Happy Easter! 🐰 Grab some eggs @szze .gg/yrQbdfhuqd",
+local Window = library:AddWindow("💘 @szze https://discord.gg/YTpK5wWBHj",
   {
 	main_color = easterclr,
 	min_size = Vector2.new(560, 563),
@@ -912,6 +810,8 @@ local otherTab2 = Window:AddTab("AR")
 local supportTab = Window:AddTab("Support")
 local TextService = cloneref(game:GetService("TextService"))
 local sgoalR = 0
+
+print('script core loading')
 
 --Booth Settings
 local textUpdateToggle = boothTab:AddSwitch("Text Update", function(bool)
@@ -1333,14 +1233,14 @@ local anonymousMode = mainTab:AddSwitch("Anonymous Mode", function(bool)
 	end
 	getgenv().settings.AnonymousMode = bool
 	saveSettings()
-	require(game:GetService('ReplicatedStorage').Remotes).Event('SetAnonymousLive'):FireServer(bool)
+	Remotes.Event('SetAnonymousLive'):FireServer(bool)
 end)
 
 anonymousMode:Set(getgenv().settings.AnonymousMode)
 
 if getgenv().settings.AnonymousMode then
 	task.delay(5,function()
-		require(game:GetService('ReplicatedStorage').Remotes).Event('SetAnonymousLive'):FireServer(true)
+		Remotes.Event('SetAnonymousLive'):FireServer(true)
 	end)
 end
 
@@ -1404,7 +1304,7 @@ local spinToggle = mainTab:AddSwitch('Spin [1R$ = +1 speed]', function(bool)
 		Spin.Name = "Spin"
 		Spin.Parent = root
 		Spin.MaxTorque = Vector3.new(0, math.huge, 0)
-		Spin.AngularVelocity = Vector3.new(0, 0.25 * settings.spinSpeedMultiplier, 0)
+		Spin.AngularVelocity = Vector3.new(0, 0.25 * getgenv().settings.spinSpeedMultiplier, 0)
 		task.spawn(function()
                     repeat task.wait() until bclaimed
 		    local sppos = root.Position
@@ -1607,38 +1507,49 @@ supportTab:AddLabel("Hello. This script is free but I won't resist")
 supportTab:AddLabel("from some robux :3")
 supportTab:AddLabel("If you want to donate me, click here: ")
 supportTab:AddButton('Teleport', function()
-	TPService:Teleport(13461969417)
+	TPService:Teleport(0)
 end)
 supportTab:AddLabel('You can also send me a message there for free!')
 
 boothTab:Show()
 library:FormatWindows()
 settingsLock = false
-  --Finds unclaimed booths
 local function findUnclaimed()
-	for i, v in pairs(_boothlocation:WaitForChild('BoothUI'):GetChildren()) do
-		if (v.Details.Owner.Text == "unclaimed") then
-			local _boothnum = tonumber(string.match(tostring(v), "%d+"))
-			for i, v in ipairs(workspace.BoothInteractions:GetChildren()) do
-		              if v:GetAttribute("BoothSlot") == _boothnum and (v.Position * Vector3.new(1,0,1) - mainCheckPosition).Magnitude < 92 then
-				   table.insert(unclaimed,_boothnum)
-			           break
-		              end
-	                 end
-		end
-	end
+    unclaimed = {}
+    local boothUI      = _boothlocation:WaitForChild("BoothUI")
+    local interactions = workspace:WaitForChild("BoothInteractions")
+    local mainPos2D    = Vector3.new(mainCheckPosition.X, 0, mainCheckPosition.Z)
+
+    for _, uiFrame in ipairs(boothUI:GetChildren()) do
+        if uiFrame.Details.Owner.Text == "unclaimed" then
+            local boothNum = tonumber(uiFrame.Name:match("%d+"))
+            if boothNum then
+                for _, interact in ipairs(interactions:GetChildren()) do
+                    if interact:GetAttribute("BoothSlot") == boothNum then
+                        local pos2D = Vector3.new(interact.Position.X, 0, interact.Position.Z)
+                        if (pos2D - mainPos2D).Magnitude < 92 then
+                            table.insert(unclaimed, boothNum)
+                            break
+                        end
+                    end
+                end
+            end
+        end
+    end
 end
+
 if not pcall(findUnclaimed) then
 	serverHop()
 end
+
 local claimCount = #unclaimed
 if not unclaimed[2] then
    serverHop()
    return
 end
-  --Claim booth function
+
 local function boothclaim()
-	requirex(ReplicatedStorage.Remotes).Event("ClaimBooth"):InvokeServer(unclaimed[2])
+	Remotes.Event("ClaimBooth"):InvokeServer(unclaimed[2])
 	if not string.find(_boothlocation.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[2])).Details.Owner.Text, Players.LocalPlayer.DisplayName) then
 		task.wait(1)
 		if not string.find(_boothlocation.BoothUI:FindFirstChild(tostring("BoothUI" .. unclaimed[2])).Details.Owner.Text, Players.LocalPlayer.DisplayName) then
@@ -1646,7 +1557,6 @@ local function boothclaim()
 		end
 	end
 end
-  --Checks if booth claim fails
 while not pcall(boothclaim) do
 	if errCount >= claimCount then
 		serverHop()
@@ -1654,7 +1564,9 @@ while not pcall(boothclaim) do
 	table.remove(unclaimed, 1)
 	errCount = errCount + 1
 end
+print('setting hopset')
 hopSet()
+print('hopset set')
 getgenv().walkToBooth = function()
 	local theCframe
 	if string.find(tostring(getgenv().settings.boothPosition), "6") then
@@ -1696,8 +1608,9 @@ getgenv().walkToBooth = function()
 	Players:Chat('/e dance' .. getgenv().settings.danceChoice)
 	bclaimed = true
 end
-
+print('walking')
 walkToBooth()
+print('walked')
 if getgenv().settings.autoBeg then
 	spamming = task.spawn(begging)
 end
@@ -1706,6 +1619,7 @@ local RaisedC = Players.LocalPlayer.leaderstats.Raised.value
 local djset = false
 local helidebounce = false
 local lapdebounce = false
+print('setting main core')
 Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 	local playerWhoDonated
 	sgoalR = sgoalR + (Players.LocalPlayer.leaderstats.Raised.Value - RaisedC)
@@ -1883,7 +1797,9 @@ Players.LocalPlayer.leaderstats.Raised.Changed:Connect(function()
 	task.wait(getgenv().settings.textUpdateDelay)
 	updateBoothText()
 end)
+print('main core set')
 updateBoothText()
+print('main core set 2')
 
 task.spawn(function()
 	raisedV = 0
