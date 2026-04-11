@@ -1625,7 +1625,7 @@ ReplicatedStorage.VFXObjects.CreateVfx.OnClientEvent:Connect(function(...)
 	local args = { ... }
 	local donation = args[4]
 	local user = args[3]
-	if user ~= Players.LocalPlayer.Character then
+	if user ~= Players.LocalPlayer.Character or args[1] ~= 'GiveCurrency' then
 			return
 	end
 	if not donation or typeof(donation) ~= 'number' then
@@ -1817,7 +1817,7 @@ task.spawn(function()
 			serverHop()
 		end
 	end)
-	for i, v in next, Players:GetPlayers() do
+	--[[for i, v in next, Players:GetPlayers() do
 		if v:FindFirstChild('leaderstats') and v ~= Players.LocalPlayer then
 			if raisedV ~= nil then
 				if v.leaderstats.Raised.Value > raisedV then
@@ -1830,7 +1830,7 @@ task.spawn(function()
 	end
 	if raisedV < getgenv().settings.minimumDonated then
 		serverHop()
-	end
+	end]]
 end)
 
 task.spawn(function()
