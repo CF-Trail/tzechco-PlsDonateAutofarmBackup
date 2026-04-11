@@ -148,7 +148,11 @@ local mainCheckPosition = Vector3.new(165.161,0,311.636)
 local donation, boothText, spamming, hopTimer, vcEnabled
 local errCount = 0
 local uid = Players.LocalPlayer.UserId
-local newRaisedFormat = Players.LocalPlayer:WaitForChild('leaderstats'):WaitForChild('Raised')
+local newRaisedFormat = Players.LocalPlayer:WaitForChild('leaderstats'):WaitForChild('Raised', 5)
+if not newRaisedFormat then
+	game:GetService('Players').LocalPlayer:Kick('im fixing the script hold on (04.11.2026)')
+	return
+end
 local queueonteleport = (syn and syn.queue_on_teleport) or queue_on_teleport or (fluxus and fluxus.queue_on_teleport) or nil
 local httprequest = (syn and syn.request) or http and http.request or http_request or (fluxus and fluxus.request) or request
 local httpservice = HttpService
