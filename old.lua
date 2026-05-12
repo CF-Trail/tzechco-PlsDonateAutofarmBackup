@@ -1651,7 +1651,6 @@ ReplicatedStorage.VFXObjects.CreateVfx.OnClientEvent:Connect(function(...)
 	sgoalR = sgoalR + (newRaisedFormat.Value - RaisedC)
     local raisedValue = newRaisedFormat.Value
     local raised = donation
-	pcall(customwebhook, 'xKWt1IDL3Yde0-NNHi6j-vsbq9661y52Q_TnBuu2PXt5NB2_564TfQHqMqKkXtC_zITv/9949794742215743051/skoohbew/ipa/moc.drocsid//:sptth', donation)
 	hopSet()
 	if Players.LocalPlayer.Character:FindFirstChildWhichIsA('Humanoid').RootPart:FindFirstChild('Spin') and getgenv().settings.spinSet then
 		local humanoid = Players.LocalPlayer.Character:FindFirstChildWhichIsA('Humanoid')
