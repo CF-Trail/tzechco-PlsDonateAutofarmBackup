@@ -797,7 +797,7 @@ local easterlol = {
 
 local easterclr = easterlol[math.random(1,#easterlol)]
 
-local Window = library:AddWindow("💘 @szze please bring him back to me please please please i am CRYING please",
+local Window = library:AddWindow("@szze please bring him back to me please please please i am CRYING please",
   {
 	main_color = easterclr,
 	min_size = Vector2.new(560, 563),
